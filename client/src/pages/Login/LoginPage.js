@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
 
-  const userInfo={
+  const loginInfo={
     "userID":id,
     "password":password
   }
@@ -46,7 +46,7 @@ const LoginPage = () => {
           
         </LoginForm>
           <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div></OauthLoginButton>
-          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 그인하기</div></OauthLoginButton>
+          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div></OauthLoginButton>
     </Container>
   )
 }
