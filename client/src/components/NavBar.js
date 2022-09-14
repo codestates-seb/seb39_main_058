@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineBell } from "react-icons/ai";
@@ -8,6 +8,11 @@ function NavBar({welcome}) {
 
     const [searchOn, setSearchOn] = useState(false)
     const [noticeOn, setNoticeOn] = useState(false)
+
+    const clear = () => {
+        setNoticeOn(false)
+        setSearchOn(false)
+    }
 
   return (
     <>
@@ -23,7 +28,7 @@ function NavBar({welcome}) {
     }
     <NavBarStyle>
         <div className='main_title'>
-            <Link to='/'>쓰위치</Link>
+            <Link to='/' onClick={clear}>쓰위치</Link>
         </div>
             <div className='search' onClick={() => {
                 setSearchOn(!searchOn)
@@ -58,7 +63,7 @@ function NavBar({welcome}) {
             <Link to='/login'>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
-                    <li>내정보</li>
+                    <li><Link to='/users/:id' onClick={clear}>내정보</Link></li>
                     <li>회원수정</li>
                     <li>회원삭제</li>
                     {1 === 1 ? <li>관리자</li> : undefined}
@@ -74,15 +79,15 @@ function NavBar({welcome}) {
             }}><AiOutlineBell/></div>
     </NavBarStyle>
     <SearchInput>
-        {searchOn?
+        {searchOn ?
         <div className='search_bar'>
         <input type="search" placeholder='검색어를 입력해주세요. ex) LCS로 53번길 21'></input>
         <div className='search_icon'><FaSearch /></div>
-        </div>:
+        </div> :
         undefined}
     </SearchInput>
-        {noticeOn?
-        <Notification>ㅁㄹㅁㄹ</Notification>:
+        {noticeOn ?
+        <Notification>ㅁㄹㅁㄹ</Notification> :
         undefined}
     </>
   )
@@ -91,11 +96,13 @@ function NavBar({welcome}) {
 export default NavBar
 
 const NavBarStyle = styled.div`
+    width: 100%;
     height: 6vh;
     display: flex;
     align-items: center;
     font-size: 2vmin;
     user-select:none;
+    background-color: white;
 
     a{
         text-decoration: none;
@@ -109,41 +116,44 @@ const NavBarStyle = styled.div`
     .drop{
         list-style: none;
         position: absolute;
-        margin-top: 3vh;
+        margin-top: 2vh;
         font-size: 2vmin;
-        z-index: 2;
-        li, a{
-            margin: 1.5vh 0px;
-            margin-left: -0.8vw;
-            padding: 5% 15%;
-            width: 140%;
+        z-index: 3;
+        margin-left: -0.5vw;
+        display: none;
+        li{
+            padding: 0.3vh 0.5vw;
+            width: 100%;
+            margin: 1.5vh 0;
             cursor: pointer;
             :hover{
                 background-color: #E38B29;
                 color: white;
                 font-weight: bold;
                 border-radius: 20px;
+                a{
+                    color: white;
+                }
             }
         }
-        display: none;
     }
 
     .news{
-        margin-left: -0.8vw;
+        margin-left: -1.5vw;
     }
 
     .community{
-        margin-left: -0.5vw;
+        margin-left: -1.2vw;
     }
 
     .drop_container{
-        position: fixed;
-        right: 1%;
+        position: absolute;
+        right: 0;
         top: 6.5%;
         background-color: lightgray;
-        width: 76%;
+        width: 77%;
         height: 25vh;
-        z-index: 1;
+        z-index: 2;
         display: none;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
@@ -200,6 +210,7 @@ const SearchInput = styled.div`
 
     position: absolute;
     width: 100%;
+    z-index: 1;
 
     input{
         width: 90%;
@@ -211,7 +222,8 @@ const SearchInput = styled.div`
     .search_icon{
         display: flex;
         align-items: center;
-        border: 0.8vmin solid rgb(71,182,181);
+        border: 0.5vmin solid black;
+        background-color: white;
         padding: 1vh 2vw;
         cursor: pointer;
         border-radius: 20px;
@@ -237,12 +249,15 @@ const Notification = styled.div`
     height: 50vh;
     right: 0;
     background-color: white;
+    z-index: 2;
 `
 
 const MobileSearchInput = styled.div`
     display: none;
     position: absolute;
-    width: 100%;
+    width: 103%;
+    background-color: white;
+    margin-left: -2.5vw;
 
     input{
         width: 70%;

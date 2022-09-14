@@ -10,7 +10,8 @@ import NavBar from './components/NavBar';
 function App() {
   
   const [welcome, setWelcome] = useState(sessionStorage.getItem('welcome'));
-
+  
+  
   useEffect(() => {
     sessionStorage.setItem('welcome', welcome)
   }, [welcome])
@@ -25,7 +26,7 @@ function App() {
 
   return (
     <div>
-      <NavBar welcome={welcome} />
+      {welcome === null ? undefined :<NavBar welcome={welcome} />}
       <Routes>
         <Route path='/' element={welcome === null ? <Welcome/> : <MainPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
