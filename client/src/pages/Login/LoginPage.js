@@ -31,17 +31,17 @@ const click =(event)=>{
  
 const loginAlertFunc=()=>{
   if(clickId){
-    if(!id){
+    if(!id.trim()){
       setAlertId('아이디를 입력해 주세요.')
-    }else if(id){
+    }else if(id.trim()){
       setAlertId('')
     }
   }
 
   if(clickPassword){
-    if(!password){
+    if(!password.trim()){
       setAlertPwd('비밀번호를 입력해 주세요.')
-    }else if(id){
+    }else if(id.trim()){
       setAlertPwd('')
     }
   }
@@ -49,7 +49,6 @@ const loginAlertFunc=()=>{
 
   const loginFunc=(event)=>{
     event.preventDefault();
-    loginAlertFunc();
     // loginPost();
    
   }
