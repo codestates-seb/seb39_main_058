@@ -28,17 +28,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private  AuthenticationManager authenticationManager;
-    private  UserRepository userRepository;
-    private  BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             ObjectMapper om = new ObjectMapper();
@@ -55,6 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return authentication;
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -63,11 +57,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("Authentication Successful");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+
+        Long userId = principalDetails.getUser().getUserId();
+        String loginId = principalDetails.getUser().getLoginId();
+        String userName = principalDetails.getUser().getUserName();
+
+        String json =
+                "{\"memberId\":" + userId + ",\n\"email\":\"" + loginId + "\",\n\"nickname\":\"" + userName + "\"}";
+
         String jwtToken = JWT.create()
                 .withSubject("cos jwt token")
                 .withExpiresAt(new Date(System.currentTimeMillis() + (60 * 1000 * 10)))
                 .withClaim("userId", principalDetails.getUser().getUserId())
                 .sign(Algorithm.HMAC512("cos_jwt_token"));
         response.addHeader("Authorization", "Bearer " + jwtToken);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
     }
 }

@@ -5,11 +5,14 @@ import main.sswitch.excpetion.BusinessLogicException;
 import main.sswitch.excpetion.ExceptionCode;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +23,15 @@ import java.util.Optional;
 @Service
 @Builder
 public class UserService {
+    @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @EventListener
-    public User signUp(User user) {
+    public User createUser(@NotNull User user) {
         verifyExistUser(user.getLoginId());
+        verifyExistEmail(user.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(User.UserRole.ROLE_USER);
         user.setLoginId(user.getLoginId());
@@ -47,10 +52,13 @@ public class UserService {
         return findUser;
     }
 
-    public void update(User user) {
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public User update(User user) {
         User findUser = findVerifiedUser(user.getUserId());
         Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
-        Optional.ofNullable(user.getPassword()).ifPresent(password->findUser.setPassword(password));
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
+
+        return userRepository.save(findUser);
     }
 
     public void delete(long userId) {
@@ -67,7 +75,35 @@ public class UserService {
 
     private void verifyExistUser(String loginId) {
         Optional<User> user = userRepository.findByLoginId(loginId);
-        if(user.isPresent())
+        if (user.isPresent())
             throw new BusinessLogicException(ExceptionCode.USER_EXISTS);
+    }
+
+    private User findVerifiedUserWithEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User findEmail = optionalUser.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.EMAIL_NOT_FOUND));
+        return findEmail;
+    }
+
+    private void verifyExistEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent())
+            throw new BusinessLogicException(ExceptionCode.EMAIL_EXISTS);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserWithId(long userId) {
+        return findVerifiedUser(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUserWithEmail(String email) {
+        return findVerifiedUserWithEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<User> userList(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }

@@ -1,5 +1,6 @@
 package main.sswitch.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,10 @@ import javax.validation.constraints.NotBlank;
 
 public class UserDto {
     @Getter
+    @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
-    public static class Post {
+    public static class PostDto {
 
         private long userId;
 
@@ -28,7 +31,9 @@ public class UserDto {
         @NotBlank(message = "사용자 이메일 주소는 공백이 아니어야 합니다.")
         @Email
         private String email;
+
     }
+
 
     @Getter
     @Setter
@@ -45,23 +50,39 @@ public class UserDto {
         private User.UserStatus userStatus;
         private User.UserRole userRole;
 
+        public void setUserId(long userId) {
+            this.userId = userId;
+        }
     }
 
     @AllArgsConstructor
-    @NoArgsConstructor
     @Getter
-    public static class Response {
+    @Setter
+    @NoArgsConstructor
+    public static class ResponseDto {
+
         private long userId;
         private String loginId;
+
+        private String password;
         private String userName;
         private String email;
         private User.UserStatus userStatus;
         private User.Providers providers;
         private User.UserRole userRole;
         private int point;
+        public ResponseDto(User user) {
+            this.userId = userId;
+            this.loginId = loginId;
+            this.userName = userName;
+            this.email = email;
+            this.userStatus = userStatus;
+            this.providers = providers;
+            this.userRole = userRole;
+            this.point = point;
+        }
 
     }
-
 
 
 }

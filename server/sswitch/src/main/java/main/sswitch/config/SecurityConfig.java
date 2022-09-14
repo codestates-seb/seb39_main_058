@@ -18,14 +18,15 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-    @Autowired
-    private CorsFilter corsFilter;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private final CorsFilter corsFilter;
+
+    private final UserRepository userRepository;
+
+    private final BCryptPasswordEncoder encoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -39,10 +40,12 @@ public class SecurityConfig {
                 .apply(new CustomDsl())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup")
-                .permitAll()
                 .antMatchers("/**")
-                .access("hasRole('ROLE_ADMIN')")
+//                .access("hasRole('ROLE_ADMIN')")
+//                .antMatchers("/signup")
+//                .permitAll()
+//                .antMatchers("/login")
+                .permitAll()
                 .anyRequest().permitAll();
         return httpSecurity.build();
     }
@@ -52,7 +55,7 @@ public class SecurityConfig {
         public void configure(HttpSecurity builder) throws Exception {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
             builder.addFilter(corsFilter)
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager, userRepository, bCryptPasswordEncoder))
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager, userRepository, encoder))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
         }
     }

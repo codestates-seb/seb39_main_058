@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
-    User userPostToUser(UserDto.Post requestBody);
+    User userPostToUser(UserDto.PostDto requestBody);
 
     User userPatchToUser(UserDto.Patch requestBody);
 
-    UserDto.Response userToUserResponse(User user);
+    UserDto.ResponseDto userToUserResponse(User user);
 
-    List<UserDto.Response> usersToUserResponses(List<User> users);
+    List<UserDto.ResponseDto> usersToUserResponses(List<User> users);
 }

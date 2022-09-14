@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "USERS")
+@Table(name = "USER")
 @AllArgsConstructor
 public class User extends BaseEntity {
     @Id
@@ -27,17 +27,17 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String loginId;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String userName;
 
     @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
-    @Column(nullable = false)
-    private Integer point;
+//    @Column(nullable = false)
+//    private Integer point;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "STATUS")
@@ -50,6 +50,15 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
+
+    boolean enabled = false;
+
+    public User(String loginId, String password, String userName, String email) {
+        this.loginId = loginId;
+        this.password = password;
+        this.userName = userName;
+        this.email = email;
+    }
 
     public enum UserStatus {
         USER_NOT_EXIST("지금 입력하신 회원은 존재하지 않습니다"),
@@ -69,6 +78,7 @@ public class User extends BaseEntity {
         ROLE_GUEST("게스트 계정");
 
         @Getter
+        @Setter
         private String role;
 
         UserRole(String role) {

@@ -7,7 +7,11 @@ public enum ExceptionCode {
 
     USER_EXISTS(409, "User exists"),
 
-    PASSWORD_NOT_FOUND(404, "Wrong password");
+    PASSWORD_NOT_FOUND(404, "Wrong password"),
+
+    EMAIL_EXISTS(409, "Email exists"),
+
+    EMAIL_NOT_FOUND(404, "Email not found");
 
     @Getter
     private int status;
