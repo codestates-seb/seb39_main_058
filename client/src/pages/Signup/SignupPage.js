@@ -1,9 +1,17 @@
-import React from 'react'
+import {React ,useState } from 'react'
+import styled from "styled-components";
+
+
 
 function SignupPage() {
+  //비밀번호6자리이상
   return (
-    <div>SignupPage</div>
+    <div>
+ssss
+      
+    </div>
   )
 }
 
 export default SignupPage
+
