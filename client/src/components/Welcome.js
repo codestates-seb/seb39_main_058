@@ -79,7 +79,7 @@ const WelcomeStyle = styled.div`
   }
 
   .third_title{
-    animation: move_title 3s;
+    animation: move_title 1.5s;
     opacity: 0;
     animation-fill-mode: forwards;
     animation-delay: 1.5s;

@@ -25,7 +25,7 @@ function App() {
 
   return (
     <div>
-      <NavBar />
+      <NavBar welcome={welcome} />
       <Routes>
         <Route path='/' element={welcome === null ? <Welcome/> : <MainPage/>}/>
         <Route path='/login' element={<LoginPage/>}/>
