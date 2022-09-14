@@ -65,7 +65,7 @@ flex-direction: column;
  
   a{
     text-decoration: none;
-    color: black;
+    color: rgb(71,182,181);
     font-size: xx-large;
     font-weight: bold;
   } 
