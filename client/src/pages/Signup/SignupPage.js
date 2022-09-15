@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 
 
 function SignupPage() {
+  const navigate=useNavigate();
+
   const [id, setId] = useState('');
   const [clickId, setClickId] = useState(false);
 
@@ -14,13 +16,22 @@ function SignupPage() {
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
 
+  const [emailInfo, setEmailInfo]=useState('');
+  const [clickEmail,setClickEmail]= useState(false);
+
+
   const [alertId,setAlertId]=useState('');
   const [alertName,setAlertName]=useState('');
   const [passwordMsg,setPassworMsg] =useState(true);
   const [alertPwd,setAlertPwd]=useState(false);
   const [rePasswordMsg,setRePassworMsg] =useState(true);
   const [alertRePwd,setAlertRePwd]=useState(false);
-  const [alertSpaceKey,setAlertSpaceKey]=useState(false);
+  const [alertEmail,setAlertEmail]=useState('');
+
+  const [alertSpaceId,setAlertSpaceId]=useState(false);
+  const [alertSpaceName,setAlertSpaceName]=useState(false);
+  const [alertSpacePwd,setAlertSpacePwd]=useState(false);
+  const [alertSpaceEmail,setAlertSpaceEmail]=useState(false);
 
 
   
@@ -34,29 +45,77 @@ const click =(event)=>{
     if(event.target.id==='name'){
       setClickName(true)
     }
+    if(event.target.id==='email'){
+      setClickEmail(true)
+    }
   }
+
 }
 
 const overlapConfirm=()=>{
   if(clickId){
-    if(!id.trim()){
+    if(id.length===0){
       setAlertId('아이디를 입력해 주세요.')
-    }else if(id.trim()){
-      setAlertId('')
-      //post요청함수 
-    }
+    } else if(spaceCheck(id)===false||onlyEng(id)===false){
+      setAlertId('정확한 아이디를 입력해 주세요.')
+        
+    } else if(spaceCheck(id)===true&&onlyEng(id)===true){
+        setAlertId('')
+        setAlertSpaceId(false)
+        //post?get?요청함수
+      }
+    
   }
 
   if(clickName){
-    if(!name.trim()){
+    if(name.length===0){
       setAlertName('닉네임을 입력해 주세요.')
-    }else if(name.trim()){
+    }else if(spaceCheck(name)===true){
       setAlertName('')
-      //post요청함수 
+      setAlertSpaceName(false)
+        //post?get?요청함수
     }
   }
-  if(password.length===0||password.length===password.trim().length){
-    setAlertSpaceKey(false)
+  if(clickEmail){
+
+      if ( ! email_check(emailInfo) ) {
+        setAlertEmail('이메일을 올바르게 입력해주세요.');
+      }
+      if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
+        setAlertEmail('')
+        setAlertSpaceEmail(false)
+        //post?get?요청함수
+      }
+    }
+    
+
+}
+//이메일확인정규식
+function email_check( email) {
+
+  let regex=/([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+  return (email !== '' && email !== 'undefined' && regex.test(email));    
+  }
+
+  
+//글자에 공백있나없나체크함수
+function spaceCheck(txt){
+  let abc=txt.replace(/(\s*)/g,'')
+  if(abc.length!==0){
+
+    return(abc.length===txt.length )
+  }
+}
+//영문 숫자만 입력가능하게하는함수
+function onlyEng(txt){
+  let regex= /^[A-Za-z0-9]+$/;
+  return (txt !== '' && txt !== 'undefined' && regex.test(txt));  
+}
+
+
+const passwordConfirmFunc=()=>{
+  if(password.length===0 ||spaceCheck(password)===true){
+    setAlertSpacePwd(false)
   }
   if(!password.trim()){
     setPassworMsg(true)
@@ -86,9 +145,6 @@ const overlapConfirm=()=>{
     setRePassworMsg(true)
     setAlertRePwd(false)
   }
-
-
-
 }
 
 
@@ -96,42 +152,85 @@ const overlapConfirm=()=>{
 const tabKey=(e)=>{
    if(e.key==="Tab"){
     overlapConfirm()
+    passwordConfirmFunc()
    }
 }
 
 const tabKey2=(event)=>{
+  if(event.key===" "&&event.target.id==='id'){
+    setAlertSpaceId(true)
+  }
+  if(event.key===" "&&event.target.id==='name'){
+    setAlertSpaceName(true)
+  }
+  if(event.key===" "&&event.target.id==='email'){
+    setAlertSpaceEmail(true)
+  }
   if(event.key==="Tab"){
    click(event)
   }
 }
 const spaceKey=(event)=>{
   if(event.key===" "){
-     setAlertSpaceKey(true)
+    setAlertSpacePwd(true)
    }
-  //  else if(event.key==='Backspace' || 'Delete'){
-  //    overlapConfirm()
-  // }
+   else if(event.key==='Backspace' || 'Delete'){
+   passwordConfirmFunc()
+  }
+}
+
+const signupPostFunc=async()=>{
+  if (spaceCheck(id)===true&& onlyEng(id)===true&&spaceCheck(name)===true&& email_check(emailInfo)===true&&spaceCheck(emailInfo)===true && password===rePassword &&spaceCheck(password)===true&& password.length>=6 ){
+    
+    const signupInfo ={
+      "userId": id,
+      // api명세서 닉네임 키값아직미설정
+      "name": name,
+      "password": password,
+      "email": emailInfo
+    }
+  //  await fetch(`https://sswitch.com/signup`, {
+
+  //   method: 'POST',
+  //   headers: { 'content-Type' : 'application/json'},
+  //   body: JSON.stringify(signupInfo)
+  // }).then((res) => {
+  //   '성공하면'
+  //   navigate('/login')
+
+  // }).catch((err) => {
+  //   '에러아직모름'
+  // })
+    console.log('signupinfo:',signupInfo)
+  }
+
 }
 
    
   return (
-    <Container onKeyDown={tabKey} onMouseDown={overlapConfirm}>
+    <Container onKeyDown={tabKey} onMouseDown={()=>{overlapConfirm();passwordConfirmFunc()}} >
       <SignUpForm >
         <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
         <p>회원정보를 입력해 주세요</p>
         <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
+        <InfoMsg>아이디는 영문과 숫자만 가능 합니다.</InfoMsg>
+        {
+          alertSpaceId ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <OverlapForm>
           <AlertMsg>{alertId}</AlertMsg>
         </OverlapForm>
+        }
 
         <input id="name" name="name" type='text' placeholder="닉네임" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
+        {
+          alertSpaceName ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <OverlapForm>
           <AlertMsg>{alertName}</AlertMsg>
         </OverlapForm>
-
+          } 
         <input id="password" name="password" type="password" placeholder="비밀번호" onKeyDown={spaceKey} onChange={(e) => setPassword(e.target.value)}/>
         {
-          alertSpaceKey ? <AlertMsg>비밀번호에 사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
+          alertSpacePwd ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <PwdOverlapForm>
           {passwordMsg ?<InfoMsg>비밀번호는 6자리 이상이어야 합니다.</InfoMsg>: <AlertMsg>비밀번호는 6자리 이상이어야 합니다.</AlertMsg>}
           {alertPwd ?<CorrectMsg>사용 가능한 비밀번호 입니다.</CorrectMsg>:''}
@@ -140,17 +239,22 @@ const spaceKey=(event)=>{
 
         <input id="repassword" name="repassword" type="password" placeholder="비밀번호확인" onChange={(e) => setRePassword(e.target.value)}/>
         <PwdOverlapForm>
-          {rePasswordMsg ?<InfoMsg>확인을 위해 입력한 비밀번호를 다시 입력해주세요.</InfoMsg>: <AlertMsg>비밀번호가 일치하지 않습니다.</AlertMsg>}
+          {rePasswordMsg ?<InfoMsg>확인을 위해 설정한 비밀번호를 다시 입력해주세요.</InfoMsg>: <AlertMsg>비밀번호가 일치하지 않습니다.</AlertMsg>}
           {alertRePwd ?<CorrectMsg>비밀번호가 일치합니다.</CorrectMsg>:''}
         </PwdOverlapForm>
 
-
-
+        <input id="email" name="email" type='text' placeholder="이메일" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
+        {
+          alertSpaceEmail ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
+        <OverlapForm>
+        <AlertMsg>{alertEmail}</AlertMsg>
+        </OverlapForm>
+        }
 
 
 
       </SignUpForm>
-      <SignUpButton>회원가입</SignUpButton>      
+      <SignUpButton onClick={signupPostFunc}>회원가입</SignUpButton>      
     </Container>
   )
 }
