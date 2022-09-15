@@ -7,65 +7,150 @@ import { useEffect } from 'react';
 function SignupPage() {
   const [id, setId] = useState('');
   const [clickId, setClickId] = useState(false);
-  const [password, setPassword] = useState("");
-  const [clickPwd, setClickPwd] = useState(false);
+
+  const [name,setName]= useState('');
+  const [clickName, setClickName] = useState(false);
+
+  const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
 
   const [alertId,setAlertId]=useState('');
-  const [alertPwd,setAlertPwd]=useState('');
-  //비밀번호6자리이상
+  const [alertName,setAlertName]=useState('');
+  const [passwordMsg,setPassworMsg] =useState(true);
+  const [alertPwd,setAlertPwd]=useState(false);
+  const [rePasswordMsg,setRePassworMsg] =useState(true);
+  const [alertRePwd,setAlertRePwd]=useState(false);
+  const [alertSpaceKey,setAlertSpaceKey]=useState(false);
 
 
-const confirm =(event)=>{
- if(event?.type==='click'){
+  
+
+
+const click =(event)=>{
+ if(event){
     if(event.target.id==='id'){
       setClickId(true)
     }
-
+    if(event.target.id==='name'){
+      setClickName(true)
+    }
   }
 }
 
-const containerConfirm=()=>{
+const overlapConfirm=()=>{
   if(clickId){
-    if(!id){
-      setAlertId('아이디를 입력하세요')
-    }else if(id){
+    if(!id.trim()){
+      setAlertId('아이디를 입력해 주세요.')
+    }else if(id.trim()){
       setAlertId('')
       //post요청함수 
     }
   }
-  if(clickPwd){
 
+  if(clickName){
+    if(!name.trim()){
+      setAlertName('닉네임을 입력해 주세요.')
+    }else if(name.trim()){
+      setAlertName('')
+      //post요청함수 
+    }
   }
- 
+  if(password.length===0||password.length===password.trim().length){
+    setAlertSpaceKey(false)
+  }
+  if(!password.trim()){
+    setPassworMsg(true)
+    setAlertPwd(false)
+  
+  }
+  if(password.trim()){
+    if(password.length<6){
+      setPassworMsg(false)
+      setAlertPwd(false)
+      setRePassworMsg(true)
+      setAlertRePwd(false)
+    }else if(password.length>=6 ){
+      setPassworMsg(true)
+      setAlertPwd(true)
+      if(rePassword===password){
+        setRePassworMsg(true)
+        setAlertRePwd(true)
+      }else if(rePassword!==password){
+      setRePassworMsg(false)
+      setAlertRePwd(false)
+      }
+    
+    }    
+  }
+  if(!rePassword.trim()){
+    setRePassworMsg(true)
+    setAlertRePwd(false)
+  }
+
+
+
 }
 
 
-  
+
+const tabKey=(e)=>{
+   if(e.key==="Tab"){
+    overlapConfirm()
+   }
+}
+
+const tabKey2=(event)=>{
+  if(event.key==="Tab"){
+   click(event)
+  }
+}
+const spaceKey=(event)=>{
+  if(event.key===" "){
+     setAlertSpaceKey(true)
+   }
+  //  else if(event.key==='Backspace' || 'Delete'){
+  //    overlapConfirm()
+  // }
+}
+
    
   return (
-    <Container onClick={()=>containerConfirm()}>
+    <Container onKeyDown={tabKey} onMouseDown={overlapConfirm}>
       <SignUpForm >
         <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
         <p>회원정보를 입력해 주세요</p>
-        <input id="id" name="id" type='text' placeholder="아이디" onClick={(event)=>confirm(event)} onChange={(e) => setId(e.target.value)} />
+        <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
         <OverlapForm>
           <AlertMsg>{alertId}</AlertMsg>
         </OverlapForm>
 
-        <input id="name" name="name" type='text' placeholder="닉네임" onChange={(e) => setPassword(e.target.value)}/>
+        <input id="name" name="name" type='text' placeholder="닉네임" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
         <OverlapForm>
-          <AlertMsg>{alertPwd}</AlertMsg>
+          <AlertMsg>{alertName}</AlertMsg>
         </OverlapForm>
 
-        <input id="password" name="password" type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)}/>
-        <input id="confirm-password" name="confirm-password" type="password" placeholder="비밀번호확인" onChange={(e) => setPassword(e.target.value)}/>
+        <input id="password" name="password" type="password" placeholder="비밀번호" onKeyDown={spaceKey} onChange={(e) => setPassword(e.target.value)}/>
+        {
+          alertSpaceKey ? <AlertMsg>비밀번호에 사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
+          <PwdOverlapForm>
+          {passwordMsg ?<InfoMsg>비밀번호는 6자리 이상이어야 합니다.</InfoMsg>: <AlertMsg>비밀번호는 6자리 이상이어야 합니다.</AlertMsg>}
+          {alertPwd ?<CorrectMsg>사용 가능한 비밀번호 입니다.</CorrectMsg>:''}
+        </PwdOverlapForm>
+        }
+
+        <input id="repassword" name="repassword" type="password" placeholder="비밀번호확인" onChange={(e) => setRePassword(e.target.value)}/>
+        <PwdOverlapForm>
+          {rePasswordMsg ?<InfoMsg>확인을 위해 입력한 비밀번호를 다시 입력해주세요.</InfoMsg>: <AlertMsg>비밀번호가 일치하지 않습니다.</AlertMsg>}
+          {alertRePwd ?<CorrectMsg>비밀번호가 일치합니다.</CorrectMsg>:''}
+        </PwdOverlapForm>
+
 
 
 
 
 
       </SignUpForm>
-      
+      <SignUpButton>회원가입</SignUpButton>      
     </Container>
   )
 }
@@ -115,9 +200,12 @@ const SignUpForm=styled.div`
   display: flex;
   width: 300px;
   `
-  const OverlapConfirmButton=styled.button`
-  
+  const PwdOverlapForm=styled(OverlapForm)`
+  flex-direction: column;
   `
+  // const OverlapConfirmButton=styled.button`
+  
+  // `
 
 const SignUpButton=styled.button`
   font-size: 18px;
@@ -135,8 +223,15 @@ const SignUpButton=styled.button`
   background-color: rgb(71,182,181);
 `
 const AlertMsg=styled.div`
-width: 230px;
+width: 300px;
 text-align: left;
 font-size: small;
 color: red;
 `
+const InfoMsg=styled(AlertMsg)`
+color: #888888;
+`
+const CorrectMsg=styled(AlertMsg)`
+color: green;
+`
+

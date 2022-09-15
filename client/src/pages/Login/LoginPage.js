@@ -4,41 +4,72 @@ import {Link, useNavigate} from 'react-router-dom';
 
 const LoginPage = () => {
   const [id, setId] = useState("");
+  const [clickId, setClickId] = useState(false);
+
   const [password, setPassword] = useState("");
+  const [clickPassword, setClickPassword] = useState(false);
+
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
 
-  const userInfo={
+  const loginInfo={
     "userID":id,
     "password":password
   }
 
-  const loginAlertFunc=()=>{
-    setAlertId('');
-    setAlertPwd('');
-    
-      if (!id) {
-        setAlertId("아이디를 입력해 주세요.");
-      };
-      if (!password) {
-        setAlertPwd("비밀번호를 입력해 주세요.");
-      };
-     
+  
+const click =(event)=>{
+  if(event){
+     if(event.target.id==='id'){
+       setClickId(true)
+     }
+     if(event.target.id==='password'){
+      setClickPassword(true)
+     }
+   }
+ }
+ 
+const loginAlertFunc=()=>{
+  if(clickId){
+    if(!id.trim()){
+      setAlertId('아이디를 입력해 주세요.')
+    }else if(id.trim()){
+      setAlertId('')
     }
+  }
+
+  if(clickPassword){
+    if(!password.trim()){
+      setAlertPwd('비밀번호를 입력해 주세요.')
+    }else if(id.trim()){
+      setAlertPwd('')
+    }
+  }
+}
 
   const loginFunc=(event)=>{
     event.preventDefault();
-    loginAlertFunc();
     // loginPost();
    
   }
+  
+const tabKey=(e)=>{
+  if(e.key==="Tab"){
+    loginAlertFunc()
+  }
+}
+const tabKey2=(event)=>{
+  if(event.key==="Tab"){
+   click(event)
+  }
+}
   return (
-    <Container>
+    <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
         <LoginForm onSubmit={(event)=>loginFunc(event)}>
           <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
-          <input id="id" name="id" type='text' placeholder="아이디" onChange={(e) => setId(e.target.value)}/>
+          <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)}/>
           <AlertMsg>{alertId}</AlertMsg>
-          <input id="password" name="password" type="password" placeholder="비밀번호" onChange={(e) => setPassword(e.target.value)}/>
+          <input id="password" name="password" type="password" placeholder="비밀번호" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setPassword(e.target.value)}/>
           <AlertMsg>{alertPwd}</AlertMsg>
 
           <LoginButton type="submit">로그인</LoginButton>
@@ -46,7 +77,7 @@ const LoginPage = () => {
           
         </LoginForm>
           <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div></OauthLoginButton>
-          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 그인하기</div></OauthLoginButton>
+          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div></OauthLoginButton>
     </Container>
   )
 }
