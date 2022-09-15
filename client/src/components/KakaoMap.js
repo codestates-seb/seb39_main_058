@@ -13,8 +13,6 @@ const KakaoMap = () => {
 
     const map = new kakao.maps.Map(container, options);
 
-    console.log("loading kakaomap");
-    console.log(data);
     // HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
     if (navigator.geolocation) {
         
@@ -87,8 +85,8 @@ const KakaoMap = () => {
 
   return (
     <div id='map' style={{
-        width: '100vw',
-        height: '100vh'
+        width: '100%',
+        height: '92vh'
     }}></div>
   );
 };
