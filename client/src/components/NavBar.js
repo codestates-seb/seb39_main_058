@@ -34,17 +34,6 @@ function NavBar({welcome}) {
                 setSearchOn(!searchOn)
             }}><FaSearch/>검색</div>
         <div className='header'>
-            <div className='point'>포인트교환
-                <div className='drop'>
-                    <li>포인트교환</li>
-                </div>
-            </div>
-            <div className='news'>소식
-                <div className='drop news'>
-                    <li>공지사항</li>
-                    <li>이벤트</li>
-                </div>
-            </div>
             <div className='community'>커뮤니티
                 <div className='drop community'>
                     <li>자유게시판</li>
@@ -57,6 +46,17 @@ function NavBar({welcome}) {
                     <li>건의사항</li>
                     <li>신고제보</li>
                     <li>운영정책</li>
+                </div>
+            </div>
+            <div className='point'>포인트교환
+                <div className='drop'>
+                    <li>포인트교환</li>
+                </div>
+            </div>
+            <div className='news'>소식
+                <div className='drop news'>
+                    <li>공지사항</li>
+                    <li>이벤트</li>
                 </div>
             </div>
             {1 !== 1 ?
@@ -139,7 +139,7 @@ const NavBarStyle = styled.div`
     }
 
     .news{
-        margin-left: -1.5vw;
+        margin-left: -1vw;
     }
 
     .community{
