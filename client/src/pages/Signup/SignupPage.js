@@ -77,11 +77,13 @@ const overlapConfirm=()=>{
     }
   }
   if(clickEmail){
-
-      if ( ! email_check(emailInfo) ) {
+      if(emailInfo.length===0){
+        setAlertEmail('이메일을 입력해 주세요')
+      }
+      else if ( ! email_check(emailInfo) ) {
         setAlertEmail('이메일을 올바르게 입력해주세요.');
       }
-      if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
+      else if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
         setAlertEmail('')
         setAlertSpaceEmail(false)
         //post?get?요청함수
