@@ -19,20 +19,22 @@ const KakaoMap = () => {
     if (navigator.geolocation) {
         
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
             
             for(let i = 0; i < data.length; i++) {
                 const lat = data[i].위도;
                 const lon = data[i].경도;
                 
-                // const lat = position.coords.latitude; // 위도
-                // const lon = position.coords.longitude; // 경도
+                const lati = position.coords.latitude; // 위도
+                const long = position.coords.longitude; // 경도
                 
                 const locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+                const curPosition = new kakao.maps.LatLng(lati,long);
                 const message = `<div style="padding:10px;">${data[i].장소}</div>`; // 인포윈도우에 표시될 내용입니다
-                
+                const curMessage = '<div style="padding:10px;">현재 위치입니다.</div>'
                 // 마커와 인포윈도우를 표시합니다
                 displayMarker(locPosition, message);
+                displayMarker(curPosition, curMessage);
             }                
           });
         
