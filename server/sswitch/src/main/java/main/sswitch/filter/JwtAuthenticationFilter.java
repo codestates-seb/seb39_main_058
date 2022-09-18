@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String userName = principalDetails.getUser().getUserName();
 
         String json =
-                "{\"memberId\":" + userId + ",\n\"email\":\"" + loginId + "\",\n\"nickname\":\"" + userName + "\"}";
+                "{\"userId\":" + userId + ",\n\"loginId\":\"" + loginId + "\",\n\"userName\":\"" + userName + "\"}";
 
         String jwtToken = JWT.create()
                 .withSubject("cos jwt token")

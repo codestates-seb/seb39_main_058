@@ -48,7 +48,7 @@ public class UserDto {
         private String password;
 
         private User.UserStatus userStatus;
-        private User.UserRole userRole;
+        private User.UserRole role;
 
         public void setUserId(long userId) {
             this.userId = userId;
@@ -69,7 +69,7 @@ public class UserDto {
         private String email;
         private User.UserStatus userStatus;
         private User.Providers providers;
-        private User.UserRole userRole;
+        private User.UserRole role;
         private int point;
         public ResponseDto(User user) {
             this.userId = userId;
@@ -78,7 +78,7 @@ public class UserDto {
             this.email = email;
             this.userStatus = userStatus;
             this.providers = providers;
-            this.userRole = userRole;
+            this.role = role;
             this.point = point;
         }
 
