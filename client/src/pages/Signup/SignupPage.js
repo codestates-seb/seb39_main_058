@@ -33,8 +33,10 @@ function SignupPage() {
   const [alertSpacePwd,setAlertSpacePwd]=useState(false);
   const [alertSpaceEmail,setAlertSpaceEmail]=useState(false);
 
+  const [alertOverlapId,setAlertOverlapId]=useState('')
+  const [alertOverlapName,setAlertOverlapName]=useState('')
+  const [alertOverlapEmail,setAlertOverlapEmail]=useState('')
 
-  
 
 
 const click =(event)=>{
@@ -62,7 +64,7 @@ const overlapConfirm=()=>{
     } else if(spaceCheck(id)===true&&onlyEng(id)===true){
         setAlertId('')
         setAlertSpaceId(false)
-        //post?get?요청함수
+        //idPost()
       }
     
   }
@@ -73,7 +75,7 @@ const overlapConfirm=()=>{
     }else if(spaceCheck(name)===true){
       setAlertName('')
       setAlertSpaceName(false)
-        //post?get?요청함수
+        //namePost()
     }
   }
   if(clickEmail){
@@ -86,12 +88,94 @@ const overlapConfirm=()=>{
       else if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
         setAlertEmail('')
         setAlertSpaceEmail(false)
-        //post?get?요청함수
+        //emailPost()
       }
     }
     
 
 }
+
+const idPost = async()=>{
+
+
+  await fetch('http://localhost:8080/users', {
+
+  method: 'POST',
+  headers: { 'content-Type' : 'application/json'},
+  body: JSON.stringify(id)
+}).then((res) => {
+  // console.log(res)
+
+  //아이디 정보를 보냄 중복이면 이미 사용중인 아이디입니다.
+  //setAlertId('이미 사용중인 아이디입니다.')
+
+//중복이아니면 사용가능한아이디입니다. 
+  //setAlertId('')
+ // setAlertOverlapId('사용 가능한 아이디 입니다.')
+
+}).catch(() => {
+  alert(`err`)
+})
+}
+
+
+const namePost = async()=>{
+
+
+  await fetch('http://localhost:8080/users', {
+
+  method: 'POST',
+  headers: { 'content-Type' : 'application/json'},
+  body: JSON.stringify(name)
+}).then((res) => {
+  // console.log(res)
+
+  //아이디 정보를 보냄 중복이면 이미 사용중인 닉네임 입니다.
+  //setAlertName('이미 사용중인 닉네임 입니다.')
+
+  //중복이아니면 사용가능한닉네임입니다. 
+  //setAlertName('')
+ // setAlertOverlapName('사용 가능한 닉네임 입니다.')
+
+}).catch(() => {
+  alert(`err`)
+})
+}
+
+
+const emailPost = async()=>{
+
+
+  await fetch('http://localhost:8080/users', {
+
+  method: 'POST',
+  headers: { 'content-Type' : 'application/json'},
+  body: JSON.stringify(emailInfo)
+}).then((res) => {
+  // console.log(res)
+
+  //아이디 정보를 보냄 중복이면 이미 사용중인 이메일 입니다.
+  //setAlertEmail('이미 사용중인 이메일 입니다.')
+
+  //중복이아니면 사용가능한닉네임입니다. 
+  // setAlertEmail('')
+ // setAlertOverlapEmail('사용 가능한 이메일 입니다.')
+
+}).catch(() => {
+  alert(`err`)
+})
+}
+
+
+
+
+
+
+
+
+
+
+
 //이메일확인정규식
 function email_check( email) {
 
@@ -220,6 +304,7 @@ const signupPostFunc=async()=>{
           alertSpaceId ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <OverlapForm>
           <AlertMsg>{alertId}</AlertMsg>
+          <CorrectMsg>{alertOverlapId}</CorrectMsg>
         </OverlapForm>
         }
 
@@ -228,6 +313,8 @@ const signupPostFunc=async()=>{
           alertSpaceName ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <OverlapForm>
           <AlertMsg>{alertName}</AlertMsg>
+          <CorrectMsg>{alertOverlapName}</CorrectMsg>
+
         </OverlapForm>
           } 
         <input id="password" name="password" type="password" placeholder="비밀번호" onKeyDown={spaceKey} onChange={(e) => setPassword(e.target.value)}/>
@@ -250,6 +337,7 @@ const signupPostFunc=async()=>{
           alertSpaceEmail ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <OverlapForm>
         <AlertMsg>{alertEmail}</AlertMsg>
+        <CorrectMsg>{alertOverlapEmail}</CorrectMsg>
         </OverlapForm>
         }
 
