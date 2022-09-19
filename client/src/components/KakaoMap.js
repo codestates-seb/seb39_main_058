@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from 'react-redux'
+import { myLocation } from "../redux/action";
+
 
 const { kakao } = window;
 
 const KakaoMap = () => {
 
-  const [guro, setGuro] = useState([]);
-  const [a, setA] = useState(null)
-  const [b, setB] = useState(null)
+    const [guro, setGuro] = useState([]);
+    const [a, setA] = useState(null);
+    const [b, setB] = useState(null);
+    const dispatch = useDispatch();
+    const state = useSelector(state => state.locationReducer);
 
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -29,8 +34,9 @@ const KakaoMap = () => {
         var lat = position.coords.latitude, // 위도
             lon = position.coords.longitude; // 경도
 
-        setA(lat)
-        setB(lon)
+        dispatch(myLocation(lat, lon))
+        // setA(lat)
+        // setB(lon)
 
         var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
             message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
@@ -105,7 +111,7 @@ const KakaoMap = () => {
         width: '100%',
         height: '92vh'
     }}></div>
-    {/* {a === null ? <MapStyle>loding....</MapStyle> : undefined} */}
+    {a === null ? <MapStyle>loding....</MapStyle> : undefined}
     </>
   );
 };
