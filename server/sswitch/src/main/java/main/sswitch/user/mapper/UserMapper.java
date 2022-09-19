@@ -15,4 +15,5 @@ public interface UserMapper {
     UserDto.ResponseDto userToUserResponse(User user);
 
     List<UserDto.ResponseDto> usersToUserResponses(List<User> users);
+
 }

@@ -32,6 +32,7 @@ public class UserService {
     public User createUser(@NotNull User user) {
         verifyExistUser(user.getLoginId());
         verifyExistEmail(user.getEmail());
+        verifyExistUserName(user.getUserName());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(User.UserRole.ROLE_USER);
         user.setLoginId(user.getLoginId());
@@ -66,17 +67,29 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
+    private void verifyExistUser(String loginId) {
+        Optional<User> user = userRepository.findByLoginId(loginId);
+        if (user.isPresent())
+            throw new BusinessLogicException(ExceptionCode.USER_EXISTS);
+    }
+
+    private void verifyExistEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent())
+            throw new BusinessLogicException(ExceptionCode.EMAIL_EXISTS);
+    }
+
+    private void verifyExistUserName(String userName) {
+        Optional<User> user = userRepository.findByUsername(userName);
+        if (user.isPresent())
+            throw new BusinessLogicException(ExceptionCode.USERNAME_EXISTS);
+    }
+
     private User findVerifiedUser(long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User findUser = optionalUser.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         return findUser;
-    }
-
-    private void verifyExistUser(String loginId) {
-        Optional<User> user = userRepository.findByLoginId(loginId);
-        if (user.isPresent())
-            throw new BusinessLogicException(ExceptionCode.USER_EXISTS);
     }
 
     private User findVerifiedUserWithEmail(String email) {
@@ -86,10 +99,16 @@ public class UserService {
         return findEmail;
     }
 
-    private void verifyExistEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent())
-            throw new BusinessLogicException(ExceptionCode.EMAIL_EXISTS);
+    private User findVerifiedUserWithLoginId(String loginId) {
+        Optional<User> optionalUser = userRepository.findByLoginId(loginId);
+        User findLoginId = optionalUser.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.LOGINID_NOT_FOUND));
+        return findLoginId;
+    }
+
+    public User idCheck(String loginId) {
+        User user = findUserWithLoginId(loginId);
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -102,8 +121,27 @@ public class UserService {
         return findVerifiedUserWithEmail(email);
     }
 
+
+    @Transactional(readOnly = true)
+    public User findUserWithLoginId(String loginId) {
+        return findVerifiedUserWithLoginId(loginId);
+    }
+
     @Transactional(readOnly = true)
     public Page<User> userList(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
+
+    public boolean checkLoginId(String loginId) {
+        return userRepository.existsByLoginId(loginId);
+    }
+
+    public boolean checkEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean checkUsername(String userName) {
+        return userRepository.existsByUserName(userName);
+    }
+
 }

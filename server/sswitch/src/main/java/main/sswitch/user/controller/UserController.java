@@ -1,6 +1,5 @@
 package main.sswitch.user.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.dto.MultiResponseDto;
@@ -8,22 +7,27 @@ import main.sswitch.dto.SingleResponseDto;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
+import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
-import net.bytebuddy.TypeCache;
+import main.sswitch.web.SessionConst;
+import main.sswitch.web.SessionManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,31 +36,57 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final SessionManager sessionManager;
+
+    private final UserRepository userRepository;
+
+    @GetMapping("/")
+    public String home(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "redirect:/";
+        }
+        String loginId = (String) session.getAttribute(SessionConst.sessionId);
+        Optional<User> findUser = userRepository.findByLoginId(loginId);
+        User user = findUser.orElseThrow(null);
+
+        if (user == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "redirect:/";
+
+    }
 
     @PostMapping("/signup")
-    public ResponseEntity postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
+    public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);
 
         User createUser = userService.createUser(user);
         UserDto.ResponseDto response = userMapper.userToUserResponse(createUser);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
+        return "/";
     }
 
     @PostMapping("/login")
-    public ResponseEntity loginUser(@Valid @RequestBody UserDto.PostDto requestBody) {
+    public String loginUser(@Valid @RequestBody UserDto.PostDto requestBody, HttpServletResponse res) {
         User user = userMapper.userPostToUser(requestBody);
 
         User loginUser = userService.login(user);
-        UserDto.ResponseDto response = userMapper.userToUserResponse(loginUser);
+//        UserDto.ResponseDto response = userMapper.userToUserResponse(loginUser);
+        sessionManager.createSession(loginUser.getLoginId(), res);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+        return "redirect:/";
     }
 
-    @GetMapping("/users/logout")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
-
-        return ResponseEntity.ok().body("로그아웃 완료");
+    @PostMapping("/users/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "redirect:/";
+        }
+        sessionManager.sessionExpired(request);
+        return "redirect:/";
     }
 
     @DeleteMapping("/users/signout/{user_id}")
@@ -92,5 +122,19 @@ public class UserController {
         User user = userService.findUserWithEmail(email);
         UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/login-id/{loginId}/verification")
+    public ResponseEntity<Boolean> checkLoginId(@PathVariable String loginId) {
+        return ResponseEntity.ok(userService.checkLoginId(loginId));
+    }
+
+    @GetMapping("/email/{email}/verification")
+    public ResponseEntity<Boolean> checkEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.checkEmail(email));
+    }
+    @GetMapping("/username/{userName}/verification")
+    public ResponseEntity<Boolean> checkUsername(@PathVariable String userName) {
+        return ResponseEntity.ok(userService.checkUsername(userName));
     }
 }

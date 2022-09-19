@@ -11,7 +11,15 @@ public enum ExceptionCode {
 
     EMAIL_EXISTS(409, "Email exists"),
 
-    EMAIL_NOT_FOUND(404, "Email not found");
+    EMAIL_NOT_FOUND(404, "Email not found"),
+
+    LOGINID_EXISTS(409, "Email exists"),
+
+    LOGINID_NOT_FOUND(404, "Email not found"),
+
+    USERNAME_NOT_FOUND(404, "Username not found"),
+
+    USERNAME_EXISTS(409, "Username exists");
 
     @Getter
     private int status;
