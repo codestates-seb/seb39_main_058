@@ -2,9 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import KakaoMap from '../../components/KakaoMap';
 
-function MainPage() {
-
-  
+function MainPage() {  
   return (
     <div>
       <Test>가까운 쓰레기통 찾기</Test>

@@ -43,8 +43,6 @@ function NavBar({welcome}) {
                 <div className='drop'>
                     <li>채팅상담</li>
                     <li>FAQ</li>
-                    <li>건의사항</li>
-                    <li>신고제보</li>
                     <li>운영정책</li>
                 </div>
             </div>
@@ -59,8 +57,8 @@ function NavBar({welcome}) {
                     <li>이벤트</li>
                 </div>
             </div>
-            {1 !== 1 ?
-            <Link to='/login'>로그인</Link> :
+            {1 === 1 ?
+            <Link to='/login' onClick={clear}>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/:id' onClick={clear}>내정보</Link></li>
@@ -69,8 +67,8 @@ function NavBar({welcome}) {
                     {1 === 1 ? <li>관리자</li> : undefined}
                 </div>
             </div>}
-            {1 !== 1 ?
-            <Link to='/signup'>회원가입</Link> :
+            {1 === 1 ?
+            <Link to='/signup' onClick={clear}>회원가입</Link> :
             <div className='logout'>로그아웃</div>}
             <div className='drop_container'></div>
             </div>
@@ -87,7 +85,7 @@ function NavBar({welcome}) {
         undefined}
     </SearchInput>
         {noticeOn ?
-        <Notification>ㅁㄹㅁㄹ</Notification> :
+        <Notification>현재 알림이 없습니다.</Notification> :
         undefined}
     </>
   )
@@ -122,9 +120,9 @@ const NavBarStyle = styled.div`
         margin-left: -0.5vw;
         display: none;
         li{
-            padding: 0.3vh 0.5vw;
-            width: 100%;
-            margin: 1.5vh 0;
+            animation-name: drop_list;
+            animation-duration: 0.5s;
+            animation-fill-mode: forwards;
             cursor: pointer;
             :hover{
                 background-color: #E38B29;
@@ -135,6 +133,21 @@ const NavBarStyle = styled.div`
                     color: white;
                 }
             }
+        }
+    }
+
+    @keyframes drop_list {
+        0%{
+            padding: 0vh 0.5vw;
+            width: 100%;
+            opacity: 0;
+        }
+
+        100%{
+            padding: 0.3vh 0.5vw;
+            width: 100%;
+            margin: 1.5vh 0;
+            opacity: 1;
         }
     }
 
@@ -152,7 +165,7 @@ const NavBarStyle = styled.div`
         top: 6.5%;
         background-color: lightgray;
         width: 77%;
-        height: 25vh;
+        height: 20vh;
         z-index: 2;
         display: none;
         border-bottom-left-radius: 20px;
@@ -170,7 +183,19 @@ const NavBarStyle = styled.div`
         :hover{
             .drop , .drop_container{
                 display: block;
+                animation-name: slide_down;
+                animation-duration: 0.5s;
             }
+        }
+    }
+
+    @keyframes slide_down {
+        0%{
+            height: 6vh;
+        }
+
+        100%{
+            height: 20vh;
         }
     }
 
@@ -209,8 +234,8 @@ const NavBarStyle = styled.div`
 const SearchInput = styled.div`
 
     position: absolute;
-    width: 100%;
-    z-index: 1;
+    width: 95%;
+    z-index: 2;
 
     input{
         width: 90%;
@@ -227,7 +252,6 @@ const SearchInput = styled.div`
         padding: 1vh 2vw;
         cursor: pointer;
         border-radius: 20px;
-        margin-right: 1vw;
     }
 
     .search_bar{
