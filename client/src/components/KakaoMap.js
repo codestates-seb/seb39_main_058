@@ -6,8 +6,8 @@ const { kakao } = window;
 const KakaoMap = () => {
 
   const [guro, setGuro] = useState([]);
-  const [a, setA] = useState(null)
-  const [b, setB] = useState(null)
+  const [curLat, setCurLat] = useState(null);
+  const [curLon, setCurLon] = useState(null);
 
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -29,8 +29,8 @@ const KakaoMap = () => {
         var lat = position.coords.latitude, // 위도
             lon = position.coords.longitude; // 경도
 
-        setA(lat)
-        setB(lon)
+        setCurLat(lat);
+        setCurLon(lon);
 
         var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
             message = '<div style="padding:5px;">여기에 계신가요?!</div>'; // 인포윈도우에 표시될 내용입니다
@@ -67,7 +67,7 @@ const KakaoMap = () => {
 
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
             mapOption = { 
-                center: new kakao.maps.LatLng(a,b), // 지도의 중심좌표
+                center: new kakao.maps.LatLng(curLat, curLon), // 지도의 중심좌표
                 level: 6 // 지도의 확대 레벨
             };
 
@@ -105,7 +105,7 @@ const KakaoMap = () => {
         width: '100%',
         height: '92vh'
     }}></div>
-    {/* {a === null ? <MapStyle>loding....</MapStyle> : undefined} */}
+    {curLat === null ? <MapStyle>loading....</MapStyle> : undefined}
     </>
   );
 };
