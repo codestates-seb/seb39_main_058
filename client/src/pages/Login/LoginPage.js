@@ -3,6 +3,8 @@ import styled from "styled-components";
 import {Link, useNavigate} from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate=useNavigate();
+
   const [id, setId] = useState("");
   const [clickId, setClickId] = useState(false);
 
@@ -47,22 +49,54 @@ const loginAlertFunc=()=>{
   }
 }
 
-  const loginFunc=(event)=>{
-    event.preventDefault();
-    // loginPost();
-   
-  }
-  
 const tabKey=(e)=>{
   if(e.key==="Tab"){
     loginAlertFunc()
   }
 }
+
 const tabKey2=(event)=>{
   if(event.key==="Tab"){
-   click(event)
+    click(event)
   }
+
 }
+
+
+  const loginPost = async()=>{
+
+
+    await fetch('http://localhost:8080/login', {
+
+    method: 'POST',
+    headers: { 'content-Type' : 'application/json'},
+    body: JSON.stringify(loginInfo)
+  }).then((res) => {
+    // console.log(res)
+
+    
+    //아이디비번이 틀리면 아이디 혹은 비번이  틀렷습니다 라고 나와야함
+
+    //아이디비번이맞으면 토큰을받을테고 그토큰을 저장해야함 그리고 홈화면 이동시킴
+//  navigate('/')
+
+  }).catch(() => {
+    alert(`err`)
+  })
+}
+
+
+
+
+
+
+
+
+  const loginFunc=(event)=>{
+    event.preventDefault();
+    loginPost();
+   
+  }
   return (
     <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
         <LoginForm onSubmit={(event)=>loginFunc(event)}>
