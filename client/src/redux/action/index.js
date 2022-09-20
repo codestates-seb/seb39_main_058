@@ -4,6 +4,9 @@ export const MY_LOCATION = 'action/MY_LOCATION';
 export const myLocation = (lat, lon) => {
     return {
         type: MY_LOCATION,
-        payload: { lat, lon }
+        payload: { 
+            latitude: lat, 
+            longitude: lon
+        }
     }
 };
