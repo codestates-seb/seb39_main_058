@@ -142,7 +142,7 @@ const NearestTrashBtn = styled.div`
     height: 80px;
     font-size: 15px;
     position: absolute;
-    left: 50%;
+    left: 40%;
     bottom: 50px;
     color: white;
     border-radius: 10%;
