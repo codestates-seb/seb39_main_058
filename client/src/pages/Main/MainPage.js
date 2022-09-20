@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
-import { Map, MapMarker, Roadview } from "react-kakao-maps-sdk";
+import styled from "styled-components";
+import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
 
 function MainPage(){
 
@@ -34,8 +34,7 @@ function MainPage(){
             .catch(err => err)
     }, []);
     
-    const handleMyLocation = () => {
-        console.log('현재위치!');        
+    const handleMyLocation = () => {     
         navigator.geolocation.getCurrentPosition(position => {
             setInitLoc({
                 center: { lat: position.coords.latitude, lng: position.coords.longitude },
@@ -50,10 +49,8 @@ function MainPage(){
     };
 
     const findNearestTrash = () => {
-        // console.log('가까운 쓰레기통 찾기!');
         setRoadView(!roadView);
     }
-
 
     return (
         
@@ -66,11 +63,22 @@ function MainPage(){
                     { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
                     { lat: myLocation.center.lat, lng: myLocation.center.lng }
                     }>
-                    <div style={{color:"#000"}}>{ !myLocation.center.lat ? '초기 위치입니다.' : '현재위치' }</div>
                 </MapMarker>
+                <CustomOverlayMap position={ !myLocation.center.lat ? 
+                    { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
+                    { lat: myLocation.center.lat, lng: myLocation.center.lng }
+                    }>
+                    <CustomInfoWindow>
+                        <div className="center">{!myLocation.center.lat ? '구로구청' : '현재위치'}</div>
+                        <a  href={`https://map.kakao.com/link/to/${!myLocation.center.lat ? '구로구청,33.450701,126.570667' : `현재위치,${myLocation.center.lat},${myLocation.center.lng}`}`}
+                            target="_blank"
+                            rel="noreferrer">
+                            길찾기
+                        </a>
+                    </CustomInfoWindow>
+                </CustomOverlayMap>
                 
                 {guro.map((ele, idx) => (
-                    // console.log(ele.위도, ele.경도)
                     <MapMarker 
                         key={idx}
                         position={!ele.위도 ? { lat: 37.48289633, lng: 126.8868871 } : { lat: ele.위도, lng: ele.경도}}
@@ -104,7 +112,7 @@ const MyLocationBtn = styled.button`
     background: #63e6be;
     }
 
-    z-index: 5;
+    z-index: 4;
     cursor: pointer;
     width: 80px;
     height: 80px;
@@ -119,6 +127,7 @@ const MyLocationBtn = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
 `;
 
 const NearestTrashBtn = styled.div`
@@ -127,7 +136,7 @@ const NearestTrashBtn = styled.div`
     background: #63e6be;
     }
 
-    z-index: 5;
+    z-index: 4;
     cursor: pointer;
     width: 150px;
     height: 80px;
@@ -142,5 +151,27 @@ const NearestTrashBtn = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
 `;
 
+const CustomInfoWindow = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+    border-radius: 10%;
+    padding: 15px;
+    z-index: 6;
+    background-color: #38d9a9;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    a {
+        background: yellow;
+        color: black;
+        text-decoration: none;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 10%;
+    }
+`;
