@@ -23,7 +23,7 @@ function MainPage(){
         fetch(`https://api.odcloud.kr/api/15087773/v1/uddi:d9bdf233-ee41-46fe-8e08-bb74980f1155?page=1&perPage=292&serviceKey=JLEKtRKG4tdEBz4y7sC%2FevNdcgS0EiQ9jhzT%2Bt2pQyQdZyGO0DtMfVGTiosROFjB%2BgYobwwT2wuL5nIXoT4tQA%3D%3D`)
             .then(res => res.json())
             .then(data => {
-                console.log(data.data);
+                // console.log(data.data);
             })
             .catch(err => err)
     }, []);
