@@ -71,13 +71,38 @@ const tabKey2=(event)=>{
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},
     body: JSON.stringify(loginInfo)
-  }).then((res) => {
-    // console.log(res)
+  }).then((res) => res.json())
+  .then((data)=>{
 
+    //
+    if (/*json화된응답을받을때를 생각한거 백엔드가전해주는 응답을보고 다시수정야함*/
+     data['response']==='SUCCESS') {
+      sessionStorage.setItem("access_token", data.access_token);
+      //원래는 refresh토큰도 같이받을텐데 이것은 쿠키에 저장하고  acceess 토큰은 세션에저장
+      //그런데 우리는 자동로그인 기능이없으므로 refresh 토큰을 받았지만 쓸일이없음
+      //그러므로  refresh 토큰은 받았지만 어디다 저장하지 않을거임 쓸일이없고 로그인 할때마다 엑세스 토큰을 받아야하기때문
     
-    //아이디비번이 틀리면 아이디 혹은 비번이  틀렷습니다 라고 나와야함
 
-    //아이디비번이맞으면 토큰을받을테고 그토큰을 저장해야함 그리고 홈화면 이동시킴
+      // access 토큰만 사용하는데 sessionStorage에 저장하니까 페이지 닫으면 사라짐  
+     // 로그아웃버튼기능에 로그아웃을누르면   sessionStorage.removeItem("access_token")로 세션에 엑세스토큰을 지워주면됨
+     
+      //headers: {
+	    // Authorization: sessionStorage.getItem("access_token"),
+      // }
+      //이제 회원정보가 필요한 통신을 할때 위에부분을 헤더부분에 추가해 세션스토레지 저장한 access_token 을 
+      //불러와서 쓰는거임
+
+  
+//  navigate('/')
+    }
+    //else {
+    //setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')
+    //}
+    
+
+ 
+
+
 //  navigate('/')
 
   }).catch(() => {
@@ -93,7 +118,7 @@ const tabKey2=(event)=>{
 
 
   const loginFunc=(event)=>{
-    event.preventDefault();
+    event.preventDefault();// 통신성공하면 없애주자
     loginPost();
    
   }
