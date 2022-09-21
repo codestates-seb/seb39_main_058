@@ -39,7 +39,7 @@
 ### [프로젝트 프로토타입](https://www.figma.com/file/Rpy3eN8tFAYRHHYgeRxs17/Untitled?node-id=0%3A1)
 ### [사용자 요구사항 정의서](https://docs.google.com/spreadsheets/d/1_aL_k1XiEbeOjp34L2AyIYex2pmMOy65XnZCuy16nz0/edit?usp=sharing)
 ### [API 명세서](https://documenter.getpostman.com/view/21357729/VVBZQj34)
-### [ERD 명세서](https://www.erdcloud.com/)
+### [ERD 명세서](https://www.erdcloud.com/d/Jjw5kFR3JJ3tDBDpa)
 
 
 # Technical Stack
