@@ -37,9 +37,9 @@ function App() {
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
           <Route path='/users/:id' element={<User/>}/>
-          <Route path='/news' element={<NewsPage/>}/>
-          <Route path='/news/create' element={<NewsCreate/>}/>
-          <Route path='/community' element={<CommunityPage/>}/>
+          <Route path='/news/notice' element={<NewsPage/>}/>
+          <Route path='/news/notice/create' element={<NewsCreate/>}/>
+          <Route path='/community/forum' element={<CommunityPage/>}/>
           <Route path='/community/:id' element={<CommunityDetail/>}/>
           <Route path='/community/create' element={<CommunityCreate/>}/>
         </Routes>
