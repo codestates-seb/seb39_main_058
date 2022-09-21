@@ -38,6 +38,7 @@ public class UserService {
         user.setLoginId(user.getLoginId());
         user.setEmail(user.getEmail());
         user.setUserName(user.getUserName());
+        user.setPoint(0);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
         User savedUser = userRepository.save(user);
 

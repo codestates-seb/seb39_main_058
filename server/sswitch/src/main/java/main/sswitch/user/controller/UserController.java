@@ -9,8 +9,6 @@ import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
 import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
-import main.sswitch.web.SessionConst;
-import main.sswitch.web.SessionManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,11 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,57 +32,37 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-    private final SessionManager sessionManager;
 
     private final UserRepository userRepository;
 
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "redirect:/";
-        }
-        String loginId = (String) session.getAttribute(SessionConst.sessionId);
-        Optional<User> findUser = userRepository.findByLoginId(loginId);
-        User user = findUser.orElseThrow(null);
-
-        if (user == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("user", user);
-        return "redirect:/";
-
+        return "Main Page";
     }
 
     @PostMapping("/signup")
-    public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
+    public ResponseEntity postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);
 
         User createUser = userService.createUser(user);
         UserDto.ResponseDto response = userMapper.userToUserResponse(createUser);
 
-        return "/";
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public String loginUser(@Valid @RequestBody UserDto.PostDto requestBody, HttpServletResponse res) {
-        User user = userMapper.userPostToUser(requestBody);
-
+    public String loginUser(@Valid @RequestBody UserDto.PostDto requestBody, User user) {
+        user = userMapper.userPostToUser(requestBody);
+        user.removeTag();
         User loginUser = userService.login(user);
-//        UserDto.ResponseDto response = userMapper.userToUserResponse(loginUser);
-        sessionManager.createSession(loginUser.getLoginId(), res);
-
-        return "redirect:/";
+        return "로그인 완료";
     }
 
     @PostMapping("/users/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "redirect:/";
-        }
-        sessionManager.sessionExpired(request);
-        return "redirect:/";
+        String jwtToken = response.getHeader("Authorization");
+        response.setHeader("Authorization","Expired");
+        return "로그아웃";
     }
 
     @DeleteMapping("/users/signout/{user_id}")

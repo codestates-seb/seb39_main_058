@@ -41,12 +41,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**")
-//                .access("hasRole('ROLE_ADMIN')")
-//                .antMatchers("/signup")
-//                .permitAll()
-//                .antMatchers("/login")
                 .permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/users/*")
+                .access("hasRole('ROLE_USER')")
+                .anyRequest()
+                .permitAll();
         return httpSecurity.build();
     }
 

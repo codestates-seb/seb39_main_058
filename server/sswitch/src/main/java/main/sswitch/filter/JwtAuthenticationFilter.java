@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_FOUND);
             }
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getLoginId(),user.getPassword());
+            System.out.println(authenticationToken);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
@@ -62,17 +63,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String loginId = principalDetails.getUser().getLoginId();
         String userName = principalDetails.getUser().getUserName();
 
-        String json =
-                "{\"userId\":" + userId + ",\n\"loginId\":\"" + loginId + "\",\n\"userName\":\"" + userName + "\"}";
-
         String jwtToken = JWT.create()
                 .withSubject("cos jwt token")
                 .withExpiresAt(new Date(System.currentTimeMillis() + (60 * 1000 * 10)))
-                .withClaim("userId", principalDetails.getUser().getUserId())
-                .sign(Algorithm.HMAC512("cos_jwt_token"));
+                .withClaim("loginId", principalDetails.getUser().getLoginId())
+                .sign(Algorithm.HMAC512("${jwt.secret}"));
         response.addHeader("Authorization", "Bearer " + jwtToken);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        String json =
+                "{\"userId\":" + userId + ",\n\"loginId\":\"" + loginId + "\",\n\"userName\":\"" + userName + "\", \n\"jwtToken\":\"" + jwtToken + "\"}";
         response.getWriter().write(json);
     }
 }

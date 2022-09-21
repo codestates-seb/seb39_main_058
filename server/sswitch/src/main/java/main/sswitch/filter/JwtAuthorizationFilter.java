@@ -34,7 +34,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         String jwtToken = jwtHeader.replace("Bearer ", "");
-        String loginId = JWT.require(Algorithm.HMAC512("cos_jwt_token")).build().verify(jwtToken).getClaim("loginId").asString();
+        System.out.println(jwtToken);
+        String loginId = JWT.require(Algorithm.HMAC512("${jwt.secret}")).build().verify(jwtToken).getClaim("loginId").asString();
 
         if (loginId != null) {
             User userEntity = userRepository.findByLoginId(loginId).get();

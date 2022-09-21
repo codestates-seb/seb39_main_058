@@ -36,8 +36,8 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
-//    @Column(nullable = false)
-//    private Integer point;
+    @Column(nullable = false)
+    private Integer point;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "STATUS")
@@ -106,4 +106,11 @@ public class User extends BaseEntity {
         }
     }
 
+// XSS 공격 방지용
+    public void removeTag() {
+        this.loginId = this.loginId.replaceAll("<", "&lt;");
+        this.password = this.password.replaceAll(">", "&gt;");
+        this.userName = this.userName.replaceAll("<", "&lt;");
+        this.email = this.email.replaceAll(">", "&gt;");
+    }
 }
