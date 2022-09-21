@@ -1,0 +1,22 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/sswitch?serverTimezone=Asia/Seoul
+#    username: root
+#    password: YourSql1
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    show-sql: true
+#    hibernate:
+#      format_sql: true
+#      ddl-auto: update
+#
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+##        type:
+##          descriptor:
+##            sql:
+##              BasicBinder: TRACE
