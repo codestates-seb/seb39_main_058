@@ -6,6 +6,11 @@ import User from './pages/User/User';
 import KakaoMap from './pages/Main/MainPage';
 import Welcome from './components/Welcome';
 import NavBar from './components/NavBar';
+import NewsPage from './pages/News/NewsPage';
+import NewsCreate from './pages/News/NewsCreate';
+import CommunityPage from './pages/Community/CommunityPage';
+import CommunityDetail from './pages/Community/CommunityDetail';
+import CommunityCreate from './pages/Community/CommunityCreate';
 
 function App() {
   
@@ -26,16 +31,18 @@ function App() {
 
   return (
     <div>
-      {/* <Suspense fallback={<div>Loading...</div>}> */}
         {welcome === null ? undefined :<NavBar welcome={welcome} />}
         <Routes>
           <Route path='/' element={welcome === null ? <Welcome/> : <KakaoMap/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
           <Route path='/users/:id' element={<User/>}/>
-          <Route/>
+          <Route path='/news' element={<NewsPage/>}/>
+          <Route path='/news/create' element={<NewsCreate/>}/>
+          <Route path='/community' element={<CommunityPage/>}/>
+          <Route path='/community/:id' element={<CommunityDetail/>}/>
+          <Route path='/community/create' element={<CommunityCreate/>}/>
         </Routes>
-      {/* </Suspense> */}
     </div>  
   );
 }
