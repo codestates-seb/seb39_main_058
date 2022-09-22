@@ -1,8 +1,8 @@
 package main.sswitch.oauth.token;
 
 import lombok.AllArgsConstructor;
-import main.sswitch.excpetion.BusinessLogicException;
-import main.sswitch.excpetion.ExceptionCode;
+import main.sswitch.help.exceptions.BusinessLogicException;
+import main.sswitch.help.exceptions.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

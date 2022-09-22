@@ -2,11 +2,14 @@ package main.sswitch.user.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import main.sswitch.excpetion.BusinessLogicException;
-import main.sswitch.excpetion.ExceptionCode;
+//<<<<<<< HEAD
 import main.sswitch.oauth.token.RefreshTokenService;
 import main.sswitch.oauth.token.jwt.TokenDto;
 import main.sswitch.oauth.token.jwt.TokenProvider;
+//=======
+import main.sswitch.help.exceptions.BusinessLogicException;
+import main.sswitch.help.exceptions.ExceptionCode;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
 
@@ -111,10 +114,24 @@ public class UserService {
         return findLoginId;
     }
 
+//<<<<<<< HEAD
 //    public User idCheck(String loginId) {
 //        User user = findUserWithLoginId(loginId);
 //        return user;
 //    }
+//=======
+//    private User findVerifiedUserRole(String role) {
+//        Optional<User> optionalUser = userRepository.findByRole(role);
+//        User findRole = optionalUser.orElseThrow(() ->
+//                new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+//        return findRole;
+//    }
+
+    public User idCheck(String loginId) {
+        User user = findUserWithLoginId(loginId);
+        return user;
+    }
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {

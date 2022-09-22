@@ -2,14 +2,24 @@ package main.sswitch.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main.sswitch.dto.MultiResponseDto;
-import main.sswitch.dto.SingleResponseDto;
+//<<<<<<< HEAD
+//import main.sswitch.dto.MultiResponseDto;
+//import main.sswitch.dto.SingleResponseDto;
 import main.sswitch.oauth.token.jwt.TokenDto;
+//=======
+import main.sswitch.help.response.dto.MultiResponseDto;
+import main.sswitch.help.response.dto.SingleResponseDto;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
 import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
+//<<<<<<< HEAD
+//=======
+import main.sswitch.security.web.SessionConst;
+import main.sswitch.security.web.SessionManager;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

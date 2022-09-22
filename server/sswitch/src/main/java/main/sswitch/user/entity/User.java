@@ -1,11 +1,19 @@
 package main.sswitch.user.entity;
 
+//<<<<<<< HEAD
 import lombok.*;
-import main.sswitch.audit.BaseEntity;
+//=======
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.news.notice.entity.Notice;
+import main.sswitch.help.audit.BaseEntity;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +54,15 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<Forum> forums = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Notice> notices = new ArrayList<>();
 
     boolean enabled = false;
     @Builder
