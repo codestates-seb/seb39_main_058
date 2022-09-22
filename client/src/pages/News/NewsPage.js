@@ -38,24 +38,22 @@ const list = [
 
 const NewsPage = () => {
 
-  const [item, setItem] = useState(undefined)
-  const [click, setClick] = useState(false)
-  const [del, setDel] = useState(false)
-  const [check, setCheck] = useState([])
-  const [completion, setCompletion] = useState(false)
+  const [item, setItem] = useState(undefined) // 몇번째 공지가 열렸는지 비교하기 위해서 만든 스테이트
+  const [click, setClick] = useState(false) // 공지를 눌를때 아코디언이 열렸다 닫혔다를 관리하기 위한 스테이트
+  const [del, setDel] = useState(false) // 체크박스가 보이고 안보이고를 관리해주는 스테이트
+  const [check, setCheck] = useState([]) // 삭제할때 체크박스 다중체크할때 어떤것들이 체크되었나 담아주기위한 스테이트
+  const [completion, setCompletion] = useState(false) // 체크박스를 선택하고 삭제버튼을 누를때 최종적으로 확인을 물어보는 창을 열고 닫기위한 스테이트 
 
-  const handleCheckButton = (id) => {
-    if(check.includes(id) === true){
-      let checked = check.filter(el => {
+  const handleCheckButton = (id) => { // 체크된 항목의 id가 이미 있는지 비교해주기 위한 함수
+    if(check.includes(id) === true){ // 이미 있는 값이라면 필터링해서 그얘를 제외한 나머지를 다시 check에 할당해줌
+      let filteredValue = check.filter(el => {
         return el !== id
       })
-      setCheck(checked)
+      setCheck(filteredValue)
     }else{
-      setCheck([...check , id])
+      setCheck([...check , id]) // 없는값이면 그대로 기존 배열에 추가시켜줌
     }
   }
-
-  // console.log(check)
 
   return (
     <NewsStyle>
@@ -67,11 +65,9 @@ const NewsPage = () => {
           check.length === 0 ?
           setDel(false) :
           setCompletion(true)
-
         }}>완료</div>:
         <div className='delete' onClick={() => {
           setDel(true)
-          alert("원하시는 항목을 체크해주세요!")
         }}>삭제</div>}
       </div>
       {completion ?
@@ -131,7 +127,7 @@ const NewsStyle = styled.div`
   flex-direction: column;
   height: ${list.length >= 5 ? "100%" : "94vh"};
   width: 100%;
-  background-color: ivory;
+  /* background-color: ivory; */
   border-radius: 30px;
 
   .back_drop{
@@ -275,6 +271,20 @@ const NewsStyle = styled.div`
     font-size: 2vmin;
     white-space: pre-wrap;
     word-break: keep-all;
+    animation-name: drop;
+    animation-duration: .5s;
+  }
+
+  @keyframes drop {
+
+    0%{
+      transform: translateY(-30%);
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
 
 `
