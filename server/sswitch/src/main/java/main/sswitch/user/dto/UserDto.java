@@ -18,12 +18,14 @@ public class UserDto {
         private long userId;
 
         @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
+        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String loginId;
 
         @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
         private String password;
 
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
+        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String userName;
 
         @NotBlank(message = "사용자 이메일 주소는 공백이 아니어야 합니다.")

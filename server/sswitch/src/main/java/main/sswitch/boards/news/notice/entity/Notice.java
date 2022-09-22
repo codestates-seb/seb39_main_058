@@ -29,7 +29,7 @@ public class Notice extends BaseEntity {
     @Column(length = 255, nullable = false)
     public String noticeTitle;
 
-    @Column(length = 20000, nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     public String noticeText;
 
     public void setUser(User user) {

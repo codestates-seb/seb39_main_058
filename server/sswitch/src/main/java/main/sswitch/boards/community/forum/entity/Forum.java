@@ -24,7 +24,7 @@ public class Forum extends BaseEntity {
     @Column(length = 255, nullable = false)
     private String forumTitle;
 
-    @Column(length = 20000, nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     private String forumText;
 
     @Column(nullable = false)

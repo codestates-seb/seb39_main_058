@@ -20,6 +20,7 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(columnDefinition = "text", nullable = false)
     private String commentText;
 
     //User Table Mapping
