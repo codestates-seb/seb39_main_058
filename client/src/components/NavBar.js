@@ -96,7 +96,6 @@ function NavBar({welcome}) {
 export default NavBar
 
 const NavBarStyle = styled.div`
-    width: 100%;
     height: 6vh;
     display: flex;
     align-items: center;
@@ -166,7 +165,7 @@ const NavBarStyle = styled.div`
         right: 0;
         top: 6.5%;
         background-color: lightgray;
-        width: 77%;
+        width: 79%;
         height: 20vh;
         z-index: 3;
         display: none;

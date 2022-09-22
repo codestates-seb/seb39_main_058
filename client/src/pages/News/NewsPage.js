@@ -5,8 +5,7 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 const list = [
         { id:0, title: '여행상품 예약은 어떻게 하나요 ?',
             content:
-`여행상품의 예약은 온라인상에서, 전화, 또는 e-mail을 통해 문의 및 예약하실수 있으며, 
-365일 24시간 언제든지 예약하실 수 있습니다.
+`여행상품의 예약은 온라인상에서, 전화, 또는 e-mail을 통해 문의 및 예약하실수 있으며, 365일 24시간 언제든지 예약하실 수 있습니다.
     
 (단, 전화상담 가능시간 평일 09:00~18:00 / 토,일요일 및 공휴일 휴무)
     
@@ -41,13 +40,61 @@ const NewsPage = () => {
 
   const [item, setItem] = useState(undefined)
   const [click, setClick] = useState(false)
+  const [del, setDel] = useState(false)
+  const [check, setCheck] = useState([])
+  const [completion, setCompletion] = useState(false)
+
+  const handleCheckButton = (id) => {
+    if(check.includes(id) === true){
+      let checked = check.filter(el => {
+        return el !== id
+      })
+      setCheck(checked)
+    }else{
+      setCheck([...check , id])
+    }
+  }
+
+  // console.log(check)
 
   return (
     <NewsStyle>
       <div className='title'>공지사항</div>
+      <div className='manager'>
+        <div className='ask'>글쓰기</div>
+        {del ?
+        <div className='completion' onClick={() => {
+          check.length === 0 ?
+          setDel(false) :
+          setCompletion(true)
+
+        }}>완료</div>:
+        <div className='delete' onClick={() => {
+          setDel(true)
+          alert("원하시는 항목을 체크해주세요!")
+        }}>삭제</div>}
+      </div>
+      {completion ?
+      <div className='back_drop'>
+        <div className='view'>
+          <div>정말 삭제하시겠습니까?</div>
+          <div className='confirm'>
+            <div onClick={() => {
+              setCompletion(false)
+              window.location.reload()
+              // handleDeletButton()
+            }}>확인</div>
+            <div onClick={() => {
+              setCompletion(false)
+            }}>취소</div>
+          </div>
+        </div>
+      </div> :
+      undefined}
         {list.map(el => {
           return(
-            <div className='list_container' key={el.id} onClick={() => {
+            <div className='container' key={el.id}>
+            <div className='list_container' onClick={() => {
               setItem(el.id)
               item === el.id ? setClick(!click) : setClick(true)
             }}>
@@ -59,6 +106,10 @@ const NewsPage = () => {
                 {item === el.id && click === true ?
                 <div className='content_detail'>{el.content}</div>:
                 undefined}
+            </div>
+                {del ? <input type='checkbox' onClick={() => {
+                  handleCheckButton(el.id)
+                }} /> : undefined}
             </div>
           )
         })}
@@ -81,6 +132,88 @@ const NewsStyle = styled.div`
   height: ${list.length >= 5 ? "100%" : "94vh"};
   width: 100%;
   background-color: ivory;
+  border-radius: 30px;
+
+  .back_drop{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .view{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    width: 30vw;
+    height: 20vh;
+    border-radius: 1rem;
+    font-size: 3vmin;
+
+    .confirm{
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      div{
+        border: 3px solid black;
+        padding: 0.5vh 1vw;
+        border-radius: 10px;
+        cursor: pointer;
+
+        :hover{
+          background-color: gray;
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .ask, .delete, .completion{
+    font-size: 2vmin;
+    margin: 1vh 1vw;
+    padding: 1vh 1vw;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .completion:hover{
+    color: white;
+    background-color: #357C3C;
+    font-weight: bold;
+  }
+
+  .ask:hover{
+    color: white;
+    background-color: gray;
+    font-weight: bold;
+  }
+
+  .delete:hover{
+    color: white;
+    background-color: #FF1E00;
+    font-weight: bold;
+  }
+
+  .manager{
+    display: flex;
+    justify-content: end;
+    width: 70%;
+  }
+
+  .container{
+    display: flex;
+  }
 
   .notice{
     color: rgb(71,182,181);
@@ -133,6 +266,7 @@ const NewsStyle = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 5vh;
   }
 
   .content_detail{
