@@ -10,9 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PrincipalDetailService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -21,6 +23,6 @@ public class PrincipalDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         User userEntity = userRepository.findByLoginId(loginId).orElseThrow(()->
                 new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-        return new PrincipalDetails(userEntity);
+        return PrincipalDetails.create(userEntity);
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.dto.MultiResponseDto;
 import main.sswitch.dto.SingleResponseDto;
+import main.sswitch.oauth.token.jwt.TokenDto;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
@@ -51,11 +52,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@Valid @RequestBody UserDto.PostDto requestBody, User user) {
-        user = userMapper.userPostToUser(requestBody);
-        user.removeTag();
-        User loginUser = userService.login(user);
-        return "로그인 완료";
+    public ResponseEntity loginUser(@Valid @RequestBody UserDto.LoginDto loginDto, HttpServletResponse res) {
+        TokenDto.TokenDetailsDto tokenDetailsDto = userService.login(userMapper.userLoginToUser(loginDto), res);
+        return new ResponseEntity(new SingleResponseDto<>(tokenDetailsDto), HttpStatus.OK);
     }
 
     @PostMapping("/users/logout")
@@ -85,7 +84,7 @@ public class UserController {
         return new ResponseEntity<>(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public ResponseEntity getUsers(@PageableDefault(size = 10, sort = "userName", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<User> users = userService.userList(pageable);
         List<User> userList = users.getContent();

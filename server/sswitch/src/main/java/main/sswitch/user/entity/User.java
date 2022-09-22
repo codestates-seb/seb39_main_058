@@ -1,9 +1,6 @@
 package main.sswitch.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.sswitch.audit.BaseEntity;
 
 import javax.persistence.*;
@@ -43,22 +40,27 @@ public class User extends BaseEntity {
     @Column(nullable = false, name = "STATUS")
     private UserStatus userStatus = UserStatus.USER_EXIST;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "ROLE")
-    private UserRole role = UserRole.ROLE_GUEST;
+    private String role;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
 
     boolean enabled = false;
-
-    public User(String loginId, String password, String userName, String email) {
+    @Builder
+    public User(Long userId, String loginId, String password, String userName, String email, Integer point, UserStatus userStatus, String role, Providers providers) {
+        this.userId = userId;
         this.loginId = loginId;
         this.password = password;
         this.userName = userName;
         this.email = email;
+        this.point = point;
+        this.userStatus = userStatus;
+        this.role = role;
+        this.providers = providers;
     }
+
 
     public enum UserStatus {
         USER_NOT_EXIST("지금 입력하신 회원은 존재하지 않습니다"),
@@ -72,26 +74,12 @@ public class User extends BaseEntity {
         }
     }
 
-    public enum UserRole {
-        ROLE_ADMIN("관리자 계정"),
-        ROLE_USER("회원 계정"),
-        ROLE_GUEST("게스트 계정");
-
-        @Getter
-        @Setter
-        private String role;
-
-        UserRole(String role) {
-            this.role = role;
-        }
-
         public List<String> getRoleList() {
             if (this.role.length() > 0) {
                 return Arrays.asList(this.role.split(","));
             }
             return new ArrayList<>();
         }
-    }
 
     public enum Providers {
         PROVIDER_GOOGLE("구글"),
@@ -105,6 +93,7 @@ public class User extends BaseEntity {
             this.providers = providers;
         }
     }
+
 
 // XSS 공격 방지용
     public void removeTag() {
