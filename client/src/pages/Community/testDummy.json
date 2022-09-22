@@ -1,16 +1,18 @@
 {
-    "data": {
-        "forumId": 2,
-        "tag": "FREE_BOARD",
-        "secret": "OPEN",
-        "forumTitle": "TestTitle4",
-        "forumText": "TestText4TestText4TestText4TestText4",
-        "forumLike": 0,
-        "createdAt": null,
-        "modifiedAt": null,
-        "userId": 0,
-        "commentResponses": [],
-        "forumSecret": "공개글",
-        "forumTag": "자유 게시판"
-    }
+    "data": [
+        {
+            "forumId": 2,
+            "tag": [ "강남구", "구로구", "동작구", "관악구", "마포구" ],
+            "secret": "OPEN",
+            "forumTitle": "TestTitle4",
+            "forumText": "TestText4TestText4TestText4TestText4",
+            "forumLike": 0,
+            "createdAt": null,
+            "modifiedAt": null,
+            "userId": 0,
+            "commentResponses": [],
+            "forumSecret": "공개글",
+            "forumTag": "자유 게시판"
+        }
+    ]
 }
