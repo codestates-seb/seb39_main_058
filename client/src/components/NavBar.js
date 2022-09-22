@@ -28,7 +28,9 @@ function NavBar({welcome}) {
     }
     <NavBarStyle>
         <div className='main_title'>
-            <Link to='/' onClick={clear}>쓰위치</Link>
+            <Link to='/' onClick={() => {
+                clear()
+            }}>쓰위치</Link>
         </div>
             <div className='search' onClick={() => {
                 setSearchOn(!searchOn)
@@ -36,7 +38,7 @@ function NavBar({welcome}) {
         <div className='header'>
             <div className='community'>커뮤니티
                 <div className='drop community'>
-                    <li>자유게시판</li>
+                    <li><Link to = '/community/forum'>자유게시판</Link></li>
                 </div>
             </div>
             <div className='service_center'>고객센터
@@ -53,7 +55,7 @@ function NavBar({welcome}) {
             </div>
             <div className='news'>소식
                 <div className='drop news'>
-                    <li>공지사항</li>
+                    <li><Link to= '/news/notice'>공지사항</Link></li>
                     <li>이벤트</li>
                 </div>
             </div>
@@ -71,7 +73,7 @@ function NavBar({welcome}) {
             <Link to='/signup' onClick={clear}>회원가입</Link> :
             <div className='logout'>로그아웃</div>}
             <div className='drop_container'></div>
-            </div>
+        </div>
             <div className='notice' onClick={() => {
                 setNoticeOn(!noticeOn)
             }}><AiOutlineBell/></div>
@@ -116,7 +118,7 @@ const NavBarStyle = styled.div`
         position: absolute;
         margin-top: 2vh;
         font-size: 2vmin;
-        z-index: 3;
+        z-index: 4;
         margin-left: -0.5vw;
         display: none;
         li{
@@ -166,7 +168,7 @@ const NavBarStyle = styled.div`
         background-color: lightgray;
         width: 77%;
         height: 20vh;
-        z-index: 2;
+        z-index: 3;
         display: none;
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
@@ -278,7 +280,6 @@ const Notification = styled.div`
 
 const MobileSearchInput = styled.div`
     display: none;
-    position: absolute;
     width: 103%;
     background-color: white;
     margin-left: -2.5vw;

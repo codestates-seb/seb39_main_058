@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
+import { BiCurrentLocation } from "react-icons/bi";
 
 function MainPage(){
 
@@ -36,11 +37,11 @@ function MainPage(){
     
     const handleMyLocation = () => {     
         navigator.geolocation.getCurrentPosition(position => {
-            setInitLoc({
+            setMyLocation({
                 center: { lat: position.coords.latitude, lng: position.coords.longitude },
                 isPanto: false,
             });
-            setMyLocation({
+            setInitLoc({
                 center: { lat: position.coords.latitude, lng: position.coords.longitude },
                 isPanto: false,
             });
@@ -72,8 +73,9 @@ function MainPage(){
                         <div className="center">{!myLocation.center.lat ? '구로구청' : '현재위치'}</div>
                         <a  href={`https://map.kakao.com/link/to/${!myLocation.center.lat ? '구로구청,33.450701,126.570667' : `현재위치,${myLocation.center.lat},${myLocation.center.lng}`}`}
                             target="_blank"
-                            rel="noreferrer">
-                            길찾기
+                            rel="noreferrer"
+                            className={initLoc.center.lat !== 37.495025886857 ? "none" : undefined}>
+                                길찾기
                         </a>
                     </CustomInfoWindow>
                 </CustomOverlayMap>
@@ -91,7 +93,10 @@ function MainPage(){
                         }}
                     />
                 ))}
-                <MyLocationBtn onClick={handleMyLocation}>현위치</MyLocationBtn>
+                <MyLocationBtn onClick={handleMyLocation}>
+                    <BiCurrentLocation className="location_icon"/>
+                    <div className="guide">현위치 찾기</div>
+                </MyLocationBtn>
                 <NearestTrashBtn onClick={findNearestTrash} roadView={roadView}>{ !roadView ? '가까운 쓰레기통 찾기' : '지도보기'}</NearestTrashBtn>
             </Map> : 
             <>
@@ -106,52 +111,76 @@ function MainPage(){
 
 export default MainPage;
 
-const MyLocationBtn = styled.button`
-    background: #38d9a9;
-    &:hover {
-    background: #63e6be;
+const MyLocationBtn = styled.div`
+    :hover {
+        .location_icon{
+            color: lightgray;
+        }
+
+        .guide{
+            display: block;
+            position: absolute;
+            top: 10%;
+            right: 9%;
+            z-index: 1;
+            background-color: #73777B;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1vh 1vw;
+            font-size: 2vmin;
+        }
     }
 
-    z-index: 4;
-    cursor: pointer;
-    width: 80px;
-    height: 80px;
-    font-size: 20px;
-    position: absolute;
-    left: 20%;
-    bottom: 50px;
-    color: white;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Courier New', Courier, monospace;
+    .location_icon{
+        background: white;
+        cursor: pointer;
+        z-index: 1;
+        font-size: 3.5vmin;
+        position: absolute;
+        right: 3%;
+        top: 10%;
+        color: black;
+        border-radius: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5vh 1vw;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
+                    0 2px 2px rgba(0,0,0,0.11), 
+                    0 4px 4px rgba(0,0,0,0.11), 
+                    0 6px 8px rgba(0,0,0,0.11),
+                    0 8px 16px rgba(0,0,0,0.11);
+    }
+
+    .guide{
+        display: none;
+    }
 `;
 
 const NearestTrashBtn = styled.div`
-    background: #38d9a9;
     &:hover {
-    background: #63e6be;
+        font-weight: bold;
     }
 
-    z-index: 4;
+    z-index: 1;
     cursor: pointer;
-    width: 150px;
-    height: 80px;
-    font-size: 15px;
+    font-size: 2vmin;
     position: absolute;
-    left: 40%;
-    bottom: 50px;
-    color: white;
-    border-radius: 10%;
-    border: none;
-    outline: none;
+    left: 42vw;
+    bottom: 3%;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Courier New', Courier, monospace;
+    padding: 1vh 2vw;
+    background-color: white;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
+                0 2px 2px rgba(0,0,0,0.11), 
+                0 4px 4px rgba(0,0,0,0.11), 
+                0 6px 8px rgba(0,0,0,0.11),
+                0 8px 16px rgba(0,0,0,0.11);
 `;
 
 const CustomInfoWindow = styled.div`
@@ -159,19 +188,32 @@ const CustomInfoWindow = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 80px;
     border-radius: 10%;
-    padding: 15px;
-    z-index: 6;
-    background-color: #38d9a9;
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
+    padding: 10px 15px;
+    background-color: white;
+    border: 3px solid #277BC0;
+    color: black;
+    margin: -95px 0px;
+    cursor: default;
+
     a {
-        background: yellow;
-        color: black;
+        background: #277BC0;
+        color: white;
         text-decoration: none;
-        margin-top: 10px;
-        padding: 5px;
+        margin-top: 7px;
+        padding: 7px 10px;
         border-radius: 10%;
+
+        :hover{
+            font-weight: bold;
+        }
+    }
+
+    .center{
+        font-size: 20px;
+    }
+
+    .none{
+        display: none;
     }
 `;
