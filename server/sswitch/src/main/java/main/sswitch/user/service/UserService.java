@@ -1,56 +1,65 @@
 package main.sswitch.user.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import main.sswitch.excpetion.BusinessLogicException;
-import main.sswitch.excpetion.ExceptionCode;
+//<<<<<<< HEAD
+import main.sswitch.oauth.token.RefreshTokenService;
+import main.sswitch.oauth.token.jwt.TokenDto;
+import main.sswitch.oauth.token.jwt.TokenProvider;
+//=======
+import main.sswitch.help.exceptions.BusinessLogicException;
+import main.sswitch.help.exceptions.ExceptionCode;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Transactional
 @Service
 @Builder
+@AllArgsConstructor
 public class UserService {
-    @Autowired
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public User createUser(@NotNull User user) {
+    public User createUser(User user) {
         verifyExistUser(user.getLoginId());
         verifyExistEmail(user.getEmail());
         verifyExistUserName(user.getUserName());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRole(User.UserRole.ROLE_USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setLoginId(user.getLoginId());
         user.setEmail(user.getEmail());
         user.setUserName(user.getUserName());
+        user.setRole("ROLE_USER");
+        user.setUserStatus(User.UserStatus.USER_EXIST);
+        user.setPoint(0);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
         User savedUser = userRepository.save(user);
 
         return savedUser;
     }
 
-    public User login(User user) {
+    public TokenDto.TokenDetailsDto login(User user, HttpServletResponse response) {
         Optional<User> optionalUser = userRepository.findByLoginId(user.getLoginId());
         User findUser = optionalUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-        if (!findUser.getPassword().equals(bCryptPasswordEncoder.encode(user.getPassword()))) {
+        if (!passwordEncoder.matches(user.getPassword(), findUser.getPassword())) {
             throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_FOUND);
         }
-        return findUser;
+        return tokenProvider.createToken(findUser, response);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
@@ -84,21 +93,20 @@ public class UserService {
         if (user.isPresent())
             throw new BusinessLogicException(ExceptionCode.USERNAME_EXISTS);
     }
-
     private User findVerifiedUser(long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         User findUser = optionalUser.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         return findUser;
     }
-
+//
     private User findVerifiedUserWithEmail(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         User findEmail = optionalUser.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.EMAIL_NOT_FOUND));
         return findEmail;
     }
-
+//
     private User findVerifiedUserWithLoginId(String loginId) {
         Optional<User> optionalUser = userRepository.findByLoginId(loginId);
         User findLoginId = optionalUser.orElseThrow(() ->
@@ -106,10 +114,24 @@ public class UserService {
         return findLoginId;
     }
 
+//<<<<<<< HEAD
+//    public User idCheck(String loginId) {
+//        User user = findUserWithLoginId(loginId);
+//        return user;
+//    }
+//=======
+//    private User findVerifiedUserRole(String role) {
+//        Optional<User> optionalUser = userRepository.findByRole(role);
+//        User findRole = optionalUser.orElseThrow(() ->
+//                new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
+//        return findRole;
+//    }
+
     public User idCheck(String loginId) {
         User user = findUserWithLoginId(loginId);
         return user;
     }
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {
@@ -143,5 +165,8 @@ public class UserService {
     public boolean checkUsername(String userName) {
         return userRepository.existsByUserName(userName);
     }
+
+
+
 
 }

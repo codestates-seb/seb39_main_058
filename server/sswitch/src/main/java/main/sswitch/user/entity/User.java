@@ -1,14 +1,19 @@
 package main.sswitch.user.entity;
 
+//<<<<<<< HEAD
+import lombok.*;
+//=======
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.sswitch.audit.BaseEntity;
+import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.news.notice.entity.Notice;
+import main.sswitch.help.audit.BaseEntity;
+//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,29 +41,43 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
-//    @Column(nullable = false)
-//    private Integer point;
+    @Column(nullable = false)
+    private Integer point;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "STATUS")
     private UserStatus userStatus = UserStatus.USER_EXIST;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "ROLE")
-    private UserRole role = UserRole.ROLE_GUEST;
+    private String role;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
 
-    boolean enabled = false;
+//    @OneToMany(mappedBy = "user")
+//    private List<Forum> forums = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Notice> notices = new ArrayList<>();
 
-    public User(String loginId, String password, String userName, String email) {
+    boolean enabled = false;
+    @Builder
+    public User(Long userId, String loginId, String password, String userName, String email, Integer point, UserStatus userStatus, String role, Providers providers) {
+        this.userId = userId;
         this.loginId = loginId;
         this.password = password;
         this.userName = userName;
         this.email = email;
+        this.point = point;
+        this.userStatus = userStatus;
+        this.role = role;
+        this.providers = providers;
     }
+
 
     public enum UserStatus {
         USER_NOT_EXIST("지금 입력하신 회원은 존재하지 않습니다"),
@@ -72,26 +91,12 @@ public class User extends BaseEntity {
         }
     }
 
-    public enum UserRole {
-        ROLE_ADMIN("관리자 계정"),
-        ROLE_USER("회원 계정"),
-        ROLE_GUEST("게스트 계정");
-
-        @Getter
-        @Setter
-        private String role;
-
-        UserRole(String role) {
-            this.role = role;
-        }
-
         public List<String> getRoleList() {
             if (this.role.length() > 0) {
                 return Arrays.asList(this.role.split(","));
             }
             return new ArrayList<>();
         }
-    }
 
     public enum Providers {
         PROVIDER_GOOGLE("구글"),
@@ -106,4 +111,12 @@ public class User extends BaseEntity {
         }
     }
 
+
+// XSS 공격 방지용
+    public void removeTag() {
+        this.loginId = this.loginId.replaceAll("<", "&lt;");
+        this.password = this.password.replaceAll(">", "&gt;");
+        this.userName = this.userName.replaceAll("<", "&lt;");
+        this.email = this.email.replaceAll(">", "&gt;");
+    }
 }

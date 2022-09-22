@@ -9,11 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 @EnableJpaAuditing
 public class SswitchApplication {
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(SswitchApplication.class, args);
 	}
