@@ -1,7 +1,7 @@
 import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useNavigate} from 'react-router-dom';
-import { useEffect } from 'react';
+
 
 
 function SignupPage() {
@@ -64,7 +64,7 @@ const overlapConfirm=()=>{
     } else if(spaceCheck(id)===true&&onlyEng(id)===true){
         setAlertId('')
         setAlertSpaceId(false)
-        //idPost()
+        idPost()
       }
     
   }
@@ -75,7 +75,7 @@ const overlapConfirm=()=>{
     }else if(spaceCheck(name)===true){
       setAlertName('')
       setAlertSpaceName(false)
-        //namePost()
+        namePost()
     }
   }
   if(clickEmail){
@@ -88,7 +88,7 @@ const overlapConfirm=()=>{
       else if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
         setAlertEmail('')
         setAlertSpaceEmail(false)
-        //emailPost()
+        emailPost()
       }
     }
     
@@ -98,72 +98,53 @@ const overlapConfirm=()=>{
 const idPost = async()=>{
 
 
-  await fetch('http://localhost:8080/users', {
-
-  method: 'POST',
-  headers: { 'content-Type' : 'application/json'},
-  body: JSON.stringify(id)
-}).then((res) => {
-  // console.log(res)
-
-  //아이디 정보를 보냄 중복이면 이미 사용중인 아이디입니다.
-  //setAlertId('이미 사용중인 아이디입니다.')
-
-//중복이아니면 사용가능한아이디입니다. 
-  //setAlertId('')
- // setAlertOverlapId('사용 가능한 아이디 입니다.')
-
-}).catch(() => {
-  alert(`err`)
-})
+ let response= await fetch(`http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/login-id/${id}/verification`)
+ let data =await response.json();
+ 
+//  console.log(data)
+ if(data===true){
+  setAlertId('이미 사용중인 아이디입니다.')
+ }else if(data===false){
+  setAlertId('')
+  setAlertOverlapId('사용 가능한 아이디 입니다.')
+ }
+ 
 }
 
 
 const namePost = async()=>{
 
 
-  await fetch('http://localhost:8080/users', {
+  let response= await fetch(`http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/username/${name}/verification`)
+  let data =await response.json();
+  
+  // console.log(data)
+  if(data===true){
+    setAlertName('이미 사용중인 닉네임 입니다.')
+   }else if(data===false){
+    setAlertName('')
+    setAlertOverlapName('사용 가능한 닉네임 입니다.')
+   }
 
-  method: 'POST',
-  headers: { 'content-Type' : 'application/json'},
-  body: JSON.stringify(name)
-}).then((res) => {
-  // console.log(res)
-
-  //아이디 정보를 보냄 중복이면 이미 사용중인 닉네임 입니다.
-  //setAlertName('이미 사용중인 닉네임 입니다.')
-
-  //중복이아니면 사용가능한닉네임입니다. 
-  //setAlertName('')
- // setAlertOverlapName('사용 가능한 닉네임 입니다.')
-
-}).catch(() => {
-  alert(`err`)
-})
+ 
 }
 
 
 const emailPost = async()=>{
 
 
-  await fetch('http://localhost:8080/users', {
+  let response= await fetch(`http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/email/${emailInfo}/verification`)
+  let data =await response.json();
+  
+  // console.log(data)
+  if(data===true){
+    setAlertEmail('이미 사용중인 이메일 입니다.')
+   }else if(data===false){
+    setAlertEmail('')
+    setAlertOverlapEmail('사용 가능한 이메일 입니다.')
+   }
+  
 
-  method: 'POST',
-  headers: { 'content-Type' : 'application/json'},
-  body: JSON.stringify(emailInfo)
-}).then((res) => {
-  // console.log(res)
-
-  //아이디 정보를 보냄 중복이면 이미 사용중인 이메일 입니다.
-  //setAlertEmail('이미 사용중인 이메일 입니다.')
-
-  //중복이아니면 사용가능한닉네임입니다. 
-  // setAlertEmail('')
- // setAlertOverlapEmail('사용 가능한 이메일 입니다.')
-
-}).catch(() => {
-  alert(`err`)
-})
 }
 
 
@@ -269,25 +250,28 @@ const signupPostFunc=async()=>{
   if (spaceCheck(id)===true&& onlyEng(id)===true&&spaceCheck(name)===true&& email_check(emailInfo)===true&&spaceCheck(emailInfo)===true && password===rePassword &&spaceCheck(password)===true&& password.length>=6 ){
     
     const signupInfo ={
-      "userId": id,
-      // api명세서 닉네임 키값아직미설정
-      "name": name,
+      "loginId": id,
+      "userName": name,
       "password": password,
       "email": emailInfo
     }
-  //  await fetch(`https://sswitch.com/signup`, {
+   await fetch(`http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/signup`, {
 
-  //   method: 'POST',
-  //   headers: { 'content-Type' : 'application/json'},
-  //   body: JSON.stringify(signupInfo)
-  // }).then((res) => {
-  //   '성공하면'
-  //   navigate('/login')
+    method: 'POST',
+    headers: { 'content-Type' : 'application/json'},
+    body: JSON.stringify(signupInfo)
+  }).then((res) => {
+  
+    // console.log(res)
+    if(res.ok===true){
+       navigate('/login')
+    }else if(res.ok===false){
+        alert('작성하신 회원정보를 다시 확인해 주세요.')
+    }
 
-  // }).catch((err) => {
-  //   '에러아직모름'
-  // })
-    console.log('signupinfo:',signupInfo)
+  }).catch((err) => {
+  })
+    // console.log('signupinfo:',signupInfo)
   }
 
 }
@@ -321,7 +305,7 @@ const signupPostFunc=async()=>{
         {
           alertSpacePwd ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <PwdOverlapForm>
-          {passwordMsg ?<InfoMsg>비밀번호는 6자리 이상이어야 합니다.</InfoMsg>: <AlertMsg>비밀번호는 6자리 이상이어야 합니다.</AlertMsg>}
+          {passwordMsg ?<InfoMsg>비밀번호는 6자리 이상 이어야 합니다.</InfoMsg>: <AlertMsg>비밀번호는 6자리 이상이어야 합니다.</AlertMsg>}
           {alertPwd ?<CorrectMsg>사용 가능한 비밀번호 입니다.</CorrectMsg>:''}
         </PwdOverlapForm>
         }
@@ -393,6 +377,7 @@ const SignUpForm=styled.div`
   const OverlapForm=styled.div`
   display: flex;
   width: 300px;
+  flex-direction: column;
   `
   const PwdOverlapForm=styled(OverlapForm)`
   flex-direction: column;
@@ -421,9 +406,12 @@ width: 300px;
 text-align: left;
 font-size: small;
 color: red;
+/* white-space:nowrap; */
+
 `
 const InfoMsg=styled(AlertMsg)`
 color: #888888;
+
 `
 const CorrectMsg=styled(AlertMsg)`
 color: green;
