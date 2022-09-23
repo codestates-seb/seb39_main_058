@@ -18,15 +18,12 @@ public class UserDto {
         private long userId;
 
         @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
-        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String loginId;
 
-        @NotBlank(message = "비밀번호는 0-9사이 숫자, 영어 대문자, 소문자, 특수문자 하나씩을 포함해야 합니다.")
-        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")
+        @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
         private String password;
 
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
-        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String userName;
 
         @NotBlank(message = "사용자 이메일 주소는 공백이 아니어야 합니다.")
@@ -41,10 +38,8 @@ public class UserDto {
     @Builder
     public static class LoginDto {
         @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
-        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String loginId;
-        @NotBlank(message = "비밀번호는 0-9사이 숫자, 영어 대문자, 소문자, 특수문자 하나씩을 포함해야 합니다.")
-        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")
+        @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
         private String password;
     }
 
@@ -56,11 +51,9 @@ public class UserDto {
         private long userId;
 
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
-        @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$")
         private String userName;
 
-        @NotBlank(message = "비밀번호는 0-9사이 숫자, 영어 대문자, 소문자, 특수문자 하나씩을 포함해야 합니다.")
-        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")
+        @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
         private String password;
 
         private User.UserStatus userStatus;
