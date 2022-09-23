@@ -20,7 +20,7 @@ public class TrashService {
     }
 
     public TrashCan createTrashCan(TrashCan trashCan) {
-        verifyExistTrashCan(trashCan.getTrashId());
+//        verifyExistTrashCan(trashCan.getTrashId());
         TrashCan savedTrashCan = trashRepository.save(trashCan);
 
         return savedTrashCan;

@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.forum.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.boards.community.forum.dto.ForumPatchDto;
 import main.sswitch.boards.community.forum.dto.ForumPostDto;
 import main.sswitch.boards.community.forum.entity.Forum;
@@ -20,6 +21,8 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/community/forum")
+@Slf4j
+@CrossOrigin("*")
 public class ForumController {
     private ForumService forumService;
 
@@ -42,7 +45,7 @@ public class ForumController {
 
     //게시글 따봉
     @PatchMapping("/like/{forum-id}")
-    public ResponseEntity likeForum(@Positive @PathVariable("like/{forum-id}") long forumId,
+    public ResponseEntity likeForum(@Positive @PathVariable("{forum-id}") long forumId,
                                     @Valid @RequestBody ForumPatchDto forumPatchDto) {
         forumPatchDto.setForumId(forumId);
         Forum forum =

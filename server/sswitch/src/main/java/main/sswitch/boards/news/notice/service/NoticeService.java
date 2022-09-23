@@ -29,7 +29,7 @@ public class NoticeService {
         //이미 등록된 공지사항인지 확인
         verifyExistNotice(notice.getNoticeId());
         //관리자인지 확인
-        verifyUserRole(notice);
+//        verifyUserRole(notice);
 
         return noticeRepository.save(notice);
     }
@@ -38,7 +38,7 @@ public class NoticeService {
         //조회하려는 공지사항이 존재하는지 확인
         Notice findNotice = findVerifiedNotice(notice.getNoticeId());
         //관리자인지 확인
-        verifyUserRole(notice);
+//        verifyUserRole(notice);
 
         Optional.ofNullable(notice.getNoticeTitle())
                 .ifPresent(noticeTitle -> findNotice.setNoticeTitle(noticeTitle));

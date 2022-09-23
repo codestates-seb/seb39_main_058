@@ -1,5 +1,6 @@
 package main.sswitch.boards.trash.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.boards.trash.dto.TrashStatusDto;
 import main.sswitch.boards.trash.entity.TrashCan;
 import main.sswitch.boards.trash.mapper.TrashMapper;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/trash")
 @Validated
+@Slf4j
 public class TrashController {
     private TrashService trashService;
     private TrashMapper mapper;
@@ -31,7 +33,7 @@ public class TrashController {
     }
 
     //쓰레기통 등록
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity postTrashCan(@Valid @RequestBody TrashPostDto trashPostDto) {
         TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto));
 
@@ -55,7 +57,7 @@ public class TrashController {
 
     //쓰레기통 비움 기능(상황에 맞게 패치와 합침 가능)
     @PatchMapping("/flush/{trash-id}")
-    public ResponseEntity TrashCan(@PathVariable("flush/trash-id") @Positive long trashId,
+    public ResponseEntity TrashCan(@PathVariable("trash-id") @Positive long trashId,
                                    @Valid @RequestBody TrashStatusDto trashStatusDto) {
         trashStatusDto.setTrashId(trashId);
         TrashCan trashCan = trashService.changeTrashCanStatus(mapper.trashStatusChangeDtoToTrash(trashStatusDto));
