@@ -1,45 +1,73 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 // 게시글 생성
 function CommunityCreate() {
 
+    const [ title, setTitle ] = useState("");
+    const [ titleState, setTitleState ] = useState(false); // 제목 입력 상태여부
+
+    const [ content, setContent ] = useState("");
+    const [ contentState, setContentState ] = useState(false); // 내용 입력 상태여부
+
+    const [ tags, setTags ] = useState([]);
+    const [ clickTag, setClickTag ] = useState(false);
+
+    const navigate = useNavigate();
     
 
-    const [ title, setTitle ] = useState("");
-    const [ content, setContent ] = useState("");
-    const [ tags, setTags ] = useState([]);
-    const [ state, setState ] = useState(false);
-    const navigate = useNavigate();
-
-    // const handleSubmit = () => {
-    //     fetch(`/data`)
-    //         .then(res => res.json())
-    //         .then(data => console.log(data))
-    //         .catch(err => console.log(err));
-    // };
-
+    const boardPost = {
+        "forumTitle" : title,
+        "forumText" : content,
+        "tag" : [ "강남구", "구로구", "동작구", "관악구", "마포구" ],
+        "secret" : "SECRET"
+    }
+    
     const handleTags = () => {
-        fetch('http://localhost:3002/data')
-        // fetch('http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/')
+        fetch("http://localhost:3002/data")
+        // fetch("http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/")
             .then(res => res.json())
             .then(data => setTags(data[0].tag))
             .catch(err => console.log(err))
     }
 
-
     // 게시판 내용 제출
     const handleSubmit = (e) => {
         e.preventDefault();
-        // fetch('http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/')
-        //     .then()
-        //     .then()
+        
+        if(!title) {
+            setTitle(title);
+            setTitleState(!titleState); // 제목 입력 여부 상태
+        }
+        
+        if(!content) {
+            setContent(content);
+            setContentState(!contentState); // 내용 입력 여부 상태
+        }
+        
+        if(title && content) {
+            setTitle("");
+            setContent("");
+            
+            fetch("http://localhost:3002/data", {
+            // fetch("http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/")
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(boardPost)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    navigate("/community/forum")
+                })
+                .catch(error => error)
+        }        
     }
 
     // 특정 태그 선택
     const selectTag = () => {
-
+        
     }
     return (
     <Main>
@@ -56,22 +84,33 @@ function CommunityCreate() {
                 <div className="writer-title">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="title">제목</label>
-                        <input type="text" id="title" placeholder="제목을 입력해주세요." onChange={(e) => setTitle(e.target.value)}/>
+                        <input type="text" id="title" placeholder="제목을 입력해주세요." value={title} 
+                            onChange={(e) => {
+                                setTitleState(false)
+                                setTitle(e.target.value)}}/>
+                        {titleState ? <div style={{color: "red", paddingLeft: "4rem"}}>제목은 반드시 입력되어야 합니다.</div> : undefined}
                     </form>
                 </div>
                 
                 <div className="writer-content">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="content"></label>
-                        <textarea id="content" placeholder="내용을 입력해주세요." onChange={(e) => {
-                            
-                            setContent(e.target.value)
-                            console.log(content)
-                            }}/>
+                        <textarea id="content" placeholder="내용을 입력해주세요." value={content} 
+                            onChange={(e) => {
+                                setContentState(false)
+                                setContent(e.target.value)}}/>
+                        {contentState ? <div style={{color: "red", paddingLeft: "2rem"}}>내용은 반드시 입력되어야 합니다.</div> : undefined}
                     </form>
                 </div>
                 <div className="writer-tags"></div>
             </BoardWrite>
+            {/* 유저가 태그를 선택한 경우, 나타나는 태그 만들기 */}
+            { !clickTag && <SelectedTag>
+                <div>
+                    <span style={{padding: "10px"}}>예시</span>
+                    <span style={{padding: "10px"}}>또 다른 예시</span>
+                </div>
+            </SelectedTag>}
 
             <BoardTag>
                 {/* <label>지역 태그를 선택하세요</label> */}
@@ -82,6 +121,8 @@ function CommunityCreate() {
                     )}
                 </select>
             </BoardTag>
+            
+            
 
             {/* 등록 및 취소하는 버튼 만들기 */}
             <ButtonWrapper>
@@ -101,7 +142,6 @@ const Main = styled.main`
     width: 100%;
     height: 92vh;
     background-color: ivory;
-
     @media (max-width: 550px) {
         height: 115vh;
     }
@@ -196,6 +236,17 @@ const BoardTag = styled.div`
         background-color: ivory;
         /* border-radius: 10%; */
     }
+`;
+
+const SelectedTag = styled.div`
+    margin-bottom: 20px;    
+    border: 1px solid black;
+    /* padding: 15px; */
+    width: 85vw;
+    height: 5vh;
+    @media (max-width: 550px) {
+            width: 55vw;
+        }
 `;
 
 const ButtonWrapper = styled.div`
