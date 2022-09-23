@@ -15,12 +15,20 @@ public class TrashResponseDto {
 
     private String latitude;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime dateCreated;
 
-    private LocalDateTime modifiedAt;
+    private LocalDateTime dateModified;
 
     private TrashCan.TrashStatus trashStatus;
 
+
+    public void getDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void getDateModified(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
     public String getTrashStatus() {
         return trashStatus.getStatus();
     }

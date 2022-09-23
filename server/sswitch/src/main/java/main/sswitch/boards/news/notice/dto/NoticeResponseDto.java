@@ -14,8 +14,16 @@ public class NoticeResponseDto {
     private String username;
     private String noticeTitle;
     private String noticeText;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private LocalDateTime dateCreated;
+    private LocalDateTime dateModified;
+
+    public void getDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void getDateModified(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
 
     public void setUser(User user) {
         this.username = user.getUserName();
