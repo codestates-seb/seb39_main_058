@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { GiCancel } from "react-icons/gi";
 import { AiOutlineSearch } from "react-icons/ai";
 
-
 const list = [
   {
     id: 1,
