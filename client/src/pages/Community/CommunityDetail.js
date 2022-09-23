@@ -6,6 +6,7 @@ function CommunityDetail() {
   return (
       <>
         <div>CommunityDetail</div>
+        
         <CommunityAnswer/>
       </>
   )

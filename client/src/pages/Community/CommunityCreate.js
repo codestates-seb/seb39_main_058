@@ -1,6 +1,11 @@
+import { click } from "@testing-library/user-event/dist/click";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+
+// 'tag': REPORT, QNA, ASK, FREE_BOARD 
+// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"]
+const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"]
 
 // 게시글 생성
 function CommunityCreate() {
@@ -11,25 +16,16 @@ function CommunityCreate() {
     const [ content, setContent ] = useState("");
     const [ contentState, setContentState ] = useState(false); // 내용 입력 상태여부
 
-    const [ tags, setTags ] = useState([]);
     const [ clickTag, setClickTag ] = useState(false);
 
     const navigate = useNavigate();
     
-
+    // 'tag': REPORT, QNA, ASK, FREE_BOARD -> 한스님 local에만 O, 아직 ec2에는 X
     const boardPost = {
         "forumTitle" : title,
         "forumText" : content,
-        "tag" : [ "강남구", "구로구", "동작구", "관악구", "마포구" ],
+        "tag" : "QNA",
         "secret" : "SECRET"
-    }
-    
-    const handleTags = () => {
-        fetch("http://localhost:3002/data")
-        // fetch("http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/")
-            .then(res => res.json())
-            .then(data => setTags(data[0].tag))
-            .catch(err => console.log(err))
     }
 
     // 게시판 내용 제출
@@ -50,24 +46,29 @@ function CommunityCreate() {
             setTitle("");
             setContent("");
             
-            fetch("http://localhost:3002/data", {
-            // fetch("http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/")
+            // fetch("http://localhost:5000/data", {
+            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(boardPost)
             })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                    navigate("/community/forum")
+                .then( res => {
+                    res.status === 500 ? alert('error') : navigate("/community/forum")
                 })
-                .catch(error => error)
+                .catch(error => console.log(error))
         }        
     }
 
     // 특정 태그 선택
-    const selectTag = () => {
+    const selectTag = (e) => {
+        console.log(e.target.value);
+        if (!clickTag) setClickTag(!clickTag);
         
+    }
+
+    // 태그 삭제
+    const deleteTag = () => {
+        console.log('태그 삭제!')
     }
     return (
     <Main>
@@ -96,7 +97,7 @@ function CommunityCreate() {
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="content"></label>
                         <textarea id="content" placeholder="내용을 입력해주세요." value={content} 
-                            onChange={(e) => {
+                            onChange={ e => {
                                 setContentState(false)
                                 setContent(e.target.value)}}/>
                         {contentState ? <div style={{color: "red", paddingLeft: "2rem"}}>내용은 반드시 입력되어야 합니다.</div> : undefined}
@@ -104,25 +105,26 @@ function CommunityCreate() {
                 </div>
                 <div className="writer-tags"></div>
             </BoardWrite>
+
             {/* 유저가 태그를 선택한 경우, 나타나는 태그 만들기 */}
-            { !clickTag && <SelectedTag>
-                <div>
-                    <span style={{padding: "10px"}}>예시</span>
-                    <span style={{padding: "10px"}}>또 다른 예시</span>
+            { clickTag && <SelectedTag>
+                <div className="selected-tags">
+                    <span className="tag">구로구 <span className="tag delete-tag"
+                        onClick={deleteTag}>X</span></span>
+                    <span className="tag">마포구 <span className="tag delete-tag"
+                        onClick={deleteTag}>X</span></span>
                 </div>
-            </SelectedTag>}
+            </SelectedTag> }
 
             <BoardTag>
                 {/* <label>지역 태그를 선택하세요</label> */}
-                <select name="tags" onClick={handleTags}>
+                <select name="tags" onChange={ e => selectTag(e)}>
                     <option name="tags">지역 태그를 선택하세요</option>
                     {tags.map(tag => 
-                        <option key={tag} name="tags" value="guro" onClick={selectTag}>{tag}</option>
+                        <option key={tag} name="tag" value={tag} >{tag}</option>
                     )}
                 </select>
             </BoardTag>
-            
-            
 
             {/* 등록 및 취소하는 버튼 만들기 */}
             <ButtonWrapper>
@@ -239,14 +241,35 @@ const BoardTag = styled.div`
 `;
 
 const SelectedTag = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-bottom: 20px;    
     border: 1px solid black;
-    /* padding: 15px; */
-    width: 85vw;
+    padding: 10px 0;
+    width: 80vw;
     height: 5vh;
     @media (max-width: 550px) {
-            width: 55vw;
+        width: 55vw;
+    }
+
+    .tag {
+        margin: 10px;
+        padding: 0.5rem;
+        border-radius: 10%;
+        color: white;
+        background-color: rgb(56,217,169);
+        font-family: 'Courier New', Courier, monospace;
+        &:hover {
+            background: rgb(71,182,181);
         }
+
+        .delete-tag {
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
 `;
 
 const ButtonWrapper = styled.div`

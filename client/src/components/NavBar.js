@@ -103,7 +103,7 @@ const NavBarStyle = styled.div`
     user-select:none;
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
-
+    white-space: nowrap;
     a{
         text-decoration: none;
         color: black;
