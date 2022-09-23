@@ -127,7 +127,6 @@ const NewsStyle = styled.div`
   flex-direction: column;
   height: ${list.length >= 5 ? "100%" : "94vh"};
   width: 100%;
-  /* background-color: ivory; */
   border-radius: 30px;
 
   .back_drop{
@@ -228,8 +227,7 @@ const NewsStyle = styled.div`
 
   .list_container{
     width: 70vw;
-    list-style: none;
-    
+    list-style: none;    
 
     .list{
       height: 10vh;
@@ -250,6 +248,7 @@ const NewsStyle = styled.div`
     display: flex;
     align-items: center;
     width: min-content;
+    cursor: pointer;
   }
 
   .icon{
