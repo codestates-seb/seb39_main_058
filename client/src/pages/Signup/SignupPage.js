@@ -103,6 +103,7 @@ const idPost = async()=>{
  
 //  console.log(data)
  if(data===true){
+  setAlertOverlapId('')
   setAlertId('이미 사용중인 아이디입니다.')
  }else if(data===false){
   setAlertId('')
@@ -120,6 +121,7 @@ const namePost = async()=>{
   
   // console.log(data)
   if(data===true){
+    setAlertOverlapName('')
     setAlertName('이미 사용중인 닉네임 입니다.')
    }else if(data===false){
     setAlertName('')
@@ -138,6 +140,7 @@ const emailPost = async()=>{
   
   // console.log(data)
   if(data===true){
+    setAlertOverlapEmail('')
     setAlertEmail('이미 사용중인 이메일 입니다.')
    }else if(data===false){
     setAlertEmail('')

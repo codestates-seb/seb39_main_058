@@ -102,6 +102,7 @@ const NavBarStyle = styled.div`
     font-size: 2vmin;
     user-select:none;
     background-color: white;
+    border-bottom: 3px solid rgb(71,182,181);
 
     a{
         text-decoration: none;
@@ -163,7 +164,7 @@ const NavBarStyle = styled.div`
     .drop_container{
         position: absolute;
         right: 0;
-        top: 6.5%;
+        top: 6%;
         background-color: lightgray;
         width: 79%;
         height: 20vh;
