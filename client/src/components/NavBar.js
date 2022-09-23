@@ -104,6 +104,7 @@ const NavBarStyle = styled.div`
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
     white-space: nowrap;
+
     a{
         text-decoration: none;
         color: black;
@@ -238,6 +239,7 @@ const SearchInput = styled.div`
     position: absolute;
     width: 95%;
     z-index: 2;
+    margin-top: .5vh;
 
     input{
         width: 90%;
