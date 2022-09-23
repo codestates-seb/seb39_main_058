@@ -24,13 +24,21 @@ public class ForumResponseDto {
 
     public long forumLike;
 
-    public LocalDateTime createdAt;
+    public LocalDateTime dateCreated;
 
-    public LocalDateTime modifiedAt;
+    public LocalDateTime dateModified;
 
     private long userId;
 
     public List<CommentResponseDto> commentResponses;
+
+    public void getDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void getDateModified(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
 
     public String getForumTag(){
         return tag.getTag();
