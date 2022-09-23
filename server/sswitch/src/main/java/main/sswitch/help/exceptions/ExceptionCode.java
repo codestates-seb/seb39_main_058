@@ -9,6 +9,10 @@ public enum ExceptionCode {
     TRASHCAN_ALREADY_FULL(409, "TrashCan already full"),
     NOTICE_NOT_FOUND(404, "Notice not exist"),
     NOTICE_EXISTS(409, "Notice exists"),
+
+    EVENT_NOT_FOUND(404, "Event not found"),
+
+    EVETN_EXISTS(409, "Event already Exist"),
     FORUM_NOT_FOUND(404, "Forum not exist"),
 
     FORUM_EXISTS(409, "Forum exists"),

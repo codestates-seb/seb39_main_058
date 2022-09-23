@@ -32,7 +32,7 @@ public class Forum extends BaseEntity {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 255, nullable = false)
-    private Tag tag = Tag.FREE_BOARD;
+    private Tag tag = Tag.구로구;
 
     @Enumerated(value = EnumType.STRING)
     @Column
@@ -62,11 +62,11 @@ public class Forum extends BaseEntity {
 
     //게시판 작성시에 분류해주는 enum
     public enum Tag {
-        FREE_BOARD("자유 게시판"),
-        QNA("자주 묻는 질문"),
-        ASK("건의사항"),
-        REPORT("신고"),
-        ;
+        구로구("구로구"),
+        강남구("강남구"),
+        동작구("동작구"),
+        관악구("관악구"),
+        마포구("마포구");
 
         @Getter
         @Setter
