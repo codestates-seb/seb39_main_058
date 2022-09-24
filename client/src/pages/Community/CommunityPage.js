@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from "styled-components";
 import { GiCancel } from "react-icons/gi";
 import { AiOutlineSearch } from "react-icons/ai";
-import PageNation from '../../components/CommunityAnswer/PageNation';
+import PageNation from '../../components/PageNation';
 
 // revers() 해도 몇초뒤에 다시 돌아옴! 원본데이터에 영향을 안줘서 그런거같음!!
 // 나중에 get 받아온걸 data.revers()해서 스테이트에 저장시켜주는거로!
