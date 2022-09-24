@@ -52,13 +52,13 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
+    public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);
 
         User createUser = userService.createUser(user);
         UserDto.ResponseDto response = userMapper.userToUserResponse(createUser);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.CREATED);
+        return "회원가입 완료";
     }
 
     @PostMapping("/login")

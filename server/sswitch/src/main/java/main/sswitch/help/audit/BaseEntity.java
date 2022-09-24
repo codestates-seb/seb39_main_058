@@ -22,4 +22,6 @@ public abstract class BaseEntity {
     @Setter
     @Column(name = "date_modified")
     protected LocalDateTime dateModified = LocalDateTime.now();
+
+
 }

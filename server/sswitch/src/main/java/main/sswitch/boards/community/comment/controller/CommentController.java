@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.comment.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.boards.community.comment.dto.CommentGetDto;
 import main.sswitch.boards.community.comment.dto.CommentPatchDto;
 import main.sswitch.boards.community.comment.dto.CommentPostDto;
@@ -20,6 +21,8 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("/community/comment")
+@Slf4j
+@CrossOrigin("*")
 public class CommentController {
     private CommentService commentService;
     private CommentMapper mapper;

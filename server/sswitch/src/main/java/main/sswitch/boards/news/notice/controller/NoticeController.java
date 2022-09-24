@@ -1,5 +1,6 @@
 package main.sswitch.boards.news.notice.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.boards.news.notice.dto.NoticePatchDto;
 import main.sswitch.boards.news.notice.dto.NoticePostDto;
 import main.sswitch.boards.news.notice.entity.Notice;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/news/notice")
+@Slf4j
+@CrossOrigin("*")
 public class NoticeController {
     private NoticeService noticeService;
     private NoticeMapper mapper;
@@ -26,7 +29,7 @@ public class NoticeController {
         this.mapper = mapper;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto) {
         Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto));
 
