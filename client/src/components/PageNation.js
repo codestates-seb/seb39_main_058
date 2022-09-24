@@ -14,7 +14,7 @@ function PageNation({list, data}) { // 더미 props 받아온거임
     // count는 총 페이지의 수를 선언 해둔거임 
     // 테스트해보려면 밑에줄 주석풀고 if문들 주석하면 돼요
 
-    // let count = 16 // 
+    // let count = 16 //
 
     let count
 
