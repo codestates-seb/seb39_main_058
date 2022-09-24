@@ -1,45 +1,74 @@
+import { click } from "@testing-library/user-event/dist/click";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+
+// 'tag': REPORT, QNA, ASK, FREE_BOARD 
+// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"]
+const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"]
 
 // 게시글 생성
 function CommunityCreate() {
 
-    
-
     const [ title, setTitle ] = useState("");
+    const [ titleState, setTitleState ] = useState(false); // 제목 입력 상태여부
+
     const [ content, setContent ] = useState("");
-    const [ tags, setTags ] = useState([]);
-    const [ state, setState ] = useState(false);
+    const [ contentState, setContentState ] = useState(false); // 내용 입력 상태여부
+
+    const [ clickTag, setClickTag ] = useState(false);
+
     const navigate = useNavigate();
-
-    // const handleSubmit = () => {
-    //     fetch(`/data`)
-    //         .then(res => res.json())
-    //         .then(data => console.log(data))
-    //         .catch(err => console.log(err));
-    // };
-
-    const handleTags = () => {
-        fetch('http://localhost:3002/data')
-        // fetch('http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/')
-            .then(res => res.json())
-            .then(data => setTags(data[0].tag))
-            .catch(err => console.log(err))
+    
+    // 'tag': REPORT, QNA, ASK, FREE_BOARD -> 한스님 local에만 O, 아직 ec2에는 X
+    const boardPost = {
+        "forumTitle" : title,
+        "forumText" : content,
+        "tag" : "QNA",
+        "secret" : "SECRET"
     }
-
 
     // 게시판 내용 제출
     const handleSubmit = (e) => {
         e.preventDefault();
-        // fetch('http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/')
-        //     .then()
-        //     .then()
+        
+        if(!title) {
+            setTitle(title);
+            setTitleState(!titleState); // 제목 입력 여부 상태
+        }
+        
+        if(!content) {
+            setContent(content);
+            setContentState(!contentState); // 내용 입력 여부 상태
+        }
+        
+        if(title && content) {
+            setTitle("");
+            setContent("");
+            
+            // fetch("http://localhost:5000/data", {
+            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(boardPost)
+            })
+                .then( res => {
+                    res.status === 500 ? alert('error') : navigate("/community/forum")
+                })
+                .catch(error => console.log(error))
+        }        
     }
 
     // 특정 태그 선택
-    const selectTag = () => {
+    const selectTag = (e) => {
+        console.log(e.target.value);
+        if (!clickTag) setClickTag(!clickTag);
+        
+    }
 
+    // 태그 삭제
+    const deleteTag = () => {
+        console.log('태그 삭제!')
     }
     return (
     <Main>
@@ -56,29 +85,43 @@ function CommunityCreate() {
                 <div className="writer-title">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="title">제목</label>
-                        <input type="text" id="title" placeholder="제목을 입력해주세요." onChange={(e) => setTitle(e.target.value)}/>
+                        <input type="text" id="title" placeholder="제목을 입력해주세요." value={title} 
+                            onChange={(e) => {
+                                setTitleState(false)
+                                setTitle(e.target.value)}}/>
+                        {titleState ? <div style={{color: "red", paddingLeft: "4rem"}}>제목은 반드시 입력되어야 합니다.</div> : undefined}
                     </form>
                 </div>
                 
                 <div className="writer-content">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="content"></label>
-                        <textarea id="content" placeholder="내용을 입력해주세요." onChange={(e) => {
-                            
-                            setContent(e.target.value)
-                            console.log(content)
-                            }}/>
+                        <textarea id="content" placeholder="내용을 입력해주세요." value={content} 
+                            onChange={ e => {
+                                setContentState(false)
+                                setContent(e.target.value)}}/>
+                        {contentState ? <div style={{color: "red", paddingLeft: "2rem"}}>내용은 반드시 입력되어야 합니다.</div> : undefined}
                     </form>
                 </div>
                 <div className="writer-tags"></div>
             </BoardWrite>
 
+            {/* 유저가 태그를 선택한 경우, 나타나는 태그 만들기 */}
+            { clickTag && <SelectedTag>
+                <div className="selected-tags">
+                    <span className="tag">구로구 <span className="tag delete-tag"
+                        onClick={deleteTag}>X</span></span>
+                    <span className="tag">마포구 <span className="tag delete-tag"
+                        onClick={deleteTag}>X</span></span>
+                </div>
+            </SelectedTag> }
+
             <BoardTag>
                 {/* <label>지역 태그를 선택하세요</label> */}
-                <select name="tags" onClick={handleTags}>
+                <select name="tags" onChange={ e => selectTag(e)}>
                     <option name="tags">지역 태그를 선택하세요</option>
                     {tags.map(tag => 
-                        <option key={tag} name="tags" value="guro" onClick={selectTag}>{tag}</option>
+                        <option key={tag} name="tag" value={tag} >{tag}</option>
                     )}
                 </select>
             </BoardTag>
@@ -101,7 +144,6 @@ const Main = styled.main`
     width: 100%;
     height: 92vh;
     background-color: ivory;
-
     @media (max-width: 550px) {
         height: 115vh;
     }
@@ -195,6 +237,38 @@ const BoardTag = styled.div`
         padding: 0.5rem 1rem;
         background-color: ivory;
         /* border-radius: 10%; */
+    }
+`;
+
+const SelectedTag = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;    
+    border: 1px solid black;
+    padding: 10px 0;
+    width: 80vw;
+    height: 5vh;
+    @media (max-width: 550px) {
+        width: 55vw;
+    }
+
+    .tag {
+        margin: 10px;
+        padding: 0.5rem;
+        border-radius: 10%;
+        color: white;
+        background-color: rgb(56,217,169);
+        font-family: 'Courier New', Courier, monospace;
+        &:hover {
+            background: rgb(71,182,181);
+        }
+
+        .delete-tag {
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
     }
 `;
 
