@@ -1,4 +1,4 @@
-package main.sswitch.security.filter;
+package main.sswitch.oauth.token.jwt.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package main.sswitch.security.config;
 
 import lombok.RequiredArgsConstructor;
 //<<<<<<< HEAD:server/sswitch/src/main/java/main/sswitch/config/SecurityConfig.java
-import main.sswitch.security.filter.JwtFilter;
+import main.sswitch.oauth.token.jwt.filter.JwtFilter;
 import main.sswitch.oauth.token.jwt.JwtAccessDeniedHandler;
 import main.sswitch.oauth.token.jwt.JwtAuthenticationEntryPoint;
 import main.sswitch.oauth.token.jwt.TokenProvider;
@@ -12,6 +12,7 @@ import main.sswitch.security.oauth.PrincipalDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,9 +41,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
 //        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 //        authenticationManagerBuilder.userDetailsService(principalDetailService).passwordEncoder(passwordEncoder());
-////        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         http.csrf().disable();
         http.cors();
@@ -54,11 +56,11 @@ public class SecurityConfig {
                 .apply(new CustomDsl())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**")
+                .antMatchers("/signup","/login","/")
                 .permitAll()
-                .antMatchers("/users/*")
+                .antMatchers("/users/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/admin/*")
+                .antMatchers("/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
                 .anyRequest()
                 .permitAll();
@@ -67,7 +69,6 @@ public class SecurityConfig {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler);
         return http.build();
-//        return null;
     }
 
     @Bean
@@ -85,7 +86,6 @@ public class SecurityConfig {
 
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
             builder.addFilter(corsFilter)
                     .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         }

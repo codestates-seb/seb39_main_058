@@ -3,7 +3,6 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 //<<<<<<< HEAD
-import main.sswitch.oauth.token.RefreshTokenService;
 import main.sswitch.oauth.token.jwt.TokenDto;
 import main.sswitch.oauth.token.jwt.TokenProvider;
 //=======
@@ -15,7 +14,6 @@ import main.sswitch.user.repository.UserRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +32,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenService refreshTokenService;
-
     public User createUser(User user) {
         verifyExistUser(user.getLoginId());
         verifyExistEmail(user.getEmail());
