@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { RiArrowDropDownFill } from "react-icons/ri";
 
+// revers() 해도 몇초뒤에 다시 돌아옴! 원본데이터에 영향을 안줘서 그런거같음!!
+// 나중에 get 받아온걸 data.revers()해서 스테이트에 저장시켜주는거로!
+
 const list = [
         { id:0, title: '여행상품 예약은 어떻게 하나요 ?',
             content:
