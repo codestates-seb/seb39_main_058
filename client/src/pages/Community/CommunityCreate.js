@@ -170,7 +170,6 @@ const Main = styled.main`
     /* border: 1px solid black; // 삭제 예정 */
     width: 100%;
     height: 92vh;
-    background-color: ivory;
     @media (max-width: 550px) {
         height: 115vh;
     }
@@ -239,7 +238,6 @@ const BoardWrite = styled.div`
             height: 4vh;
             padding: 0 15px;
             font-size: 2vmin;
-            background-color: ivory;
         }
     }
 
@@ -252,7 +250,6 @@ const BoardWrite = styled.div`
             height: 30vh;
             padding: 10px 15px;
             font-size: 2vmin;
-            background-color: ivory;
             resize: none;
             
         }
@@ -262,8 +259,6 @@ const BoardWrite = styled.div`
 const BoardTag = styled.div`
     select {
         padding: 0.5rem 1rem;
-        background-color: ivory;
-        /* border-radius: 10%; */
     }
 `;
 
@@ -349,7 +344,6 @@ const ButtonWrapper = styled.div`
         padding: 1vmin 4vmin;
         border-radius: 1rem;
         border: 1px solid gray;
-        background-color: ivory;
         font-size: 15px;
         cursor: pointer;
         &:hover {
