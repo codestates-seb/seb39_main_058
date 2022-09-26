@@ -1,53 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GiCancel } from "react-icons/gi";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineSearch, AiFillLock } from "react-icons/ai";
 import PageNation from '../../components/PageNation';
+import { useSelector } from 'react-redux'
 
-// revers() 해도 몇초뒤에 다시 돌아옴! 원본데이터에 영향을 안줘서 그런거같음!!
-// 나중에 get 받아온걸 data.revers()해서 스테이트에 저장시켜주는거로!
-
-const list = [
-  {
-    id: 1,
-    title: "제목입니다 제목입니다 제목입니다제목입니다제목입니다제목입니다제목입니다제목입니다",
-    user: "우투더영투더우",
-    updateAT: new Date().toLocaleDateString('ko-KR'),
-    views: 0,
-    suggestion: 0
-  },
-  {
-    id: 2,
-    title: "제목입니다????",
-    user: "짱구는 못말려",
-    updateAT: new Date().toLocaleDateString('ko-KR'),
-    views: 0,
-    suggestion: 0
-  },
-  {
-    id: 3,
-    title: "제목입니다 제목입니다 제목입니다",
-    user: "어떻게이별까지사랑하겠어널사랑하는거지",
-    updateAT: new Date().toLocaleDateString('ko-KR'),
-    views: 0,
-    suggestion: 0
-  },
-  {
-    id: 4,
-    title: "제목입니다 제목입니다",
-    user: "취기를 빌려 오늘 너에게 고백할거야",
-    updateAT: new Date().toLocaleDateString('ko-KR'),
-    views: 0,
-    suggestion: 0
-  }
-]
-
-const tag = ["태그1", "태그2", "태그3", "태그4"]
+const tag = ["강동구", "강서구", "강남구", "강북구"]
 
 // 커뮤니티 게시판 리스트가 나오는 메인페이지
 function CommunityPage() {
 
   const [tags, setTags] = useState([])
+  const [data, setData] = useState([])
+
+  const page = useSelector(state => {
+    return state.CurrentPageReducer.page
+  })
+
+  useEffect(() => {
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum?page=${page}&size=20`)
+    .then(res => res.json())
+    .then(res => {
+      setData(res.data)
+    })  
+  },[page])
 
   const filteredTag = (value) => {
     if(tags.includes(value) === true || value === '태그를 선택해주세요'){
@@ -72,7 +49,7 @@ function CommunityPage() {
       </div>
       <div className='btn'>
         <span className='list'>목록</span>
-        <span className='write'>글쓰기</span>
+        <Link to='/community/create' className='write'>글쓰기</Link>
       </div>
       <div className='select_container'>
         <select onChange={(e) => {
@@ -85,10 +62,10 @@ function CommunityPage() {
         {tags.map(el => {
           return (
             <div className='tags_container' key={el}>
-              <div className={el === "태그1" ? "red" :
-                   el === "태그2" ? "orange" :
-                   el === "태그3" ? "blue" :
-                   el === "태그4" ? "green" :
+              <div className={el === "강동구" ? "red" :
+                   el === "강서구" ? "orange" :
+                   el === "강남구" ? "blue" :
+                   el === "강북구" ? "green" :
                    undefined}> {el}
               </div>
               <GiCancel className='cancle_icon' onClick={() => {
@@ -103,24 +80,26 @@ function CommunityPage() {
             <span className='title'>제목</span>
             <span className='user'>글쓴이</span>
             <span className='updateAT'>등록일</span>
-            <span className='views'>조회</span>
+            <span className='tags'>태그</span>
             <span className='suggestion'>추천</span>
           </div>
-          {list.map(el => {
+          {data.map(el => {
             return(
-              <div key={el.id} className="bords_list">
-                <span className='id'>{el.id}</span>
-                <span className='title'>{el.title}</span>
-                <span className='user'>{el.user}</span>
-                <span className='updateAT'>{el.updateAT}</span>
-                <span className='views'>{el.views}</span>
-                <span className='suggestion'>{el.suggestion}</span>
+              <div key={el.forumId} className="bords_list">
+                <span className='id'>{el.forumId}</span>
+                {el.secret === "OPEN" ?
+                <span className='title pointer'>{el.forumTitle}</span> :
+                <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
+                <span className='user'>{el.userName}글쓴이</span>
+                <span className='updateAT'>{el.dateCreated}22/11/11</span>
+                <span className='tags'>{el.tag} 외 1</span>
+                <span className='suggestion'>{el.forumLike}</span>
               </div>
             )
           })}
         </div>
         <div className='pagenation_container'>
-          <PageNation list={list} />
+          <PageNation data={data} />
         </div>
     </CommunityPageStyle>
   )
@@ -130,11 +109,11 @@ export default CommunityPage
 
 const CommunityPageStyle = styled.div`
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   margin-top: 10vh;
   height: 120vh;
+  user-select: none;
 
   .pagenation_container{
     margin-top: 2vh;
@@ -164,12 +143,13 @@ const CommunityPageStyle = styled.div`
     justify-content: end;
     align-items: center;
     font-size: 1.6vmin;
-    span{
+    .write, .list{
       padding: 0.5rem 1rem;
       margin: 0 .5vw;
       border: 1px solid #413F42;
       box-shadow: 3px 1px 5px rgba(0,0,0,11);
       border-radius: 10px;
+      text-decoration: none;
     }
 
     .list{
@@ -194,10 +174,12 @@ const CommunityPageStyle = styled.div`
     background-color: #F5F5F5;
     width: 80vw;
     margin-top: 1vh;
-    height: 6vh;
+    height: 8vh;
     display: flex;
     align-items: center;
     font-size: 2vmin;
+    overflow-x: scroll;
+    white-space: pre;
 
     select{
       margin: 0 1vw;
@@ -286,6 +268,10 @@ const CommunityPageStyle = styled.div`
     align-items: center;
     height: 2vh;
     padding: 1vh 0;
+
+    .pointer{
+      cursor: pointer;
+    }
     
     span{
       overflow: hidden;
@@ -300,7 +286,7 @@ const CommunityPageStyle = styled.div`
   }
 
   .title{
-    width: 50%;
+    width: 45%;
     margin: 0 3%;
   }
 
@@ -312,8 +298,8 @@ const CommunityPageStyle = styled.div`
     width: 11%;
   }
 
-  .views{
-    width: 8%;
+  .tags{
+    width: 13%;
     text-align: center;
   }
 
