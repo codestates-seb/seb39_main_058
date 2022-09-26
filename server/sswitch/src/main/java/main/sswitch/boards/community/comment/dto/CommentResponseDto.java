@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.comment.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,29 +11,24 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class CommentResponseDto {
 
     private long commnetId;
 
     private String commentText;
 
-    private long userId;
+    private String userName;
     private long forumId;
 
     private LocalDateTime dateCreated;
-
-    private LocalDateTime dateModified;
 
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public void setDateModified(LocalDateTime dateModified) {
-        this.dateModified = dateModified;
-    }
-
     public void setUser(User user) {
-        this.userId = user.getUserId();
+        this.userName = userName;
     }
 
     public void setForum(Forum forum) {

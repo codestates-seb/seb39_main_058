@@ -23,6 +23,8 @@ public interface CommentMapper {
         commentReturnDto.setForumId(comment.getForum().getForumId());
         commentReturnDto.setCommnetId(comment.getCommentId());
         commentReturnDto.setCommentText(comment.getCommentText());
+        commentReturnDto.setDateCreated(comment.getDateCreated());
+
 
         return commentReturnDto;
     }

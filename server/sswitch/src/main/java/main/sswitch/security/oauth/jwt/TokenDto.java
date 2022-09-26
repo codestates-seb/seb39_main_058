@@ -1,4 +1,4 @@
-package main.sswitch.oauth.token.jwt;
+package main.sswitch.security.oauth.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

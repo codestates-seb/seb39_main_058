@@ -23,7 +23,7 @@ public class Forum extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long forumId;
 
-    @Column(length = 255, nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     private String forumTitle;
 
     @Column(columnDefinition = "text", nullable = false)
@@ -32,9 +32,10 @@ public class Forum extends BaseEntity {
     @Column(nullable = false)
     private long forumLike;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(length = 255, nullable = false)
-    private Tag tag = Tag.구로구;
+    //    private Tag tag = Tag.구로구;
+//    @Enumerated(value = EnumType.STRING)
+    @Column(columnDefinition = "text", nullable = false)
+    private String tag;
 
     @Enumerated(value = EnumType.STRING)
     @Column
@@ -54,7 +55,7 @@ public class Forum extends BaseEntity {
 //    }
 
     //유저와 게시글을 매핑
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
@@ -63,21 +64,21 @@ public class Forum extends BaseEntity {
     }
 
     //게시판 작성시에 분류해주는 enum
-    public enum Tag {
-        구로구("구로구"),
-        강남구("강남구"),
-        동작구("동작구"),
-        관악구("관악구"),
-        마포구("마포구");
-
-        @Getter
-        @Setter
-        private String tag;
-
-        Tag(String tag) {
-            this.tag = tag;
-        }
-    }
+//    public enum Tag {
+//        구로구("구로구"),
+//        강남구("강남구"),
+//        동작구("동작구"),
+//        관악구("관악구"),
+//        마포구("마포구");
+//
+//        @Getter
+//        @Setter
+//        private String tag;
+//
+//        Tag(String tag) {
+//            this.tag = tag;
+//        }
+//    }
 
     //게시판 작성시 비밀글인지 공개글인지 전환해주는 enum
     public enum Secret {

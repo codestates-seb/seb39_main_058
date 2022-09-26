@@ -7,7 +7,8 @@ import main.sswitch.boards.community.forum.entity.Forum;
 public class ForumSearchDto {
     private long forumId;
 
-    private Forum.Tag tag;
+    private String tag;
+//    private Forum.Tag tag;
 
     private String forumTitle;
 

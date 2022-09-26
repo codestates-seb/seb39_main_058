@@ -1,8 +1,8 @@
-package main.sswitch.oauth.token.jwt.filter;
+package main.sswitch.security.oauth.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main.sswitch.oauth.token.jwt.TokenProvider;
+import main.sswitch.security.oauth.jwt.TokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;

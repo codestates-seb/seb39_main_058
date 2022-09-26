@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 //<<<<<<< HEAD
 //import main.sswitch.dto.MultiResponseDto;
 //import main.sswitch.dto.SingleResponseDto;
-import main.sswitch.oauth.token.jwt.TokenDto;
+import main.sswitch.security.oauth.jwt.TokenDto;
 //=======
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
@@ -17,8 +17,6 @@ import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 //<<<<<<< HEAD
 //=======
-import main.sswitch.security.web.SessionConst;
-import main.sswitch.security.web.SessionManager;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
