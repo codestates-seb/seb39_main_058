@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { GiCheckedShield } from "react-icons/gi";
 // import { CKEditor } from '@ckeditor/ckeditor5-react'; // 추후 리팩토링 시, CKEditor를 사용해봐야겠다.
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,7 @@ function CommunityCreate() {
     const [ tag, setTag ] = useState([]);
     const [ clickTag, setClickTag ] = useState(false);
 
-    const [ secret, setSecret ] = useState(false);
+    const [ secret, setSecret ] = useState("OPEN");
 
     const navigate = useNavigate();
     
@@ -28,8 +29,8 @@ function CommunityCreate() {
     const boardPost = {
         "forumTitle" : title,
         "forumText" : content,
-        "tag" : tag,
-        "secret" : secret, // "SECRET"
+        "tag" : tag.join(','),
+        "secret" : secret, 
     }
 
     // 게시판 내용 제출
@@ -38,21 +39,16 @@ function CommunityCreate() {
         
         if(!title) {
             setTitle(title);
-            setTitleState(!titleState); // 제목 입력 여부 상태
+            setTitleState(!titleState); 
         }
         
         if(!content) {
             setContent(content);
-            setContentState(!contentState); // 내용 입력 여부 상태
+            setContentState(!contentState);
         }
         
         if(title && content) {
-            setTitle("");
-            setContent("");
-            setClickTag(!clickTag);
-            setTag([]);
-            // fetch("http://localhost:5000/data", {
-            fetch("ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
+            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(boardPost)
@@ -61,13 +57,24 @@ function CommunityCreate() {
                     res.status === 500 ? alert('error') : navigate("/community/forum")
                 })
                 .catch(error => console.log(error))
-        }        
+
+            setTitle("");
+            setContent("");
+            setClickTag(!clickTag);
+            setTag([]);
+        }   
+
     }
 
     // 특정 태그 선택
     const selectTag = (e) => {
         if(!clickTag) setClickTag(!clickTag);
-        (tags.includes(e.target.value)) ? setTag([...tag, e.target.value]) : setTag([...tag, e.target.value])
+        if(tags.includes(e.target.value)) {
+           setTag([...tag, e.target.value])
+        }
+        if(tag.includes(e.target.value)) {
+            setTag(tag)
+        }
     }
 
     // 태그 삭제
@@ -75,6 +82,14 @@ function CommunityCreate() {
         const filteredTag = tag.filter(tag => tag !== el)
         setTag(filteredTag);        
     }
+
+    const handleSecret = (e) => {
+        if(secret === "OPEN") {
+            setSecret("SECRET");
+        } else if (secret === "SECRET") {
+            setSecret("OPEN");
+        }
+    };
 
     return (
     <Main>
@@ -134,7 +149,7 @@ function CommunityCreate() {
                 </select>
             </BoardTag> 
             <Secret>
-                <input type="checkbox" name="secret"/>
+                <input type="checkbox" name="secret" onClick={handleSecret}/>
                 <label htmlFor="secret">비밀글</label>
             </Secret>
             
@@ -268,7 +283,8 @@ const SelectedTag = styled.div`
     height: 5vh;
     @media (max-width: 550px) {
         width: 55vw;
-        height: 15vh;
+        height: 7vh;
+        font-size: 2vmin;
     }
 
     .tag {
@@ -343,9 +359,3 @@ const ButtonWrapper = styled.div`
         }
     }
 `;
-
-
-
-
-
-
