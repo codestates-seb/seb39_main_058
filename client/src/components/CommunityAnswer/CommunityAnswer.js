@@ -50,7 +50,7 @@ const submitFunc=async(event)=>{
       alert('내용을 입력해 주세요.')
     }else if(spaceCheck(commentText)===true){
       const answerInfo={
-          "forumId" : 12,
+          "forumId" : id,
           "commentText" : commentText,
           "userId" : 1,
 
