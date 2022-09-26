@@ -72,6 +72,13 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
+    private void verifyUserRole(long userId) {
+        String role = findUserWithId(userId).getRole();
+        if (role != "ROLE_ADMIN") {
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
+    }
+
     private void verifyExistUser(String loginId) {
         Optional<User> user = userRepository.findByLoginId(loginId);
         if (user.isPresent())
@@ -109,6 +116,7 @@ public class UserService {
                 new BusinessLogicException(ExceptionCode.LOGINID_NOT_FOUND));
         return findLoginId;
     }
+
 
 //<<<<<<< HEAD
 //    public User idCheck(String loginId) {

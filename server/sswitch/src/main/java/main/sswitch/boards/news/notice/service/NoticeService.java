@@ -25,20 +25,20 @@ public class NoticeService {
         this.userService = userService;
     }
 
-    public Notice createNotice(Notice notice) {
+    public Notice createNotice(Notice notice,long userId) {
         //이미 등록된 공지사항인지 확인
         verifyExistNotice(notice.getNoticeId());
         //관리자인지 확인
-//        verifyUserRole(notice);
+//        verifyUserRole(userId);
 
         return noticeRepository.save(notice);
     }
 
-    public Notice updateNotice(Notice notice) {
+    public Notice updateNotice(Notice notice,long userId) {
         //조회하려는 공지사항이 존재하는지 확인
         Notice findNotice = findVerifiedNotice(notice.getNoticeId());
         //관리자인지 확인
-//        verifyUserRole(notice);
+//        verifyUserRole(userId);
 
         Optional.ofNullable(notice.getNoticeTitle())
                 .ifPresent(noticeTitle -> findNotice.setNoticeTitle(noticeTitle));
@@ -58,12 +58,12 @@ public class NoticeService {
                 Sort.by("noticeId").descending()));
     }
 
-    public void deleteNotice(long noticeId) {
-        Notice notice = findVerifiedNotice(noticeId);
+    public void deleteNotice(long noticeId,long userId) {
+        Notice findNotice = findVerifiedNotice(noticeId);
         //관리자인지 확인
-//        verifyUserRole(notice.getUserRole());
+//        verifyUserRole(userId);
 
-        noticeRepository.delete(notice);
+        noticeRepository.delete(findNotice);
     }
 
     public Notice findVerifiedNotice(long noticeId) {
@@ -92,10 +92,13 @@ public class NoticeService {
     }
 
     //작성자 권환 확인 메소드
-    public void verifyUserRole(Notice notice) {
-        String role = notice.getUser().getRole();
-        if (!(role == "관리자 계정")) {
+    public void verifyUserRole(long userId) {
+        User user = userService.findUserWithId(userId);
+        String role = user.getRole();
+        if (role != "ROLE_ADMIN") {
             throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
     }
+
+
 }

@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.forum.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "FORUM")
 public class Forum extends BaseEntity {
     @Id

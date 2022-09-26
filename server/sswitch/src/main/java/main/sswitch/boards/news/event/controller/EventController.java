@@ -34,8 +34,9 @@ public class EventController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity postEvent(@Valid @RequestBody EventPostDto eventPostDto) {
-        Event event = eventService.createEvent(mapper.EventPostDtoToEvent(eventPostDto));
+    public ResponseEntity postEvent(@Valid @RequestBody EventPostDto eventPostDto,
+                                    @Positive @RequestHeader long userId) {
+        Event event = eventService.createEvent(mapper.EventPostDtoToEvent(eventPostDto),userId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.EventToEventResponseDto(event)),
@@ -45,9 +46,11 @@ public class EventController {
 
     @PatchMapping("/{event-id}")
     public ResponseEntity patchEvent(@PathVariable("event-id") long eventId,
-                                     @Valid @RequestBody EventPatchDto eventPatchDto) {
+                                     @Valid @RequestBody EventPatchDto eventPatchDto,
+                                     @Positive @RequestHeader long userId) {
+
         eventPatchDto.setEventId(eventId);
-        Event event = eventService.updateEvent(mapper.EventPatchDtoToEvent(eventPatchDto));
+        Event event = eventService.updateEvent(mapper.EventPatchDtoToEvent(eventPatchDto),userId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.EventToEventResponseDto(event)),
@@ -66,7 +69,7 @@ public class EventController {
     @GetMapping
     public ResponseEntity getEvents(@Positive @RequestParam int page,
                                     @Positive @RequestParam int size) {
-        Page<Event> pageEvents = eventService.findEvents(page, size);
+        Page<Event> pageEvents = eventService.findEvents(page -1, size);
         List<Event> events = pageEvents.getContent();
 
         return new ResponseEntity(
@@ -74,9 +77,10 @@ public class EventController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/{event-id")
-    public ResponseEntity deleteEvent( @PathVariable("event-id") long eventId) {
-        eventService.deleteEvent(eventId);
+    @DeleteMapping("/{event-id}")
+    public ResponseEntity deleteEvent( @PathVariable("event-id") long eventId,
+                                       @Positive @RequestHeader long userId) {
+        eventService.deleteEvent(eventId,userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

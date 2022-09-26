@@ -1,17 +1,21 @@
 package main.sswitch.boards.news.notice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import main.sswitch.user.entity.User;
 
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
+@Setter
+@AllArgsConstructor
 public class NoticeResponseDto {
     private long noticeId;
 
-    private String username;
+    private String userName;
     private String noticeTitle;
     private String noticeText;
     private LocalDateTime dateCreated;
@@ -26,7 +30,9 @@ public class NoticeResponseDto {
     }
 
     public void setUser(User user) {
-        this.username = user.getUserName();
+        this.userName = user.getUserName();
     }
+    //User가 특정되지 않아서 null값 반환하는듯
+    
 
 }

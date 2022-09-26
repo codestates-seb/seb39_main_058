@@ -4,6 +4,7 @@ import lombok.*;
 import main.sswitch.boards.community.comment.dto.CommentResponseDto;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,26 +13,29 @@ import java.util.List;
 @Setter
 public class ForumResponseDto {
 
-    public Long forumId;
+    private Long forumId;
 
-    public Forum.Tag tag;
+    private Forum.Tag tag;
 
-    public Forum.Secret secret;
+    private Forum.Secret secret;
 
-    public String forumTitle;
+    private String forumTitle;
 
-    public String forumText;
+    private String forumText;
 
-    public long forumLike;
+    private long forumLike;
 
-    public LocalDateTime dateCreated;
+    private LocalDateTime dateCreated;
 
-    public LocalDateTime dateModified;
+    private LocalDateTime dateModified;
 
-    private long userId;
+    private String userName;
 
     public List<CommentResponseDto> commentResponses;
 
+    public void getUser(User user) {
+        this.userName = user.getUserName();
+    }
     public void getDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }

@@ -7,6 +7,7 @@ import main.sswitch.boards.community.forum.dto.ForumPostDto;
 import main.sswitch.boards.community.forum.dto.ForumResponseDto;
 import main.sswitch.boards.community.forum.dto.ForumSearchDto;
 import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.help.audit.BaseEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;

@@ -44,9 +44,11 @@ public class TrashService {
         TrashCan findTrashCan = findVerifiedTrashCan(trashCan.getTrashId());
 
         if (trashCan.getTrashStatus() != TrashCan.TrashStatus.TRASH_CAN_FULL) {
-            trashCan.setTrashStatus(TrashCan.TrashStatus.TRASH_CAN_FULL);
+            Optional.ofNullable(trashCan.getTrashStatus())
+                    .ifPresent(trashStatus -> findTrashCan.setTrashStatus(TrashCan.TrashStatus.TRASH_CAN_FULL));
         } else {
-            throw new BusinessLogicException(ExceptionCode.TRASHCAN_ALREADY_FULL);
+            Optional.ofNullable(trashCan.getTrashStatus())
+                    .ifPresent(trashStatus -> findTrashCan.setTrashStatus(TrashCan.TrashStatus.TRASH_CAN_EMPTY));
         }
 
         return trashRepository.save(findTrashCan);
