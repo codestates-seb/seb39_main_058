@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
-import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
+import { FcLikePlaceholder, FcLike, FcLock } from 'react-icons/fc';
 import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer';
 
 // 특정 질문을 눌렀을 때 나오는 세부 페이지
@@ -18,7 +18,7 @@ function CommunityDetail() {
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState("");
   const [ dateCreated, setDateCreated ] = useState("");
-    // 서버 날짜를 기반 customizing
+    // 서버 날짜 기반 customizing
     const createdDate = new Date(dateCreated);
     const year = createdDate.getFullYear();
     const month = createdDate.getMonth() + 1;
@@ -69,6 +69,9 @@ function CommunityDetail() {
                 <li>{year}년 {month}월 {date}일 {today()}</li>
                 <li>{hours}시 {minutes}분</li>
               </ul>
+              <div className="secret">
+                {secret === "OPEN" ? <span><FcLock/>해당 글은 비밀글입니다.</span> : undefined}
+              </div>
             </UserInfo>
           </div>
 
@@ -164,8 +167,14 @@ const UserInfo = styled.div`
     list-style: none;
     padding: 0;
     > li {
-      font-size: 1.3vmin;
+      font-size: 1.5vmin;
     }
+  }
+
+  .secret {
+    margin-left: 30px;
+    font-size: 2vmin;
+    font-weight: bold;
   }
 `;
 
