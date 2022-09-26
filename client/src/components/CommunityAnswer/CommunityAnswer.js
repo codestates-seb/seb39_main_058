@@ -5,7 +5,7 @@ import AnswerMap from './AnswerMap';
 import { useLocation, useNavigate, useParams} from 'react-router-dom'
 
 //댓글 리스트 나오는 곳
-function CommunityAnswer() {
+function CommunityAnswer({data}) {
   const navigate=useNavigate();
   const location = useLocation();
  
@@ -52,7 +52,7 @@ const submitFunc=async(event)=>{
       const answerInfo={
           "forumId" : id,
           "commentText" : commentText,
-          "userId" : 1,
+          "userId" : 2,
 
       }
         await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/create', {
@@ -61,12 +61,14 @@ const submitFunc=async(event)=>{
             headers: { 'content-Type' : 'application/json'},
             body: JSON.stringify(answerInfo)
           })
-        .then((res) => res.json())
-          .then((data)=>{
-                  console.log('정보',answerInfo)
-                  console.log(data)       
-          })
+        // .then((res) => res.json())
+        //   .then((data)=>{
+        //           console.log('정보',answerInfo)
+        //           console.log(data)       
+                  
+        //   })
           // 응답받을게머가있나?
+         window.location.reload()
       }
 
   }
@@ -79,7 +81,7 @@ const submitFunc=async(event)=>{
   return (
     <Container>
       <Head>
-        댓글(3) <span>등록순</span> | <span>최신순</span>  
+        댓글({data.data?.commentResponses.length}) <span>등록순</span> | <span>최신순</span>  
 
       </Head>
       
@@ -90,8 +92,10 @@ const submitFunc=async(event)=>{
       </AnswerPostForm>
 
       <AnswerList>
+      {data.data?.commentResponses.map((item)=>(
+      <AnswerMap key={item.commnetId} item={item}/>
+      ))}
       
-        <AnswerMap/>
           
       </AnswerList>
     </Container>
