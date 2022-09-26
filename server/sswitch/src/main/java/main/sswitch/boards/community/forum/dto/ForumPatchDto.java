@@ -20,7 +20,8 @@ public class ForumPatchDto {
 
     private long forumLike;
 
-    private Forum.Tag tag;
+    private String tag;
+//    private Forum.Tag tag;
 
     private Forum.Secret secret;
 

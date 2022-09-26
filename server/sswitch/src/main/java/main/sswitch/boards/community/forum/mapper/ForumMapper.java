@@ -33,6 +33,8 @@ public interface ForumMapper {
         forumResponseDto.setForumLike(forum.getForumLike());
         forumResponseDto.setTag(forum.getTag());
         forumResponseDto.setSecret(forum.getSecret());
+        forumResponseDto.setDateCreated(forum.getDateCreated());
+        forumResponseDto.setDateModified(forum.getDateModified());
         forumResponseDto.setCommentResponses(
                 commentsToForumResponseDto(comments)
         );
@@ -61,9 +63,10 @@ public interface ForumMapper {
                 .map(comment -> CommentResponseDto
                         .builder()
                         .forumId(comment.getForum().getForumId())
-                        .userId(comment.getUser().getUserId())
+                        .userName(comment.getUser().getUserName())
                         .commnetId(comment.getCommentId())
                         .commentText(comment.getCommentText())
+                        .dateCreated(comment.getDateCreated())
                         .build())
                 .collect(Collectors.toList());
     }

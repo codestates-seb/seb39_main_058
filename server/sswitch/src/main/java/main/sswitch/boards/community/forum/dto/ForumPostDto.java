@@ -17,7 +17,8 @@ public class ForumPostDto {
     @NotNull
     private String forumText;
 
-    private Forum.Tag tag;
+    private String tag;
+//    private Forum.Tag tag;
 
     private Forum.Secret secret;
 

@@ -3,8 +3,8 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 //<<<<<<< HEAD
-import main.sswitch.oauth.token.jwt.TokenDto;
-import main.sswitch.oauth.token.jwt.TokenProvider;
+import main.sswitch.security.oauth.jwt.TokenDto;
+import main.sswitch.security.oauth.jwt.TokenProvider;
 //=======
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;

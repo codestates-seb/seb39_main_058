@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NoticeResponseDto {
     private long noticeId;
+    private long userId;
 
     private String userName;
     private String noticeTitle;
@@ -31,6 +32,10 @@ public class NoticeResponseDto {
 
     public void setUser(User user) {
         this.userName = user.getUserName();
+    }
+
+    public void setUserId(User user) {
+        this.userId = user.getUserId();
     }
     //User가 특정되지 않아서 null값 반환하는듯
     

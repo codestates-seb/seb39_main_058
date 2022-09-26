@@ -3,6 +3,7 @@ package main.sswitch.help.audit;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ public abstract class BaseEntity {
 
     @Getter
     @Setter
+    @LastModifiedDate
     @Column(name = "date_modified")
     protected LocalDateTime dateModified = LocalDateTime.now();
 

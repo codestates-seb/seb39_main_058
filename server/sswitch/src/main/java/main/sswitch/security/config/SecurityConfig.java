@@ -2,17 +2,15 @@ package main.sswitch.security.config;
 
 import lombok.RequiredArgsConstructor;
 //<<<<<<< HEAD:server/sswitch/src/main/java/main/sswitch/config/SecurityConfig.java
-import main.sswitch.oauth.token.jwt.filter.JwtFilter;
-import main.sswitch.oauth.token.jwt.JwtAccessDeniedHandler;
-import main.sswitch.oauth.token.jwt.JwtAuthenticationEntryPoint;
-import main.sswitch.oauth.token.jwt.TokenProvider;
+import main.sswitch.security.oauth.filter.JwtFilter;
+import main.sswitch.security.oauth.jwt.JwtAccessDeniedHandler;
+import main.sswitch.security.oauth.jwt.JwtAuthenticationEntryPoint;
+import main.sswitch.security.oauth.jwt.TokenProvider;
 //=======
 import main.sswitch.security.oauth.PrincipalDetailService;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450:server/sswitch/src/main/java/main/sswitch/security/config/SecurityConfig.java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

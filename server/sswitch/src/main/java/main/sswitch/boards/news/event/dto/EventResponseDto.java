@@ -21,15 +21,15 @@ public class EventResponseDto {
 
     private LocalDateTime dateModified;
 
-//    public void getDateCreated(LocalDateTime dateCreated) {
-//        this.dateCreated = dateCreated;
-//    }
-//
-//    public void getDateModified(LocalDateTime dateModified) {
-//        this.dateModified = dateModified;
-//    }
-//
-//    public void getUsername(User user) {
-//        this.userName = user.getUserName();
-//    }
+    public void getDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void getDateModified(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public void getUsername(User user) {
+        this.userName = user.getUserName();
+    }
 }
