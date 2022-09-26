@@ -1,11 +1,9 @@
-import { click } from "@testing-library/user-event/dist/click";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 // 'tag': REPORT, QNA, ASK, FREE_BOARD 
-// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"]
-const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"]
+// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"];
 
 // 게시글 생성
 function CommunityCreate() {
@@ -16,7 +14,9 @@ function CommunityCreate() {
     const [ content, setContent ] = useState("");
     const [ contentState, setContentState ] = useState(false); // 내용 입력 상태여부
 
+    const [ tags, setTags ] = useState(["구로구", "강남구", "관악구", "동작구", "마포구"]);
     const [ clickTag, setClickTag ] = useState(false);
+    const [ countTag, setCountTag ] = useState(0);
 
     const navigate = useNavigate();
     
@@ -47,7 +47,7 @@ function CommunityCreate() {
             setContent("");
             
             // fetch("http://localhost:5000/data", {
-            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
+            fetch("ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(boardPost)
@@ -62,14 +62,16 @@ function CommunityCreate() {
     // 특정 태그 선택
     const selectTag = (e) => {
         console.log(e.target.value);
-        if (!clickTag) setClickTag(!clickTag);
-        
+        if(!clickTag) setClickTag(!clickTag);
     }
 
     // 태그 삭제
-    const deleteTag = () => {
-        console.log('태그 삭제!')
+    const deleteTag = (tag) => {
+        console.log('태그 삭제!');
+        const tagFilter = tags.filter(el => el !== tag)
+        setTags(tagFilter);
     }
+
     return (
     <Main>
         <div className="container">
@@ -109,11 +111,13 @@ function CommunityCreate() {
             {/* 유저가 태그를 선택한 경우, 나타나는 태그 만들기 */}
             { clickTag && <SelectedTag>
                 <div className="selected-tags">
-                    <span className="tag">구로구 <span className="tag delete-tag"
-                        onClick={deleteTag}>X</span></span>
-                    <span className="tag">마포구 <span className="tag delete-tag"
-                        onClick={deleteTag}>X</span></span>
-                </div>
+                    {clickTag && tags.map( el =>
+                        <span className="tag" key={el}>{el} 
+                            <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                        </span>
+                        )
+                    }
+                </div>                
             </SelectedTag> }
 
             <BoardTag>
@@ -251,6 +255,7 @@ const SelectedTag = styled.div`
     height: 5vh;
     @media (max-width: 550px) {
         width: 55vw;
+        height: 15vh;
     }
 
     .tag {
@@ -325,3 +330,9 @@ const ButtonWrapper = styled.div`
         }
     }
 `;
+
+
+
+
+
+
