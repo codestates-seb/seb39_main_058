@@ -6,14 +6,14 @@ import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer'
 function CommunityDetail() {
   const { id } = useParams();
 
-  const [ comment, setComment ] = useState([]);
+  const [ data, setData ] = useState([]);
 
   useEffect(() => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`)
       .then(res => res.json())
       .then(data => {
         console.log(data.data.commentResponses)
-        setComment(data.data.commentResponses)
+        setData(data)
       })
       .catch(err => console.log(err))
   },[])
@@ -24,7 +24,7 @@ function CommunityDetail() {
       <>
         <div>CommunityDetail</div>
         
-        <CommunityAnswer comment={comment} setComment={setComment}/>
+        <CommunityAnswer data={data}/>
       </>
   )
 }
