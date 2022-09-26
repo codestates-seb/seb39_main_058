@@ -1,6 +1,7 @@
 import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useNavigate} from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 
@@ -174,6 +175,9 @@ function onlyEng(txt){
   return (txt !== '' && txt !== 'undefined' && regex.test(txt));  
 }
 
+useEffect(()=>{
+  passwordConfirmFunc()
+},[password])
 
 const passwordConfirmFunc=()=>{
   if(password.length===0 ||spaceCheck(password)===true){
