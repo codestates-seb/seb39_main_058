@@ -16,9 +16,9 @@ function CommunityDetail() {
         setComment(data.data.commentResponses)
       })
       .catch(err => console.log(err))
-  })
+  },[])
 
-  
+
 
   return (
       <>
