@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineBell } from "react-icons/ai";
 import { FaSearch, FaBars } from "react-icons/fa";
@@ -9,6 +9,8 @@ function NavBar({welcome}) {
     const [searchOn, setSearchOn] = useState(false)
     const [noticeOn, setNoticeOn] = useState(false)
     const [logout, setLogout] = useState(false)
+
+    const navigate = useNavigate();
 
     const clear = () => {
         setNoticeOn(false)
@@ -87,8 +89,9 @@ function NavBar({welcome}) {
           <div>로그아웃 하시겠습니까?</div>
           <div className='confirm'>
             <div onClick={() => {
-              window.location.reload()
-              sessionStorage.removeItem("accessToken")
+                sessionStorage.removeItem("accessToken")
+                navigate('/')
+                setLogout(false)
             }}>확인</div>
             <div onClick={() => {
                 setLogout(false)
