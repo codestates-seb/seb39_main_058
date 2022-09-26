@@ -11,6 +11,7 @@ import main.sswitch.help.response.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
@@ -30,8 +31,9 @@ public class NoticeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto) {
-        Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto));
+    public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto,
+                                     @Positive @RequestHeader long userId) {
+        Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto),userId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.noticeToNoticeResponseDto(notice)),
@@ -39,10 +41,11 @@ public class NoticeController {
     }
 
     @PatchMapping("/{notice-id}")
-    public ResponseEntity patchNotice(@PathVariable("notice-id") @Positive long noticeId,
-                                      @RequestBody NoticePatchDto noticePatchDto) {
+    public ResponseEntity patchNotice(@Positive @PathVariable("notice-id") long noticeId,
+                                      @RequestBody NoticePatchDto noticePatchDto,
+                                      @Positive @RequestHeader long userId) {
         noticePatchDto.setNoticeId(noticeId);
-        Notice notice = noticeService.updateNotice(mapper.noticePatchDtoToNotice(noticePatchDto));
+        Notice notice = noticeService.updateNotice(mapper.noticePatchDtoToNotice(noticePatchDto),userId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.noticeToNoticeResponseDto(notice)),
@@ -50,7 +53,7 @@ public class NoticeController {
     }
 
     @GetMapping("/{notice-id}")
-    public ResponseEntity getNotice(@PathVariable("notice-id") long noticeId) {
+    public ResponseEntity getNotice(@Positive @PathVariable("notice-id") long noticeId) {
         Notice notice = noticeService.findNotice(noticeId);
 
         return new ResponseEntity<>(
@@ -69,8 +72,9 @@ public class NoticeController {
     }
 
     @DeleteMapping("/{notice-id}")
-    public ResponseEntity deleteNotice(@PathVariable("notice-id") long noticeId) {
-        noticeService.deleteNotice(noticeId);
+    public ResponseEntity deleteNotice(@Positive @PathVariable("notice-id") long noticeId,
+                                       @Positive @RequestHeader long userId) {
+        noticeService.deleteNotice(noticeId,userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

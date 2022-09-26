@@ -2,8 +2,10 @@ package main.sswitch.boards.news.event.service;
 
 import main.sswitch.boards.news.event.entity.Event;
 import main.sswitch.boards.news.event.repository.EventRepository;
+import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
+import main.sswitch.user.entity.User;
 import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,16 +26,20 @@ public class EventService {
         this.userService = userService;
     }
 
-    public Event createEvent(Event event) {
+    public Event createEvent(Event event,long userId) {
         verifyExistEvent(event.getEventId());
+
+//        verifyUserRole(userId);
 
         Event saveEvent = eventRepository.save(event);
 
         return saveEvent;
     }
 
-    public Event updateEvent(Event event) {
+    public Event updateEvent(Event event, long userId) {
         Event findEvent = findVerifiedEvent(event.getEventId());
+
+//        verifyUserRole(userId);
 
         Optional.ofNullable(event.getEventTitle())
                 .ifPresent(eventTitle -> findEvent.setEventTitle(eventTitle));
@@ -52,8 +58,9 @@ public class EventService {
                 Sort.by("eventId").descending()));
     }
 
-    public void deleteEvent(long eventId) {
+    public void deleteEvent(long eventId,long userId) {
         Event findEvent = findVerifiedEvent(eventId);
+//        verifyUserRole(userId);
 
         eventRepository.delete(findEvent);
     }
@@ -72,6 +79,15 @@ public class EventService {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.EMAIL_EXISTS);
+        }
+    }
+
+    //작성자 권환 확인 메소드
+    public void verifyUserRole(long userId) {
+        User user = userService.findUserWithId(userId);
+        String role = user.getRole();
+        if (!(role == "ROLE_ADMIN")) {
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
     }
 }
