@@ -1,6 +1,8 @@
-import { legacy_createStore as createStore } from "redux";
-import rootReducer from '../reducers/rootReducer'
+import { createStore, combineReducers } from "redux";
+import { CurrentPageReducer } from "../reducers/CurrentPage"
 
-const store = createStore(rootReducer);
+const rootReducer = combineReducers({
+    CurrentPageReducer
+})
 
-export default store;
+export const store = createStore(rootReducer);
