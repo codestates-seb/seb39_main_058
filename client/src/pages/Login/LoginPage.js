@@ -81,7 +81,7 @@ const tabKey2=(event)=>{
               navigate(`${location.state.path}`)
             }else{
               navigate(`/`)
-        
+              window.location.reload()
             }
         }
         // else{setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')}
