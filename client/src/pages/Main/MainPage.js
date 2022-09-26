@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
 import { BiCurrentLocation } from "react-icons/bi";
+import Loading from "../../components/Loading";
 
 function MainPage(){
 
@@ -23,6 +24,9 @@ function MainPage(){
 
     // 구로구 쓰레기통 상태
     const [ guro, setGuro ] = useState([]);
+
+    const [loading, setLoading] = useState(false)
+    const [click, setClick] = useState(false)
     
 
     // 구로구 쓰레기통 API
@@ -45,17 +49,20 @@ function MainPage(){
                 center: { lat: position.coords.latitude, lng: position.coords.longitude },
                 isPanto: false,
             });
+            if(position.coords.latitude){
+                setLoading(true)
+                setClick(false)
+            }
         })
-       
     };
 
     const findNearestTrash = () => {
         setRoadView(!roadView);
     }
-
     return (
-        
-        !(roadView) ? <Map
+        <MainStyle>
+        {click && !loading ? <Loading /> : undefined }
+        {!roadView ? <Map
                 center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}
                 style={{ width: "100%", height: "92vh" }}
                     level={3}
@@ -79,7 +86,6 @@ function MainPage(){
                         </a>
                     </CustomInfoWindow>
                 </CustomOverlayMap>
-                
                 {guro.map((ele, idx) => (
                     <MapMarker 
                         key={idx}
@@ -93,7 +99,11 @@ function MainPage(){
                         }}
                     />
                 ))}
-                <MyLocationBtn onClick={handleMyLocation}>
+                <MyLocationBtn onClick={() => {
+                    handleMyLocation()
+                    setLoading(false)
+                    setClick(true)
+                }}>
                     <BiCurrentLocation className="location_icon"/>
                     <div className="guide">현위치 찾기</div>
                 </MyLocationBtn>
@@ -106,10 +116,18 @@ function MainPage(){
                 />
                 <NearestTrashBtn onClick={findNearestTrash}>{ !roadView ? '가까운 쓰레기통 찾기' : '지도보기'}</NearestTrashBtn>
             </>
+        }
+        </MainStyle>
     )
 }
 
 export default MainPage;
+
+const MainStyle = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 
 const MyLocationBtn = styled.div`
     :hover {
