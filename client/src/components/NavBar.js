@@ -8,6 +8,7 @@ function NavBar({welcome}) {
 
     const [searchOn, setSearchOn] = useState(false)
     const [noticeOn, setNoticeOn] = useState(false)
+    const [logout, setLogout] = useState(false)
 
     const clear = () => {
         setNoticeOn(false)
@@ -59,7 +60,7 @@ function NavBar({welcome}) {
                     <li>이벤트</li>
                 </div>
             </div>
-            {1 === 1 ?
+            {!sessionStorage.getItem("accessToken") ?
             <Link to='/login' onClick={clear}>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
@@ -69,15 +70,33 @@ function NavBar({welcome}) {
                     {1 === 1 ? <li>관리자</li> : undefined}
                 </div>
             </div>}
-            {1 === 1 ?
+            {!sessionStorage.getItem("accessToken") ?
             <Link to='/signup' onClick={clear}>회원가입</Link> :
-            <div className='logout'>로그아웃</div>}
+            <div className='logout' onClick={() => {
+                setLogout(true)
+            }}>로그아웃</div>}
             <div className='drop_container'></div>
         </div>
             <div className='notice' onClick={() => {
                 setNoticeOn(!noticeOn)
             }}><AiOutlineBell/></div>
     </NavBarStyle>
+    {logout ?
+    <LogoutStyle>
+        <div className='view'>
+          <div>로그아웃 하시겠습니까?</div>
+          <div className='confirm'>
+            <div onClick={() => {
+              window.location.reload()
+              sessionStorage.removeItem("accessToken")
+            }}>확인</div>
+            <div onClick={() => {
+                setLogout(false)
+            }}>취소</div>
+          </div>
+        </div>
+    </LogoutStyle> :
+    undefined}
     <SearchInput>
         {searchOn ?
         <div className='search_bar'>
@@ -94,6 +113,51 @@ function NavBar({welcome}) {
 }
 
 export default NavBar
+
+const LogoutStyle = styled.div`
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+
+    .view{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    width: 30vw;
+    height: 20vh;
+    border-radius: 1rem;
+    font-size: 3vmin;
+
+    .confirm{
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      div{
+        border: 3px solid black;
+        padding: 0.5vh 1vw;
+        border-radius: 10px;
+        cursor: pointer;
+
+        :hover{
+          background-color: gray;
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+`
 
 const NavBarStyle = styled.div`
     height: 6vh;
