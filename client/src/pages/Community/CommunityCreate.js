@@ -1,11 +1,12 @@
-import { click } from "@testing-library/user-event/dist/click";
 import React, { useState, useEffect } from "react";
+// import { CKEditor } from '@ckeditor/ckeditor5-react'; // 추후 리팩토링 시, CKEditor를 사용해봐야겠다.
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 // 'tag': REPORT, QNA, ASK, FREE_BOARD 
-// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"]
-const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"]
+// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"];
+const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"];
 
 // 게시글 생성
 function CommunityCreate() {
@@ -16,7 +17,10 @@ function CommunityCreate() {
     const [ content, setContent ] = useState("");
     const [ contentState, setContentState ] = useState(false); // 내용 입력 상태여부
 
+    const [ tag, setTag ] = useState([]);
     const [ clickTag, setClickTag ] = useState(false);
+
+    const [ secret, setSecret ] = useState(false);
 
     const navigate = useNavigate();
     
@@ -24,8 +28,8 @@ function CommunityCreate() {
     const boardPost = {
         "forumTitle" : title,
         "forumText" : content,
-        "tag" : "QNA",
-        "secret" : "SECRET"
+        "tag" : tag,
+        "secret" : secret, // "SECRET"
     }
 
     // 게시판 내용 제출
@@ -45,9 +49,10 @@ function CommunityCreate() {
         if(title && content) {
             setTitle("");
             setContent("");
-            
+            setClickTag(!clickTag);
+            setTag([]);
             // fetch("http://localhost:5000/data", {
-            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
+            fetch("ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(boardPost)
@@ -61,15 +66,16 @@ function CommunityCreate() {
 
     // 특정 태그 선택
     const selectTag = (e) => {
-        console.log(e.target.value);
-        if (!clickTag) setClickTag(!clickTag);
-        
+        if(!clickTag) setClickTag(!clickTag);
+        (tags.includes(e.target.value)) ? setTag([...tag, e.target.value]) : setTag([...tag, e.target.value])
     }
 
     // 태그 삭제
-    const deleteTag = () => {
-        console.log('태그 삭제!')
+    const deleteTag = (el) => {
+        const filteredTag = tag.filter(tag => tag !== el)
+        setTag(filteredTag);        
     }
+
     return (
     <Main>
         <div className="container">
@@ -82,6 +88,7 @@ function CommunityCreate() {
             </BoardHeader>
             
             <BoardWrite>
+            {/* 추후 리팩토링 시, CKEditor 라이브러리를 사용해서 추가해볼 예정 */}
                 <div className="writer-title">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="title">제목</label>
@@ -92,7 +99,6 @@ function CommunityCreate() {
                         {titleState ? <div style={{color: "red", paddingLeft: "4rem"}}>제목은 반드시 입력되어야 합니다.</div> : undefined}
                     </form>
                 </div>
-                
                 <div className="writer-content">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="content"></label>
@@ -106,26 +112,32 @@ function CommunityCreate() {
                 <div className="writer-tags"></div>
             </BoardWrite>
 
-            {/* 유저가 태그를 선택한 경우, 나타나는 태그 만들기 */}
+            {/* 유저가 태그를 선택한 경우, 태그 담는 상자와 선택한 태그 만들기 */}
             { clickTag && <SelectedTag>
                 <div className="selected-tags">
-                    <span className="tag">구로구 <span className="tag delete-tag"
-                        onClick={deleteTag}>X</span></span>
-                    <span className="tag">마포구 <span className="tag delete-tag"
-                        onClick={deleteTag}>X</span></span>
-                </div>
+                    {clickTag && tag.map( el =>
+                        <span className="tag" key={el}>{el} 
+                            <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                        </span>
+                        )
+                    }
+                </div>                
             </SelectedTag> }
 
+           
             <BoardTag>
-                {/* <label>지역 태그를 선택하세요</label> */}
                 <select name="tags" onChange={ e => selectTag(e)}>
                     <option name="tags">지역 태그를 선택하세요</option>
                     {tags.map(tag => 
                         <option key={tag} name="tag" value={tag} >{tag}</option>
                     )}
                 </select>
-            </BoardTag>
-
+            </BoardTag> 
+            <Secret>
+                <input type="checkbox" name="secret"/>
+                <label htmlFor="secret">비밀글</label>
+            </Secret>
+            
             {/* 등록 및 취소하는 버튼 만들기 */}
             <ButtonWrapper>
                 <button className="writer-submit" form="board"> 등록 </button>
@@ -240,6 +252,11 @@ const BoardTag = styled.div`
     }
 `;
 
+const Secret = styled.div`
+    margin-top: 10px;
+    font-family: 'Courier New', Courier, monospace;
+`
+
 const SelectedTag = styled.div`
     display: flex;
     flex-direction: row;
@@ -251,6 +268,7 @@ const SelectedTag = styled.div`
     height: 5vh;
     @media (max-width: 550px) {
         width: 55vw;
+        height: 15vh;
     }
 
     .tag {
@@ -325,3 +343,9 @@ const ButtonWrapper = styled.div`
         }
     }
 `;
+
+
+
+
+
+
