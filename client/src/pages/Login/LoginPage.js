@@ -1,9 +1,10 @@
 import {React ,useState } from 'react'
 import styled from "styled-components";
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 
 const LoginPage = () => {
   const navigate=useNavigate();
+  const location=useLocation();
 
   const [id, setId] = useState("");
   const [clickId, setClickId] = useState(false);
@@ -66,17 +67,22 @@ const tabKey2=(event)=>{
   const loginPost = async()=>{
 
 
-    await fetch('http://ec2-3-38-246-82.ap-northeast-2.compute.amazonaws.com:8080/login', {
+    await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/login', {
 
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},
     body: JSON.stringify(loginInfo)
   }).then((res) => res.json())
   .then((data)=>{
-        // console.log(data)
+        console.log(data)
         if(data.data.accessToken){
           sessionStorage.setItem("accessToken", data.data.accessToken)
-          navigate('/')
+          if(location.state.path){
+              navigate(`${location.state.path}`)
+          }else{
+
+            navigate('/')
+          }
         }
         // else{setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')}
       //그런데 우리는 자동로그인 기능이없으므로 refresh 토큰을 받았지만 쓸일이없음
