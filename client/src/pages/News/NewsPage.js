@@ -103,6 +103,7 @@ const NewsStyle = styled.div`
   height: 100%;
   width: 100%;
   border-radius: 30px;
+  user-select: none;
 
   .back_drop{
     position: fixed;

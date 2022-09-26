@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GiCancel } from "react-icons/gi";
 import { AiOutlineSearch, AiFillLock } from "react-icons/ai";
@@ -13,6 +13,9 @@ function CommunityPage() {
 
   const [tags, setTags] = useState([])
   const [data, setData] = useState([])
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const page = useSelector(state => {
     return state.CurrentPageReducer.page
@@ -49,7 +52,11 @@ function CommunityPage() {
       </div>
       <div className='btn'>
         <span className='list'>목록</span>
-        <Link to={sessionStorage.getItem('accessToken') ? '/community/create' : '/login'} className='write'>글쓰기</Link>
+        <span className='write' onClick={() => {
+          sessionStorage.getItem("accessToken") ?
+          navigate('/community/create') :
+          navigate('/login', {state: {path:location.pathname}})
+        }}>글쓰기</span>
       </div>
       <div className='select_container'>
         <select onChange={(e) => {
@@ -88,11 +95,13 @@ function CommunityPage() {
               <div key={el.forumId} className="bords_list">
                 <span className='id'>{el.forumId}</span>
                 {el.secret === "OPEN" ?
-                <span className='title pointer'>{el.forumTitle}</span> :
+                <span className='title pointer' onClick={() => {
+                  navigate(`/community/${el.forumId}`)
+                }}>{el.forumTitle}</span> :
                 <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
                 <span className='user'>{el.userName}글쓴이</span>
                 <span className='updateAT'>{el.dateCreated}22/11/11</span>
-                <span className='tags'>{el.tag} 외 1</span>
+                <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
                 <span className='suggestion'>{el.forumLike}</span>
               </div>
             )
@@ -114,7 +123,7 @@ const CommunityPageStyle = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 10vh;
-  height: 120vh;
+  height: 140vh;
   user-select: none;
 
   .pagenation_container{
@@ -257,7 +266,7 @@ const CommunityPageStyle = styled.div`
 
   .bords_container{
     width: 80vw;
-    height: 80vh; // 한페이지에 몇개 들어오나 봐서 수정할거임
+    height: 90vh; // 한페이지에 몇개 들어오나 봐서 수정할거임
     margin-top: 2vh;
     font-size: 1.5vmin;
     /* border: 3px solid red; */

@@ -130,6 +130,7 @@ const LogoutStyle = styled.div`
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 10;
+    white-space: nowrap;
 
     .view{
     display: flex;
@@ -137,7 +138,7 @@ const LogoutStyle = styled.div`
     justify-content: space-around;
     align-items: center;
     background-color: white;
-    width: 30vw;
+    width: 35vw;
     height: 20vh;
     border-radius: 1rem;
     font-size: 3vmin;
