@@ -118,11 +118,16 @@ width: 70%;
 white-space:nowrap;
 border-bottom:1px solid;
 margin-bottom: 10px;
-
+@media screen and (max-width: 500px){
+        width:90%;
+    }
 `
 
 const AnswerList=styled.div`
-
+width: 70%;
+@media screen and (max-width: 500px){
+        width:90%;
+    }
 `
 
 const AnswerPostForm=styled.form`
@@ -133,7 +138,9 @@ button{
   white-space:nowrap;
 
 }
-
+@media screen and (max-width: 500px){
+        width:90%;
+    }
 `
 const AnswerText=styled.textarea`
 resize: none;
