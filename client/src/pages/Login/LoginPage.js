@@ -77,12 +77,12 @@ const tabKey2=(event)=>{
         console.log(data)
         if(data.data.accessToken){
           sessionStorage.setItem("accessToken", data.data.accessToken)
-          if(location.state.path){
+            if(location.state?.path){
               navigate(`${location.state.path}`)
-          }else{
-
-            navigate('/')
-          }
+            }else{
+              navigate(`/`)
+        
+            }
         }
         // else{setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')}
       //그런데 우리는 자동로그인 기능이없으므로 refresh 토큰을 받았지만 쓸일이없음
@@ -99,9 +99,9 @@ const tabKey2=(event)=>{
       //불러와서 쓰는거임
 
 
-  }).catch(() => {
+  }).catch((err) => {
       setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')
-    
+        // console.log(err)
   })
 }
 
@@ -119,7 +119,7 @@ const tabKey2=(event)=>{
   }
   return (
     <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
-        <LoginForm onSubmit={(event)=>loginFunc(event)}>
+        <LoginForm onSubmit={(event)=>loginFunc(event)}>{console.log('로케이션')}
           <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
           <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)}/>
           <AlertMsg>{alertId}</AlertMsg>
