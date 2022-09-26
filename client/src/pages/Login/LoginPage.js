@@ -119,7 +119,7 @@ const tabKey2=(event)=>{
   }
   return (
     <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
-        <LoginForm onSubmit={(event)=>loginFunc(event)}>{console.log('로케이션')}
+        <LoginForm onSubmit={(event)=>loginFunc(event)}>
           <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
           <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)}/>
           <AlertMsg>{alertId}</AlertMsg>
