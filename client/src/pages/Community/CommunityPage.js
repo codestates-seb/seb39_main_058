@@ -49,7 +49,7 @@ function CommunityPage() {
       </div>
       <div className='btn'>
         <span className='list'>목록</span>
-        <Link to='/community/create' className='write'>글쓰기</Link>
+        <Link to={sessionStorage.getItem('accessToken') ? '/community/create' : '/login'} className='write'>글쓰기</Link>
       </div>
       <div className='select_container'>
         <select onChange={(e) => {
@@ -104,6 +104,8 @@ function CommunityPage() {
     </CommunityPageStyle>
   )
 }
+
+// console.log(sessionStorage.getItem("accessToken") !== undefined)
 
 export default CommunityPage
 
