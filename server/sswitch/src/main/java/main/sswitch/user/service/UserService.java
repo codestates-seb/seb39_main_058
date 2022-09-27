@@ -2,14 +2,13 @@ package main.sswitch.user.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-//<<<<<<< HEAD
-import main.sswitch.oauth.token.jwt.TokenDto;
-import main.sswitch.oauth.token.jwt.TokenProvider;
-//=======
+
+import main.sswitch.security.oauth.jwt.TokenProvider;
+
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
-//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
-import main.sswitch.security.oauth.PrincipalDetails;
+
+import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
 
@@ -50,7 +49,7 @@ public class UserService {
         return savedUser;
     }
 
-    public TokenDto.TokenDetailsDto login(User user, HttpServletResponse response) {
+    public UserDto.TokenDetailsDto login(User user, HttpServletResponse response) {
         Optional<User> optionalUser = userRepository.findByLoginId(user.getLoginId());
         User findUser = optionalUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         if (!passwordEncoder.matches(user.getPassword(), findUser.getPassword())) {
@@ -68,14 +67,14 @@ public class UserService {
         return userRepository.save(findUser);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
-    public User updateProfile(User user) {
-        User findUser = getUser();
-        user.setUserId(findUser.getUserId());
-        Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
-        return userRepository.save(findUser);
-    }
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+//    public User updateProfile(User user) {
+//        User findUser = getUser();
+//        user.setUserId(findUser.getUserId());
+//        Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
+//        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
+//        return userRepository.save(findUser);
+//    }
 
     public void delete(long userId) {
         User findUser = findVerifiedUser(userId);

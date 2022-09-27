@@ -1,9 +1,10 @@
-package main.sswitch.oauth.token.jwt;
+package main.sswitch.security.oauth.jwt;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.oauth.PrincipalDetails;
+import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -38,7 +40,7 @@ public class TokenProvider{
         this.SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
     }
 
-    public TokenDto.TokenDetailsDto createToken(User user, HttpServletResponse response) {
+    public UserDto.TokenDetailsDto createToken(User user, HttpServletResponse response) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
@@ -69,10 +71,13 @@ public class TokenProvider{
 //
 //        response.addHeader("Set-Cookie", cookie.toString());
 
-        return TokenDto.TokenDetailsDto.builder()
+        return UserDto.TokenDetailsDto.builder()
                 .accessToken(accessToken)
                 .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
                 .grantType("Bearer")
+                .userName(user.getUserName())
+                .role(user.getRole())
+                .dateCreated(LocalDateTime.now())
                 .build();
     }
 

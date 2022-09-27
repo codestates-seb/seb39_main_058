@@ -11,11 +11,13 @@ import java.util.List;
 
 @Getter
 @Setter
+
 public class ForumResponseDto {
 
     private Long forumId;
 
-    private Forum.Tag tag;
+    private String tag;
+//    private Forum.Tag tag;
 
     private Forum.Secret secret;
 
@@ -26,6 +28,14 @@ public class ForumResponseDto {
     private long forumLike;
 
     private LocalDateTime dateCreated;
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void setDateModified(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
 
     private LocalDateTime dateModified;
 
@@ -44,9 +54,9 @@ public class ForumResponseDto {
         this.dateModified = dateModified;
     }
 
-    public String getForumTag(){
-        return tag.getTag();
-    }
+//    public String getForumTag(){
+//        return tag.getTag();
+//    }
 
     public String getForumSecret(){
         return secret.getSecret();

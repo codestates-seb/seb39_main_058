@@ -1,6 +1,7 @@
 package main.sswitch.boards.news.notice.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 import main.sswitch.user.entity.User;
 
 import javax.validation.constraints.NotBlank;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Positive;
 
 
 @Getter
+@Setter
 public class NoticePostDto {
     @NotBlank
     private String noticeTitle;
@@ -17,9 +19,4 @@ public class NoticePostDto {
 
     private long userId;
 
-    public User getUser() {
-        User user = new User();
-        user.setUserId(userId);
-        return user;
-    }
 }

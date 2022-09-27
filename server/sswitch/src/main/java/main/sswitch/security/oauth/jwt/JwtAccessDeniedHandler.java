@@ -1,4 +1,4 @@
-package main.sswitch.oauth.token.jwt;
+package main.sswitch.security.oauth.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

@@ -103,6 +103,29 @@ public class UserDto {
         }
 
     }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class TokenDetailsDto {
+        private String grantType;
+        private String accessToken;
+        private long accessTokenExpiredAt;
+        private LocalDateTime dateCreated;
+        private String userName;
+        private String role;
+
+        public TokenDetailsDto(User user) {
+            this.grantType = grantType;
+            this.accessToken = accessToken;
+            this.accessTokenExpiredAt = accessTokenExpiredAt;
+            this.dateCreated = dateCreated;
+            this.userName = userName;
+            this.role = role;
+        }
+    }
 
 
 }
