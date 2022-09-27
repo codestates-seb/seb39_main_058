@@ -39,7 +39,6 @@ function CommunityDetail() {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         setData(data) // CommunityAnswer 컴포넌트에 props로 전달해준 데이터!
         setTitle(data.data.forumTitle);
         setContent(data.data.forumText);
