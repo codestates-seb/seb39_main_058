@@ -53,7 +53,6 @@ function CommunityDetail() {
   
   const backToBoard = () => navigate("/community/forum");
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
-  console.log(tag);
 
   return (
       <>
