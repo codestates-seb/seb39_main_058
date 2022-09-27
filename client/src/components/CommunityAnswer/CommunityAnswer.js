@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from "styled-components";
 import AnswerMap from './AnswerMap';
 import { useLocation, useNavigate, useParams} from 'react-router-dom'
+import { useEffect } from 'react';
 
 //댓글 리스트 나오는 곳
 function CommunityAnswer({data}) {
@@ -14,9 +15,9 @@ function CommunityAnswer({data}) {
 // const minute = new Date().getMinutes();
 // const todayInfo = `${year} ${time}:${minute<10?'0':''}${minute}`;
 const [commentText,setCommentText]=useState('');
+const [newest,setNewest]=useState(false)
+
 let {id}=useParams();
-//댓글 목록조회
-//이부분은 communitydetail 부분에서props로받아와야함 
 
 
 
@@ -40,7 +41,7 @@ function spaceCheck(txt){
 
 //댓글 포스트함수
 const submitFunc=async(event)=>{
-  event.preventDefault()/*통신되면 지워주자 */
+  // event.preventDefault()/*통신되면 지워주자 */
   if(!sessionStorage.getItem("accessToken")){
     alert('로그인 후 이용 가능 합니다')
     navigate('/login',{state: {path:location.pathname}})
@@ -52,36 +53,49 @@ const submitFunc=async(event)=>{
       const answerInfo={
           "forumId" : id,
           "commentText" : commentText,
-          "userId" : 2,
+          "userId": 1,
 
       }
-        await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/create', {
+        await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/create', {
         
             method: 'POST',
-            headers: { 'content-Type' : 'application/json'},
+            headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,},
             body: JSON.stringify(answerInfo)
           })
-        // .then((res) => res.json())
-        //   .then((data)=>{
-        //           console.log('정보',answerInfo)
-        //           console.log(data)       
+        .then((res) => res.json())
+          .then((data)=>{
+                  console.log('정보',answerInfo)
+                  console.log(data)       
                   
-        //   })
+          })
           // 응답받을게머가있나?
-         window.location.reload()
+        //  window.location.reload()
       }
 
   }
 
-  
-
 
 }
 
+//등록순최신순함수
+const changeRow=(e)=>{
+     if(e?.target.name==='oldest'){
+      setNewest(false)
+      console.log(newest)
+     }
+     if(e?.target.name==='newest'){
+      setNewest(true)
+      console.log(newest)
+
+     }
+}
+useEffect(()=>{
+  changeRow()
+},[newest])
   return (
     <Container>
       <Head>
-        댓글({data.data?.commentResponses.length}) <span>등록순</span> | <span>최신순</span>  
+        댓글({data.data?.commentResponses.length}) <button name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
 
       </Head>
       
@@ -91,13 +105,22 @@ const submitFunc=async(event)=>{
        
       </AnswerPostForm>
 
-      <AnswerList>
+     {newest ? 
+     <AnswerList>
+     {data.data?.commentResponses.reverse().map((item)=>(
+     <AnswerMap key={item.commnetId} item={item}/>
+     ))}
+     </AnswerList>
+     : 
+     <AnswerList>
       {data.data?.commentResponses.map((item)=>(
       <AnswerMap key={item.commnetId} item={item}/>
       ))}
-      
-          
       </AnswerList>
+     }
+    
+
+
     </Container>
   )
 }

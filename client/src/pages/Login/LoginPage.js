@@ -75,13 +75,16 @@ const tabKey2=(event)=>{
   }).then((res) => res.json())
   .then((data)=>{
         console.log(data)
-        if(data.data.accessToken){
+        if(data){
           sessionStorage.setItem("accessToken", data.data.accessToken)
+          sessionStorage.setItem("userName", data.data.userName)
+          sessionStorage.setItem("role", data.data.role)
+
             if(location.state?.path){
               navigate(`${location.state.path}`)
             }else{
               navigate(`/`)
-              window.location.reload()
+              // window.location.reload()
             }
         }
         // else{setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')}
@@ -113,7 +116,7 @@ const tabKey2=(event)=>{
 
 
   const loginFunc=(event)=>{
-    event.preventDefault();// 통신성공하면 없애주자
+    event.preventDefault();
     loginPost();
    
   }
