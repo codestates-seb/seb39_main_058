@@ -54,7 +54,7 @@ function CommunityDetail() {
   
   const backToBoard = () => navigate("/community/forum");
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
-  const replacedContent = content.replace(/(?:\r\n|\r|\n)/g, '<br>')
+  console.log(tag);
 
   return (
       <>
@@ -72,7 +72,11 @@ function CommunityDetail() {
                 <li>{hours}시 {minutes}분</li>
               </ul>
               <div className="secret">
-                {secret === "SECRET" ? <span><FcLock/>해당 글은 비밀글입니다.</span> : undefined}
+                {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
+                {secret === "SECRET" ? undefined : <span><FcLock className="lock-icon"/>해당 글은 비밀글입니다.</span>}
+              </div>
+              <div className="tag-container"> 
+                {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
               </div>
             </UserInfo>
           </div>
@@ -115,8 +119,8 @@ const Main = styled.main`
   }
 
   @media (max-width: 550px) {
-    width: 75vw;
-    height: 40vh;
+    width: 85vw;
+    margin: 7px;
     padding-left: 2rem;
   }
 
@@ -165,21 +169,64 @@ const UserInfo = styled.div`
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
+    @media (max-width: 550px) {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 
   ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     list-style: none;
+    height: 5vh;
     padding: 0;
+    padding-right: 20px;
+    border-right: 1px solid black;
     > li {
       font-size: 1.5vmin;
     }
   }
 
   .secret {
-    margin-left: 30px;
-    font-size: vmin;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    font-size: 2vmin;
     font-weight: bold;
+    border-right: 1px solid black;
+    height: 5vh;
+    @media (max-width: 450px) {
+      padding: 0 0.5rem;
+    }
+
+    span > .lock-icon{
+      padding: 0 10px;
+    }
   }
+  .tag-container{
+    @media (max-width: 740px) {
+      display: flex;
+      flex-direction: column;
+    }
+    .tag {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 10px;
+      color: white;
+      background-color: rgb(56,217,169);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.5vmin;
+      &:hover {
+        background: rgb(71,182,181);
+      }
+      @media (max-width: 550px) {
+        margin: 1px 0.5rem;
+      }
+    }
+  }
+
 `;
 
 const Content = styled.div`
