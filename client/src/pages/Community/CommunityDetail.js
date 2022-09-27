@@ -39,6 +39,7 @@ function CommunityDetail() {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`)
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         setData(data) // CommunityAnswer 컴포넌트에 props로 전달해준 데이터!
         setTitle(data.data.forumTitle);
         setContent(data.data.forumText);
@@ -53,7 +54,8 @@ function CommunityDetail() {
   
   const backToBoard = () => navigate("/community/forum");
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
-  
+  const replacedContent = content.replace(/(?:\r\n|\r|\n)/g, '<br>')
+
   return (
       <>
         <Main>
@@ -76,7 +78,9 @@ function CommunityDetail() {
           </div>
 
           <Content>
-            <div className="content">{content}</div>  
+            <div className="content">
+              {content.replace(/(?:\r\n|\r|\n)/g, '<br/>').split('<br/>').map(item => <p key={item}>{item}</p>)}
+            </div>  
           </Content>
 
           <button className="like-btn" onClick={addLike}>
@@ -97,7 +101,7 @@ const Main = styled.main`
   justify-content: center;
   align-items: center;
   width: 95vw;
-  height: 35vh;
+  height: 65vh;
   margin: 20px;
   padding: 10px;
   border: 1px solid black;
