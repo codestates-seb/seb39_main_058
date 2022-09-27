@@ -39,7 +39,7 @@ if(window.confirm('댓글을 삭제하시겠습니까?')){
     <Container>
       <Head>
  
-      <div>{item.userId}</div><div className='time'>{item.datedateCreated}</div><button onClick={answerDelete}>x</button>
+      <div>{item.userName}</div><div className='time'>{item.dateCreated}</div><button onClick={answerDelete}>x</button>
       </Head>
       <div>{item.commentText}</div>
     </Container>
