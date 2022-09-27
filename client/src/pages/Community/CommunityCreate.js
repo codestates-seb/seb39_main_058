@@ -48,9 +48,12 @@ function CommunityCreate() {
         }
         
         if(title && content) {
-            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/create", {
+            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/create", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(boardPost)
             })
                 .then( res => {

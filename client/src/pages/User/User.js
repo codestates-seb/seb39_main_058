@@ -1,8 +1,21 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 function User() {
+    const { id } = useParams();
+
+
+    useEffect(() => {
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/${id}`, {
+            headers: {
+                Authorization: sessionStorage.getItem("accessToken")
+            }
+        })
+            .then(res => console.log(res))
+
+    },[])
 
     return (
     <Main>
@@ -100,7 +113,7 @@ const UserContainer = styled.div`
     flex-direction: row;
     justify-content: space-evenly;
     /* align-items: center; */
-    background-color: ivory;
+    background-color: white;
     position: absolute;
     width: 90vw;
     height: 120vh;
@@ -124,7 +137,6 @@ const UserPrivate = styled.div`
 
     .user-name {
         display: block;
-        background-color: ivory;
         font-size: 3vmin;
         margin: 0.5rem;
         cursor: pointer;
@@ -142,7 +154,7 @@ const UserPrivate = styled.div`
             padding: 1vmin 4vmin;
             border-radius: 1rem;
             border: 1px solid gray;
-            background-color: ivory;
+            background-color: white;
             font-size: 1.5vmin;
             cursor: pointer;
             &:hover {
