@@ -78,13 +78,14 @@ public class UserController {
                 HttpStatus.OK);
     }
 
-//    @PatchMapping("/users/profile")
-//    public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
-//        requestBody.setUserName(principalDetails.getUser().getUserName());
-//        requestBody.setPassword(principalDetails.getPassword());
-//        User user = userService.updateProfile(userMapper.userPatchToUser(requestBody));
-//        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
-//    }
+    @PatchMapping("/users/profile")
+    public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
+        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+        requestBody.setUserName(principalDetails.getUser().getUserName());
+        requestBody.setPassword(principalDetails.getPassword());
+        userService.update(userMapper.userPatchToUser(requestBody));
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
+    }
 
     @DeleteMapping("/users/signout/{user_id}")
     public ResponseEntity delete(@PathVariable("user_id") @Positive long userId) {

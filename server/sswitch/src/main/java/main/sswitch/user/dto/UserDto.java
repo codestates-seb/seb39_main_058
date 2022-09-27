@@ -51,9 +51,6 @@ public class UserDto {
     public static class Patch {
         private long userId;
 
-        @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
-        private String loginId;
-
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
         private String userName;
 

@@ -3,6 +3,7 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import main.sswitch.security.oauth.PrincipalDetails;
 import main.sswitch.security.oauth.jwt.TokenProvider;
 
 import main.sswitch.help.exceptions.BusinessLogicException;
@@ -60,17 +61,17 @@ public class UserService {
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public User update(User user) {
-        User findUser = findUserWithLoginId(user.getLoginId());
-        Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
+        User findUser = findVerifiedUserWithLoginId(user.getLoginId());
+        Optional.ofNullable(user.getUserName()).ifPresent(findUser::setUserName);
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
 
         return userRepository.save(findUser);
     }
 
 //    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
 //    public User updateProfile(User user) {
-//        User findUser = getUser();
-//        user.setUserId(findUser.getUserId());
+//        User findUser = findUserWithLoginId(user.getLoginId());
+//
 //        Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
 //        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
 //        return userRepository.save(findUser);

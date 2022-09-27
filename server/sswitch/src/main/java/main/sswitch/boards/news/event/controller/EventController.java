@@ -33,7 +33,7 @@ public class EventController {
         this.mapper = mapper;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/take/create")
     public ResponseEntity postEvent(@Valid @RequestBody EventPostDto eventPostDto,
                                     @Positive @RequestHeader long userId) {
         Event event = eventService.createEvent(mapper.EventPostDtoToEvent(eventPostDto),userId);
@@ -44,7 +44,7 @@ public class EventController {
         );
     }
 
-    @PatchMapping("/{event-id}")
+    @PatchMapping("/take/{event-id}")
     public ResponseEntity patchEvent(@PathVariable("event-id") long eventId,
                                      @Valid @RequestBody EventPatchDto eventPatchDto,
                                      @Positive @RequestHeader long userId) {
@@ -77,7 +77,7 @@ public class EventController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/{event-id}")
+    @DeleteMapping("/take/{event-id}")
     public ResponseEntity deleteEvent( @PathVariable("event-id") long eventId,
                                        @Positive @RequestHeader long userId) {
         eventService.deleteEvent(eventId,userId);

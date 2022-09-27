@@ -34,7 +34,7 @@ public class CommentController {
     }
 
     //댓글 등록
-    @PostMapping("/create")
+    @PostMapping("/take/create")
     public ResponseEntity postComment(@Valid @RequestBody CommentPostDto commentPostDto) {
         Comment comment = commentService.createComment(mapper.CommentPostDtoToComment(commentPostDto));
 
@@ -44,7 +44,7 @@ public class CommentController {
     }
 
     //댓글 수정
-    @PatchMapping("/{comment-id}")
+    @PatchMapping("/take/{comment-id}")
     public ResponseEntity patchComment(@PathVariable("comment-id") @Positive long commentId,
                                        @Valid @RequestBody CommentPatchDto commentPatchDto) {
         commentPatchDto.setCommentId(commentId);
@@ -69,7 +69,7 @@ public class CommentController {
     }
 
     //댓글 삭제
-    @DeleteMapping("/{comment-id}")
+    @DeleteMapping("/take/{comment-id}")
     public ResponseEntity deleteComment(@PathVariable("comment-id") long commentId) {
         commentService.deleteComment(commentId);
 
