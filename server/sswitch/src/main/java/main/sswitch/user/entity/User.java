@@ -11,6 +11,7 @@ import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.audit.BaseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
 import javax.persistence.*;
@@ -35,7 +36,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userName;
 
     @Column(nullable = false, unique = true, updatable = false)

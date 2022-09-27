@@ -2,28 +2,25 @@ package main.sswitch.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//<<<<<<< HEAD
-//import main.sswitch.dto.MultiResponseDto;
-//import main.sswitch.dto.SingleResponseDto;
-import main.sswitch.security.oauth.jwt.TokenDto;
-//=======
+
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
-//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
+
+import main.sswitch.security.oauth.PrincipalDetails;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
 import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
-//<<<<<<< HEAD
-//=======
-//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +41,8 @@ public class UserController {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder encoder;
+
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
         return "Main Page";
@@ -61,7 +60,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity loginUser(@Valid @RequestBody UserDto.LoginDto loginDto, HttpServletResponse res) {
-        TokenDto.TokenDetailsDto tokenDetailsDto = userService.login(userMapper.userLoginToUser(loginDto), res);
+        UserDto.TokenDetailsDto tokenDetailsDto = userService.login(userMapper.userLoginToUser(loginDto), res);
         return new ResponseEntity(new SingleResponseDto<>(tokenDetailsDto), HttpStatus.OK);
     }
 
@@ -70,6 +69,22 @@ public class UserController {
         String jwtToken = response.getHeader("Authorization");
         response.setHeader("Authorization","Expired");
         return "로그아웃";
+    }
+
+    @GetMapping("/users/profile")
+    public ResponseEntity getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)),
+                HttpStatus.OK);
+    }
+
+    @PatchMapping("/users/profile")
+    public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
+        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+        requestBody.setUserName(principalDetails.getUser().getUserName());
+        requestBody.setPassword(principalDetails.getPassword());
+        userService.update(userMapper.userPatchToUser(requestBody));
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
     }
 
     @DeleteMapping("/users/signout/{user_id}")

@@ -7,6 +7,7 @@ import main.sswitch.user.entity.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 public class UserDto {
     @Getter
@@ -81,6 +82,10 @@ public class UserDto {
         private User.Providers providers;
         private String role;
         private int point;
+
+        private LocalDateTime dateCreated;
+
+        private LocalDateTime dateModified;
         public ResponseDto(User user) {
             this.userId = userId;
             this.loginId = loginId;
@@ -90,8 +95,33 @@ public class UserDto {
             this.providers = providers;
             this.role = role;
             this.point = point;
+            this.dateCreated = dateCreated;
+            this.dateModified = dateModified;
         }
 
+    }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class TokenDetailsDto {
+        private String grantType;
+        private String accessToken;
+        private long accessTokenExpiredAt;
+        private LocalDateTime dateCreated;
+        private String userName;
+        private String role;
+
+        public TokenDetailsDto(User user) {
+            this.grantType = grantType;
+            this.accessToken = accessToken;
+            this.accessTokenExpiredAt = accessTokenExpiredAt;
+            this.dateCreated = dateCreated;
+            this.userName = userName;
+            this.role = role;
+        }
     }
 
 

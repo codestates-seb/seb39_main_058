@@ -30,7 +30,7 @@ public class NoticeController {
         this.mapper = mapper;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/take/create")
     public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto,
                                      @Positive @RequestHeader long userId) {
         Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto),userId);
@@ -40,7 +40,7 @@ public class NoticeController {
                 HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{notice-id}")
+    @PatchMapping("/take/{notice-id}")
     public ResponseEntity patchNotice(@Positive @PathVariable("notice-id") long noticeId,
                                       @RequestBody NoticePatchDto noticePatchDto,
                                       @Positive @RequestHeader long userId) {
@@ -71,7 +71,7 @@ public class NoticeController {
                         pageNotices),HttpStatus.OK);
     }
 
-    @DeleteMapping("/{notice-id}")
+    @DeleteMapping("/take/{notice-id}")
     public ResponseEntity deleteNotice(@Positive @PathVariable("notice-id") long noticeId,
                                        @Positive @RequestHeader long userId) {
         noticeService.deleteNotice(noticeId,userId);

@@ -35,8 +35,15 @@ public enum ExceptionCode {
     LOGINID_NOT_FOUND(404, "Email not found"),
 
     USERNAME_NOT_FOUND(404, "Username not found"),
+    USERNAME_EXISTS(409, "Username exists"),
 
-    USERNAME_EXISTS(409, "Username exists");
+    GOODS_NOT_FOUND(404, "Goods not found"),
+
+    GOODS_EXISTS(409, "Goods exists"),
+
+    ORDER_NOT_FOUND(404, "Order not found"),
+
+    ORDER_EXITS(409, "Order exists");
 
 
     @Getter

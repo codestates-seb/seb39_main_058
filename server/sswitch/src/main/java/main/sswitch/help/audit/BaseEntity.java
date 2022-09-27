@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -18,12 +21,11 @@ public abstract class BaseEntity {
     @CreatedDate
     @Column(updatable = false, name = "date_created")
     protected LocalDateTime dateCreated;
-
     @Getter
     @Setter
     @LastModifiedDate
     @Column(name = "date_modified")
-    protected LocalDateTime dateModified = LocalDateTime.now();
+    protected LocalDateTime dateModified;
 
 
 }

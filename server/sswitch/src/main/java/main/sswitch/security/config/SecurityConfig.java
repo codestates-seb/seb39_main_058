@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/signup","/login","/")
                 .permitAll()
-                .antMatchers("/users/**")
+                .antMatchers("/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/news/notice/take","/news/event/take")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
