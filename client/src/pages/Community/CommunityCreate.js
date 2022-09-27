@@ -285,7 +285,7 @@ const SelectedTag = styled.div`
     .tag {
         margin: 10px;
         padding: 0.5rem;
-        border-radius: 10%;
+        border-radius: 10px;
         color: white;
         background-color: rgb(56,217,169);
         font-family: 'Courier New', Courier, monospace;
@@ -295,7 +295,7 @@ const SelectedTag = styled.div`
 
         .delete-tag {
             margin: 0;
-            padding: 0;
+            padding: 3px;
             cursor: pointer;
         }
     }
