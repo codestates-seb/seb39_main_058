@@ -52,7 +52,7 @@ function CommunityDetail() {
   },[]);
   
   const backToBoard = () => navigate("/community/forum");
-  const addLike = () => (!like) ? setLike(like + 1) : setLike(1);
+  const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
   
   return (
       <>
@@ -70,7 +70,7 @@ function CommunityDetail() {
                 <li>{hours}시 {minutes}분</li>
               </ul>
               <div className="secret">
-                {secret === "OPEN" ? <span><FcLock/>해당 글은 비밀글입니다.</span> : undefined}
+                {secret === "SECRET" ? <span><FcLock/>해당 글은 비밀글입니다.</span> : undefined}
               </div>
             </UserInfo>
           </div>
@@ -173,7 +173,7 @@ const UserInfo = styled.div`
 
   .secret {
     margin-left: 30px;
-    font-size: 2vmin;
+    font-size: vmin;
     font-weight: bold;
   }
 `;
