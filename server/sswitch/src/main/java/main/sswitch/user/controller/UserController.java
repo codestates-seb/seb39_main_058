@@ -10,6 +10,7 @@ import main.sswitch.oauth.token.jwt.TokenDto;
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
+import main.sswitch.security.oauth.PrincipalDetails;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
@@ -26,6 +27,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +48,8 @@ public class UserController {
     private final UserMapper userMapper;
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder encoder;
 
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
@@ -73,6 +78,21 @@ public class UserController {
         response.setHeader("Authorization","Expired");
         return "로그아웃";
     }
+
+    @GetMapping("/users/profile")
+    public ResponseEntity getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)),
+                HttpStatus.OK);
+    }
+
+//    @PatchMapping("/users/profile")
+//    public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
+//        requestBody.setUserName(principalDetails.getUser().getUserName());
+//        requestBody.setPassword(principalDetails.getPassword());
+//        User user = userService.updateProfile(userMapper.userPatchToUser(requestBody));
+//        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
+//    }
 
     @DeleteMapping("/users/signout/{user_id}")
     public ResponseEntity delete(@PathVariable("user_id") @Positive long userId) {

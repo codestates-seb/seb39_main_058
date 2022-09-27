@@ -7,6 +7,7 @@ import main.sswitch.user.entity.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 public class UserDto {
     @Getter
@@ -50,6 +51,9 @@ public class UserDto {
     public static class Patch {
         private long userId;
 
+        @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
+        private String loginId;
+
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
         private String userName;
 
@@ -81,6 +85,10 @@ public class UserDto {
         private User.Providers providers;
         private String role;
         private int point;
+
+        private LocalDateTime dateCreated;
+
+        private LocalDateTime dateModified;
         public ResponseDto(User user) {
             this.userId = userId;
             this.loginId = loginId;
@@ -90,6 +98,8 @@ public class UserDto {
             this.providers = providers;
             this.role = role;
             this.point = point;
+            this.dateCreated = dateCreated;
+            this.dateModified = dateModified;
         }
 
     }

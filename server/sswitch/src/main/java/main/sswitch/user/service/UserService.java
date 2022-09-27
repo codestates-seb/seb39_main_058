@@ -9,6 +9,7 @@ import main.sswitch.oauth.token.jwt.TokenProvider;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
+import main.sswitch.security.oauth.PrincipalDetails;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
 
@@ -60,10 +61,19 @@ public class UserService {
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public User update(User user) {
-        User findUser = findVerifiedUser(user.getUserId());
+        User findUser = findUserWithLoginId(user.getLoginId());
         Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
 
+        return userRepository.save(findUser);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public User updateProfile(User user) {
+        User findUser = getUser();
+        user.setUserId(findUser.getUserId());
+        Optional.ofNullable(user.getUserName()).ifPresent(username -> findUser.setUserName(username));
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
         return userRepository.save(findUser);
     }
 
@@ -72,12 +82,12 @@ public class UserService {
         userRepository.delete(findUser);
     }
 
-    private void verifyUserRole(long userId) {
-        String role = findUserWithId(userId).getRole();
-        if (role != "ROLE_ADMIN") {
-            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
-        }
-    }
+//    private void verifyUserRole(long userId) {
+//        String role = findUserWithId(userId).getRole();
+//        if (role != "ROLE_ADMIN") {
+//            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+//        }
+//    }
 
     private void verifyExistUser(String loginId) {
         Optional<User> user = userRepository.findByLoginId(loginId);
@@ -117,6 +127,13 @@ public class UserService {
         return findLoginId;
     }
 
+//    private User findVerifiedUserWithUserName(String userName) {
+//        Optional<User> optionalUser = userRepository.findByUsername(userName);
+//        User findUserName = optionalUser.orElseThrow(() ->
+//                new BusinessLogicException(ExceptionCode.USERNAME_NOT_FOUND));
+//        return findUserName;
+//    }
+
 
 //<<<<<<< HEAD
 //    public User idCheck(String loginId) {
@@ -131,10 +148,9 @@ public class UserService {
 //        return findRole;
 //    }
 
-    public User idCheck(String loginId) {
-        User user = findUserWithLoginId(loginId);
-        return user;
-    }
+//    public User getUser(String loginId) {
+//        return findUserWithLoginId(loginId);
+//    }
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
     @Transactional(readOnly = true)

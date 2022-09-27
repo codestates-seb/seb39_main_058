@@ -42,32 +42,32 @@ public class TokenProvider{
         Date now = new Date();
         Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
 
-        String email = user.getEmail();
+        String loginId = user.getLoginId();
         String role = user.getRole();
 
         String accessToken = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(email)
+                .setSubject(loginId)
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .compact();
 
-        String refreshToken = Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .compact();
-
-        ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Lax")
-                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
-                .path("/")
-                .build();
-
-        response.addHeader("Set-Cookie", cookie.toString());
+//        String refreshToken = Jwts.builder()
+//                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+//                .setIssuedAt(now)
+//                .setExpiration(validity)
+//                .compact();
+//
+//        ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
+//                .httpOnly(true)
+//                .secure(true)
+//                .sameSite("Lax")
+//                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
+//                .path("/")
+//                .build();
+//
+//        response.addHeader("Set-Cookie", cookie.toString());
 
         return TokenDto.TokenDetailsDto.builder()
                 .accessToken(accessToken)
@@ -76,32 +76,32 @@ public class TokenProvider{
                 .build();
     }
 
-    public TokenDto.TokenDetailsDto createAccessToken(Authentication authentication) {
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
-
-        PrincipalDetails user = (PrincipalDetails) authentication.getPrincipal();
-
-        // principalDetails 자동 implements loginId 로 세팅
-        String loginId = user.getUsername();
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        String accessToken = Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                .setSubject(loginId)
-                .claim(AUTHORITIES_KEY,role)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .compact();
-        return TokenDto.TokenDetailsDto.builder()
-                .accessToken(accessToken)
-                .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
-                .grantType("Bearer")
-                .build();
-
-    }
+//    public TokenDto.TokenDetailsDto createAccessToken(Authentication authentication) {
+//        Date now = new Date();
+//        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
+//
+//        PrincipalDetails user = (PrincipalDetails) authentication.getPrincipal();
+//
+//        // principalDetails 자동 implements loginId 로 세팅
+//        String userName = user.getUsername();
+//        String role = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(","));
+//
+//        String accessToken = Jwts.builder()
+//                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+//                .setSubject(userName)
+//                .claim(AUTHORITIES_KEY,role)
+//                .setIssuedAt(now)
+//                .setExpiration(validity)
+//                .compact();
+//        return TokenDto.TokenDetailsDto.builder()
+//                .accessToken(accessToken)
+//                .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
+//                .grantType("Bearer")
+//                .build();
+//
+//    }
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
         String role = claims.get(AUTHORITIES_KEY).toString();
