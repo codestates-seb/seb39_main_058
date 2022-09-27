@@ -81,7 +81,7 @@ const submitFunc=async(event)=>{
   return (
     <Container>
       <Head>
-        댓글({data.data?.commentResponses.length}) <span>등록순</span> | <span>최신순</span>  
+        댓글({data.data?.commentResponses.length}) <span>등록순</span> | <span>최신순</span>  {console.log(data)}
 
       </Head>
       
