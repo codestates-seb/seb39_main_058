@@ -118,7 +118,6 @@ public class UserDto {
         private String accessToken;
         private long accessTokenExpiredAt;
         private LocalDateTime dateCreated;
-        private String password;
         private long userId;
         private String userName;
         private String role;
@@ -131,7 +130,6 @@ public class UserDto {
             this.userId=userId;
             this.userName = userName;
             this.role = role;
-            this.password = password;
         }
     }
 

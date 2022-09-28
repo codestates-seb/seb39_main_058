@@ -71,7 +71,7 @@ public class UserService {
     public User updateProfile(String loginId, User user) {
         User findUser = findUserWithLoginId(loginId);
         Optional.ofNullable(user.getUserName()).ifPresent(userName -> findUser.setUserName(userName));
-        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(password));
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
         return userRepository.save(findUser);
     }
 
@@ -125,33 +125,19 @@ public class UserService {
         return findLoginId;
     }
 
-//    private User findVerifiedUserWithUserName(String userName) {
-//        Optional<User> optionalUser = userRepository.findByUsername(userName);
-//        User findUserName = optionalUser.orElseThrow(() ->
-//                new BusinessLogicException(ExceptionCode.USERNAME_NOT_FOUND));
-//        return findUserName;
-//    }
+    private User findVerifiedUserWithUserName(String userName) {
+        Optional<User> optionalUser = userRepository.findByUsername(userName);
+        User findUserName = optionalUser.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.USERNAME_NOT_FOUND));
+        return findUserName;
+    }
 
-
-//<<<<<<< HEAD
-//    public User idCheck(String loginId) {
-//        User user = findUserWithLoginId(loginId);
-//        return user;
-//    }
-//=======
-//    private User findVerifiedUserRole(String role) {
-//        Optional<User> optionalUser = userRepository.findByRole(role);
-//        User findRole = optionalUser.orElseThrow(() ->
-//                new BusinessLogicException(ExceptionCode.ACCESS_DENIED));
-//        return findRole;
-//    }
     @Transactional(readOnly = true)
     public UserDto.ResponseDto getCurrentUser(String loginId) {
         return userRepository.findById(SecurityUtil.getCurrentUserId())
                 .map(UserDto.ResponseDto::of)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
     }
-//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {
@@ -163,6 +149,10 @@ public class UserService {
         return findVerifiedUserWithEmail(email);
     }
 
+    @Transactional(readOnly = true)
+    public User findUserWithUserName(String userName) {
+        return findVerifiedUserWithUserName(userName);
+    }
 
     @Transactional(readOnly = true)
     public User findUserWithLoginId(String loginId) {

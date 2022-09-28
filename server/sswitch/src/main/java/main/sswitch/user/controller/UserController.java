@@ -85,9 +85,9 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/users/{user_id}")
-    public ResponseEntity getUser(@PathVariable("user_id") @Positive long userId) {
-        User user = userService.findUserWithId(userId);
+    @GetMapping("/users/{user_name}")
+    public ResponseEntity getUser(@PathVariable("user_name")String userName) {
+        User user = userService.findUserWithUserName(userName);
         UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
