@@ -11,6 +11,8 @@ import NewsCreate from './pages/News/NewsCreate';
 import CommunityPage from './pages/Community/CommunityPage';
 import CommunityDetail from './pages/Community/CommunityDetail';
 import CommunityCreate from './pages/Community/CommunityCreate';
+import GoodsPage from './pages/Goods/GoodsPage';
+import GoodsCreate from './pages/Goods/GoodsCreate';
 
 function App() {
   
@@ -42,6 +44,10 @@ function App() {
           <Route path='/community/forum' element={<CommunityPage/>}/>
           <Route path='/community/:id' element={<CommunityDetail/>}/>
           <Route path='/community/create' element={<CommunityCreate/>}/>
+          <Route path='/goods' element={<GoodsPage/>}/>
+          <Route path='/goods/create' element={<GoodsCreate/>}/>
+        
+
         </Routes>
     </div>  
   );
