@@ -44,7 +44,7 @@ function User() {
         <div className='wrapper'>
         <TopBackground/>
         <UserContainer>
-            {/* <div className='user-private'> */}
+            
                 <UserPrivate>
                     <img className='user-profile' src="/profile.png" alt='profile'/>
                     <div className='user-name'><b>{userData.userName}</b>님</div>
@@ -58,7 +58,7 @@ function User() {
                         <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
                     </div>
                 </UserPrivate>
-            {/* </div> */}
+            
             <UserInfo>
                 <div className='user-status'>
                     <h3 className='user-level'><AiFillGold className='status-icon'/>현재 등급: 실버</h3>
@@ -83,12 +83,12 @@ function User() {
                         <span>2022-09-06</span>
                     </div>
                     <div className='user-point-content'>
-                        <h3>포인트 사용</h3>
-                        <span>-3000p</span>
-                        <span>-20000p</span>
-                        <span>-4800p</span>
-                        <span>-18000p</span>
-                        <span>+3000p</span>
+                        <h3 className='used-point'>포인트 사용</h3>
+                        <span className='used-point'>-3000p</span>
+                        <span className='used-point'>-20000p</span>
+                        <span className='used-point'>-4800p</span>
+                        <span className='used-point'>-18000p</span>
+                        <span className='used-point'>+3000p</span>
                     </div>
                     <div className='user-point-content'>
                         <h3>남은 포인트</h3>
@@ -153,8 +153,11 @@ const UserPrivate = styled.div`
         height: 5em;
     }
 
-    & > div {
+    > div {
         margin: 1rem;
+        @media (max-width: 500px) {
+            margin: 0.5rem;
+        }
     }
 
     .user-name {
@@ -172,7 +175,7 @@ const UserPrivate = styled.div`
         border-top: 1px solid gray;
         
         .user-logout, .user-revise, .user-withdraw {
-            margin: 1rem;
+            margin: 0.5rem;
             padding: 1vmin 4vmin;
             border-radius: 1rem;
             border: 1px solid gray;
@@ -183,6 +186,11 @@ const UserPrivate = styled.div`
                 color: white;
                 background-color: rgb(71,182,181);
                 border: 1px solid rgb(71,182,181);
+            }
+            @media (max-width: 500px) {
+                margin: 0.2rem;
+                padding: 0.5vmin 2vmin;
+                
             }
         }
     }
@@ -207,6 +215,7 @@ const UserInfo = styled.div`
             flex-direction: column;
             justify-content: space-evenly;
             align-items: center;
+            height: auto;
         }
         .user-level, .user-writing, .user-received-likes {
             display: flex;
@@ -216,7 +225,14 @@ const UserInfo = styled.div`
             @media (max-width: 950px) {
                 display: flex;
                 flex-direction: row;
+                margin: 0;
             }
+        }
+
+        .status-icon {
+            padding: 10px;
+            width: 5vw;
+            height: 5vh;
         }
 
     }
@@ -229,6 +245,14 @@ const UserInfo = styled.div`
         border: 1px solid gray;
         border-radius: 3rem;
         height: 70vh;
+        @media (max-width: 950px) {
+            padding: 1rem;
+            height: 15vh;
+            font-size: .7rem;
+        }
+        @media (max-width: 650px) {
+            font-size: .3rem;
+        }
 
         .user-point-content {
             display: flex;
@@ -236,6 +260,11 @@ const UserInfo = styled.div`
             justify-content: space-evenly;
             & > h3 {
                 text-align: center;
+            }
+            @media (max-width: 1050px) {
+                .used-point {
+                    display: none;
+                }
             }
         }
     }
