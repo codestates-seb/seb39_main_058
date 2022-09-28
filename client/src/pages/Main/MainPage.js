@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
-import { BiChevronDownCircle, BiCurrentLocation } from "react-icons/bi";
+import { BiCurrentLocation } from "react-icons/bi";
+import { GiCancel } from "react-icons/gi";
 import Loading from "../../components/Loading";
 
 function MainPage(){
@@ -19,8 +20,6 @@ function MainPage(){
         isPanto: false,
     });
 
-    const [ roadView, setRoadView ] = useState(false);
-
     // 구로구 쓰레기통 상태
     const [ guro, setGuro ] = useState([]);
 
@@ -29,6 +28,13 @@ function MainPage(){
     const [hover, setHover] = useState({
         boolean : false ,
         state : ''
+    })
+
+    const [markerClick, setMarkerClick] = useState({
+        boolean : false ,
+        위도 : undefined ,
+        경도 : undefined ,
+        주소 : undefined
     })
     
     // 구로구 쓰레기통 API
@@ -58,18 +64,14 @@ function MainPage(){
         })
     };
 
-    const findNearestTrash = () => {
-        setRoadView(!roadView);
-    }
-
     return (
         <MainStyle>
         {click && !loading ? <Loading /> : undefined }
-        {!roadView ? <Map
-                center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}
-                style={{ width: "100%", height: "92vh" }}
-                    level={6}
-                > 
+        <Map
+            center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}
+            style={{ width: "100%", height: "100vh" }}
+                level={6}
+            > 
                 <CustomOverlayMap position={ !myLocation.center.lat ? 
                     { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
                     { lat: myLocation.center.lat, lng: myLocation.center.lng }
@@ -92,12 +94,33 @@ function MainPage(){
                         }}
                         onMouseOver={() => setHover({boolean: true , state : ele.소재지도로명주소})}
                         onMouseOut={() => setHover({boolean : false , state : ''})}
-                        onClick={() => window.open(`https://map.kakao.com/link/to/${ele.소재지도로명주소},${ele.위도},${ele.경도}`)}
+                        // onClick={() => window.open(`https://map.kakao.com/link/to/${ele.소재지도로명주소},${ele.위도},${ele.경도}`)}
+                        onClick={() => setMarkerClick({boolean : true , 위도 : ele.위도 , 경도 : ele.경도 , 주소 : ele.소재지도로명주소})}
                     >
                     {ele.소재지도로명주소 === hover.state ? <div className="info">{hover.state}</div> : undefined}
                     </MapMarker>
                     </div>
                 ))}
+                {markerClick.boolean ?
+                    <div className="roadview_modal_container">
+                        <div className="modal_container">
+                            <Roadview 
+                            position={{ lat : markerClick.위도, lng : markerClick.경도, radius : 50}}
+                            style={{width: "100%", height: "100%"}}
+                            />
+                            <span className="cancel"
+                            onClick={() => setMarkerClick({
+                                boolean : false ,
+                                위도 : undefined ,
+                                경도 : undefined ,
+                                주소 : undefined
+                            })}><GiCancel/></span>
+                        </div>
+                        <div className="get_directions" 
+                        onClick={() => window.open(`https://map.kakao.com/link/to/${markerClick.주소},${markerClick.위도},${markerClick.경도}`)}
+                        >길찾기</div>
+                    </div> :
+                undefined}
                 <MyLocationBtn onClick={() => {
                     handleMyLocation()
                     setLoading(false)
@@ -106,16 +129,7 @@ function MainPage(){
                     <BiCurrentLocation className="location_icon"/>
                     <div className="guide">현위치 찾기</div>
                 </MyLocationBtn>
-                <NearestTrashBtn onClick={findNearestTrash} roadView={roadView}>{ !roadView ? '가까운 쓰레기통 찾기' : '지도보기'}</NearestTrashBtn>
-            </Map> : 
-            <>
-                <Roadview 
-                    position={{ lat: 33.450701, lng: 126.570667, radius: 50 }}
-                    style={{width: "100%", height: "92vh" }}
-                />
-                <NearestTrashBtn onClick={findNearestTrash}>{ !roadView ? '가까운 쓰레기통 찾기' : '지도보기'}</NearestTrashBtn>
-            </>
-        }
+        </Map>
         </MainStyle>
     )
 }
@@ -126,6 +140,57 @@ const MainStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .get_directions{
+        cursor: pointer;
+    font-size: 3vmin;
+    position: absolute;
+    bottom: 10%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1vh 2vw;
+    background-color: white;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
+                0 2px 2px rgba(0,0,0,0.11), 
+                0 4px 4px rgba(0,0,0,0.11), 
+                0 6px 8px rgba(0,0,0,0.11),
+                0 8px 16px rgba(0,0,0,0.11);
+
+        &:hover {
+            font-weight: bold;
+        }
+    }
+
+    .roadview_modal_container{
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+    }
+
+    .modal_container{
+        width: 50vw;
+        height: 50vh;
+
+        .cancel{
+            font-size: 500%;
+            position: absolute;
+            top: 5%;
+            right: 5%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    }
 
     .info{
         white-space: pre;
@@ -184,30 +249,6 @@ const MyLocationBtn = styled.div`
     .guide{
         display: none;
     }
-`;
-
-const NearestTrashBtn = styled.div`
-    &:hover {
-        font-weight: bold;
-    }
-
-    z-index: 1;
-    cursor: pointer;
-    font-size: 2vmin;
-    position: absolute;
-    left: 42vw;
-    bottom: 3%;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1vh 2vw;
-    background-color: white;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
-                0 2px 2px rgba(0,0,0,0.11), 
-                0 4px 4px rgba(0,0,0,0.11), 
-                0 6px 8px rgba(0,0,0,0.11),
-                0 8px 16px rgba(0,0,0,0.11);
 `;
 
 const CustomInfoWindow = styled.div`
