@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { RiArrowDropDownFill } from "react-icons/ri";
+import {Link} from "react-router-dom"
 
 const NewsPage = () => {
 
@@ -30,21 +31,42 @@ const NewsPage = () => {
     })
   },[])
 
+  const handleDeletButton = () => {
+    for(let i = 0 ; i < check.length ; i++){
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/${check[i]}`,{
+        method: "DELETE",
+        headers: { 
+          "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json"
+      }
+      }).then(() => {
+        console.log("삭제됐습니다")
+      }).catch((err) => console.log(err))
+    }
+  }
+
   return (
     <NewsStyle>
       <div className='title'>공지사항</div>
-      <div className='manager'>
-        <div className='ask'>글쓰기</div>
-        {del ?
-        <div className='completion' onClick={() => {
-          check.length === 0 ?
-          setDel(false) :
-          setCompletion(true)
-        }}>완료</div>:
-        <div className='delete' onClick={() => {
-          setDel(true)
-        }}>삭제</div>}
-      </div>
+      {sessionStorage.getItem("role") !== "ROLE_USER" ?
+        <div className='manager'>
+          <Link to="/news/notice/create" className='ask'>글쓰기</Link>
+          {del ?
+          <>
+          <div className='delete' onClick={() => {
+            check.length === 0 ?
+            alert("삭제할 글을 체크해주세요.") :
+            setCompletion(true)
+          }}>삭제</div>
+          <div className='edit' onClick={() => {
+            setDel(false)
+          }}>완료</div>
+          </>:
+          <div className='edit' onClick={() => {
+            setDel(true)
+          }}>편집</div>}
+        </div> :
+      undefined}
       {completion ?
       <div className='back_drop'>
         <div className='view'>
@@ -52,8 +74,8 @@ const NewsPage = () => {
           <div className='confirm'>
             <div onClick={() => {
               setCompletion(false)
-              window.location.reload()
-              // handleDeletButton()
+              // window.location.reload()
+              handleDeletButton()
             }}>확인</div>
             <div onClick={() => {
               setCompletion(false)
@@ -81,6 +103,7 @@ const NewsPage = () => {
                 {del ? <input type='checkbox' onClick={() => {
                   handleCheckButton(el.noticeId)
                 }} /> : undefined}
+                {del ? <div className='rewrite'>수정</div> : undefined}
             </div>
           )
         })}
@@ -104,6 +127,17 @@ const NewsStyle = styled.div`
   width: 100%;
   border-radius: 30px;
   user-select: none;
+
+  .rewrite{
+    display: flex;
+    align-items: center;
+    margin-left: 1vw;
+    margin: 3vh 1vw;
+    cursor: pointer;
+    :hover{
+      background-color: lightgray;
+    }
+  }
 
   .back_drop{
     position: fixed;
@@ -149,18 +183,20 @@ const NewsStyle = styled.div`
     }
   }
 
-  .ask, .delete, .completion{
+  .ask, .edit, .delete{
     font-size: 2vmin;
     margin: 1vh 1vw;
     padding: 1vh 1vw;
     border: 2px solid black;
     border-radius: 10px;
     cursor: pointer;
+    text-decoration: none;
+    color: black;
   }
 
-  .completion:hover{
+  .delete:hover{
     color: white;
-    background-color: #357C3C;
+    background-color: #FF1E00;
     font-weight: bold;
   }
 
@@ -170,9 +206,9 @@ const NewsStyle = styled.div`
     font-weight: bold;
   }
 
-  .delete:hover{
+  .edit:hover{
     color: white;
-    background-color: #FF1E00;
+    background-color: #357C3C;
     font-weight: bold;
   }
 

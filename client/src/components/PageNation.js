@@ -15,11 +15,11 @@ function PageNation({data}) { // 더미 props 받아온거임
     // count는 총 페이지의 수를 선언 해둔거임 
     // 테스트해보려면 밑에줄 주석풀고 if문들 주석하면 돼요
 
-    let count = 16 //
+    // let count = 16
 
     const dispatch = useDispatch()
 
-    // let count
+    let count
 
     useEffect(() => {
         let arr = []
@@ -28,11 +28,11 @@ function PageNation({data}) { // 더미 props 받아온거임
         //     count = Math.ceil((list.length)/20) // 한페이지에 20개씩 보여줄거기때문에
         // }
 
-        // if(data !== undefined){
-        //     count = Math.ceil((data.length)/20)
-        // }
+        if(data !== undefined){
+            count = Math.ceil((data.length)/20)
+        }
 
-        for(let i = 1 ; i <= count ; i++){
+        for(let i = 1 ; i <= count+1 ; i++){
             arr.push(i)
         }
         
@@ -83,12 +83,13 @@ const PageNationStyle = styled.div`
 
     .number{
         padding: 0 1vw;
+        margin: 0 0.7vw;
     }
 
     .number_container{
         width: 25vw;
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
     }
 

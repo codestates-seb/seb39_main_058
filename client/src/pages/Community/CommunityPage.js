@@ -5,6 +5,7 @@ import { GiCancel } from "react-icons/gi";
 import { AiOutlineSearch, AiFillLock } from "react-icons/ai";
 import PageNation from '../../components/PageNation';
 import { useSelector } from 'react-redux'
+import { FaSearch } from "react-icons/fa";
 
 const tag = ["강동구", "강서구", "강남구", "강북구"]
 
@@ -100,7 +101,7 @@ function CommunityPage() {
                 }}>{el.forumTitle}</span> :
                 <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
                 <span className='user'>{el.userName}글쓴이</span>
-                <span className='updateAT'>{el.dateCreated}22/11/11</span>
+                <span className='updateAT'>{el.dateCreated.slice(5,10)}</span>
                 <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
                 <span className='suggestion'>{el.forumLike}</span>
               </div>
@@ -110,11 +111,18 @@ function CommunityPage() {
         <div className='pagenation_container'>
           <PageNation data={data} />
         </div>
+        <div className='search_container'>
+          <select>
+            <option>제목</option>
+            <option>내용</option>
+            <option>작성자</option>
+          </select>
+          <input type='search' />
+          <span><FaSearch /></span>
+        </div>
     </CommunityPageStyle>
   )
 }
-
-// console.log(sessionStorage.getItem("accessToken") !== undefined)
 
 export default CommunityPage
 
@@ -125,6 +133,37 @@ const CommunityPageStyle = styled.div`
   margin-top: 10vh;
   height: 140vh;
   user-select: none;
+
+  .search_container{
+    display: flex;
+    margin-top: 3vh;
+
+    select{
+      width: 7vw;
+      height: 4vh;
+      font-size: 1.5vmin;
+      text-align: center;
+      border-right: 0px;
+    }
+  
+    input{
+      height: 4vh;
+      width: 25vw;
+      font-size: 2vmin;
+    }
+
+    span{
+      width: 6vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid black;
+      border-left: 0;
+      font-size: 2.5vmin;
+      cursor: pointer;
+    }
+  }
+
 
   .pagenation_container{
     margin-top: 2vh;
