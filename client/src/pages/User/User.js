@@ -4,18 +4,37 @@ import { useParams, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 function User() {
-    const { id } = useParams();
-
+    
+    // const [ userName, setUserName ] = useState("");
+    const [ userData, setUserData ] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/${id}`, {
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
             headers: {
-                Authorization: sessionStorage.getItem("accessToken")
+                "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+                "Content-Type": "application/json"
             }
         })
-            .then(res => console.log(res))
-
+            .then(res => res.json())
+            .then(data => setUserData(data.data))
+            .catch(err => console.log(err))
     },[])
+
+    console.log(userData)
+
+    const userLogout = () => {
+        sessionStorage.clear();
+        navigate("/");
+    };
+
+    const userRevise = () => {
+
+    };
+
+    const userWithdraw = () => {
+
+    };
 
     return (
     <Main>
@@ -25,15 +44,15 @@ function User() {
             {/* <div className='user-private'> */}
                 <UserPrivate>
                     <img className='user-profile' src="/profile.png" alt='profile'/>
-                    <div className='user-name'><b>김야긴(Jakin)</b>님</div>
+                    <div className='user-name'><b>{userData.userName}</b>님</div>
                     <div className='user-level'>현재 등급: 실버</div>
-                    <div className='user-email'>이메일: kimyagin94@gmail.com</div>
-                    <div className='user-point'>보유 포인트: 7777p</div>
+                    <div className='user-email'>이메일: {userData.email}</div>
+                    <div className='user-point'>보유 포인트: {userData.point}p</div>
                     <div className='user-point'>누적 포인트: 12345p</div>
                     <div className='button-wrapper'>
-                        <button className='user-logout' > 로그아웃 </button>
-                        {/* <button className='user-logout'> 회원정보 수정 </button>
-                        <button className='user-logout'> 회원탈퇴 </button> */}
+                        <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
+                        <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
+                        <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
                     </div>
                 </UserPrivate>
             {/* </div> */}
@@ -149,7 +168,7 @@ const UserPrivate = styled.div`
         align-items: center;
         border-top: 1px solid gray;
         
-        .user-logout {
+        .user-logout, .user-revise, .user-withdraw {
             margin: 1rem;
             padding: 1vmin 4vmin;
             border-radius: 1rem;

@@ -36,7 +36,7 @@ function App() {
           <Route path='/' element={welcome === null ? <Welcome/> : <KakaoMap/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
-          <Route path='/users/:id' element={<User/>}/>
+          <Route path='/users/profile' element={<User/>}/>
           <Route path='/news/notice' element={<NewsPage/>}/>
           <Route path='/news/notice/create' element={<NewsCreate/>}/>
           <Route path='/community/forum' element={<CommunityPage/>}/>
