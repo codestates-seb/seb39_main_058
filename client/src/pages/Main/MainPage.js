@@ -26,6 +26,10 @@ function MainPage(){
 
     const [loading, setLoading] = useState(false)
     const [click, setClick] = useState(false)
+    const [hover, setHover] = useState({
+        boolean : false ,
+        state : ''
+    })
     
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -57,8 +61,6 @@ function MainPage(){
     const findNearestTrash = () => {
         setRoadView(!roadView);
     }
-    
-    console.log(guro[0].수거쓰레기종류)
 
     return (
         <MainStyle>
@@ -66,31 +68,21 @@ function MainPage(){
         {!roadView ? <Map
                 center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}
                 style={{ width: "100%", height: "92vh" }}
-                    level={3}
+                    level={6}
                 > 
-                <MapMarker position={ !myLocation.center.lat ? 
-                    { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
-                    { lat: myLocation.center.lat, lng: myLocation.center.lng }
-                    }>
-                </MapMarker>
                 <CustomOverlayMap position={ !myLocation.center.lat ? 
                     { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
                     { lat: myLocation.center.lat, lng: myLocation.center.lng }
                     }>
+                    {myLocation.center.lat ?
                     <CustomInfoWindow>
-                        <div className="center">{!myLocation.center.lat ? '구로구청' : '현재위치'}</div>
-                        <a  href={`https://map.kakao.com/link/to/${!myLocation.center.lat ? '구로구청,33.450701,126.570667' : `현재위치,${myLocation.center.lat},${myLocation.center.lng}`}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={initLoc.center.lat !== 37.495025886857 ? "none" : undefined}>
-                                길찾기
-                        </a>
-                    </CustomInfoWindow>
+                        <div className="my_location">{myLocation.center.lat ? "현재 위치" : undefined}</div>
+                    </CustomInfoWindow> : undefined}
                 </CustomOverlayMap>
                 {guro.map((ele, idx) => (
+                    <div key={idx}>
                     <MapMarker
-                        key={idx}
-                        position={!ele.위도 ? { lat: 37.48289633, lng: 126.8868871 } : { lat: ele.위도, lng: ele.경도}}
+                        position={{ lat: ele.위도, lng: ele.경도}}
                         image={{
                             src: ele.수거쓰레기종류 === "일반쓰레기" ? "/trash.png" : "/recycle.png",
                             size: {
@@ -98,7 +90,13 @@ function MainPage(){
                             height: 30
                             },
                         }}
-                    />
+                        onMouseOver={() => setHover({boolean: true , state : ele.소재지도로명주소})}
+                        onMouseOut={() => setHover({boolean : false , state : ''})}
+                        onClick={() => window.open(`https://map.kakao.com/link/to/${ele.소재지도로명주소},${ele.위도},${ele.경도}`)}
+                    >
+                    {ele.소재지도로명주소 === hover.state ? <div className="info">{hover.state}</div> : undefined}
+                    </MapMarker>
+                    </div>
                 ))}
                 <MyLocationBtn onClick={() => {
                     handleMyLocation()
@@ -128,6 +126,16 @@ const MainStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .info{
+        white-space: pre;
+        padding: 1vh 1vw;
+        font-size: 2vmin;
+        border: 3px solid #277BC0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `
 
 const MyLocationBtn = styled.div`
@@ -203,36 +211,18 @@ const NearestTrashBtn = styled.div`
 `;
 
 const CustomInfoWindow = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10%;
-    padding: 10px 15px;
-    background-color: white;
-    border: 3px solid #277BC0;
-    color: black;
-    margin: -95px 0px;
-    cursor: default;
+    user-select: none;
 
-    a {
-        background: #277BC0;
-        color: white;
-        text-decoration: none;
-        margin-top: 7px;
-        padding: 7px 10px;
+    .my_location{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        padding: 1vh 1.5vw;
+        margin-top: -1vh;
+        border: 3px solid #277BC0;
+        cursor: default;
+        font-size: 2.5vmin;
         border-radius: 10%;
-
-        :hover{
-            font-weight: bold;
-        }
-    }
-
-    .center{
-        font-size: 20px;
-    }
-
-    .none{
-        display: none;
     }
 `;
