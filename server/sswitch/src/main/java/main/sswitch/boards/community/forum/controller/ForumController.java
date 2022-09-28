@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/community/forum")
 @Slf4j
-@CrossOrigin("*")
 public class ForumController {
     private ForumService forumService;
 
@@ -39,7 +38,7 @@ public class ForumController {
         Forum forum = forumService.createForum(mapper.ForumPostDtoToForum(forumPostDto));
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.forumToForumResponseDto(forum)),
+                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
                 HttpStatus.CREATED);
     }
 
@@ -52,7 +51,7 @@ public class ForumController {
                 forumService.likeForum(mapper.ForumPatchDtoToForum(forumPatchDto));
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.forumToForumResponseDto(forum)),
+                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
                 HttpStatus.OK);
     }
 
@@ -65,7 +64,7 @@ public class ForumController {
                 forumService.updateForum(mapper.ForumPatchDtoToForum(forumPatchDto));
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.forumToForumResponseDto(forum)),
+                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
                 HttpStatus.OK);
     }
 
@@ -75,7 +74,7 @@ public class ForumController {
         Forum forum = forumService.findForum(forumId);
 
         return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.forumToForumResponseDto(forum)),
+                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
                 HttpStatus.OK);
     }
 

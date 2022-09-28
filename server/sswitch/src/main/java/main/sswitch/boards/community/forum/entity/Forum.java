@@ -1,9 +1,6 @@
 package main.sswitch.boards.community.forum.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
@@ -32,8 +29,6 @@ public class Forum extends BaseEntity {
     @Column(nullable = false)
     private long forumLike;
 
-    //    private Tag tag = Tag.구로구;
-//    @Enumerated(value = EnumType.STRING)
     @Column(columnDefinition = "text", nullable = false)
     private String tag;
 
@@ -47,38 +42,21 @@ public class Forum extends BaseEntity {
     @OneToMany(mappedBy = "forum")
     private List<LikeForum> likeForums = new ArrayList<>();
 
-//    public void addLikeForum(LikeForum likeForum) {
-//        this.likeForums.get(likeForum);
-//        if (likeForum.getForum() != this) {
-//            likeForum.addForum(this);
-//        }
-//    }
-
     //유저와 게시글을 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    public void addUser(User user) {
+        this.user = user;
+        if (!this.user.getForums().contains(this)) {
+            this.user.getForums().add(this);
+        }
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
-
-    //게시판 작성시에 분류해주는 enum
-//    public enum Tag {
-//        구로구("구로구"),
-//        강남구("강남구"),
-//        동작구("동작구"),
-//        관악구("관악구"),
-//        마포구("마포구");
-//
-//        @Getter
-//        @Setter
-//        private String tag;
-//
-//        Tag(String tag) {
-//            this.tag = tag;
-//        }
-//    }
 
     //게시판 작성시 비밀글인지 공개글인지 전환해주는 enum
     public enum Secret {
@@ -94,4 +72,10 @@ public class Forum extends BaseEntity {
         }
     }
 
+    //    public void addLikeForum(LikeForum likeForum) {
+//        this.likeForums.get(likeForum);
+//        if (likeForum.getForum() != this) {
+//            likeForum.addForum(this);
+//        }
+//    }
 }

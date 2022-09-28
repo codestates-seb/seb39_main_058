@@ -16,6 +16,8 @@ public class CommentReturnDto {
 
     private String commentText;
 
+    private long userId;
+
     private String userName;
 
     private long forumId;
@@ -26,7 +28,7 @@ public class CommentReturnDto {
 
 
     public void getUser(User user) {
-        this.userName = user.getUserName();
+        this.userId = user.getUserId();
     }
 
     public void setForum(Forum forum) {

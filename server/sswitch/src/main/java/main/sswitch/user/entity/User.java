@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 @Setter
 @Table(name = "USER")
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -56,14 +57,14 @@ public class User extends BaseEntity {
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Forum> forums = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Notice> notices = new ArrayList<>();
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
+    private List<Forum> forums = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Notice> notices = new ArrayList<>();
 
     boolean enabled = false;
     @Builder

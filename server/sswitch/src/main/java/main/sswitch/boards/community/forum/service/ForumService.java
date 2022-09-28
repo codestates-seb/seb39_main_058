@@ -1,12 +1,17 @@
 package main.sswitch.boards.community.forum.service;
 
+import main.sswitch.boards.community.forum.dto.ForumResponseDto;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.forum.repository.ForumRepository;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
+import main.sswitch.user.entity.User;
+import main.sswitch.user.repository.UserRepository;
+import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,12 +19,17 @@ import java.util.Optional;
 @Service
 public class ForumService {
     private final ForumRepository forumRepository;
+    private final UserService userService;
 
-    public ForumService(ForumRepository forumRepository) {
+    public ForumService(ForumRepository forumRepository,
+                        UserService userService) {
         this.forumRepository = forumRepository;
+        this.userService = userService;
     }
 
     public Forum createForum(Forum forum) {
+//        findUserId(forum);
+//        System.out.println(forum.getUser().getLoginId());
         Forum savedForum = forumRepository.save(forum);
 
         return savedForum;
@@ -83,6 +93,11 @@ public class ForumService {
                         new BusinessLogicException(ExceptionCode.FORUM_NOT_FOUND));
         return findForum;
     }
+
+//    public void findUserId(Forum forum) {
+//        User user = userService.findUserWithLoginId(forum.getUser().getLoginId());
+//        forumRepository
+//    }
 
 //    //게시글 검색시 쿼리 검색 진행하는 메소드
 //    public Forum SearchForumTitleByQuery(String forumTitle) {

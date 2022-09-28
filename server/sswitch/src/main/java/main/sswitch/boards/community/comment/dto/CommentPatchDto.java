@@ -2,6 +2,7 @@ package main.sswitch.boards.community.comment.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import main.sswitch.user.entity.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,8 +22,8 @@ public class CommentPatchDto {
     @NotNull
     private long forumId;
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+//    public void setUserId(User user) {
+//        this.userId = user.;
+//    }
 
 }
