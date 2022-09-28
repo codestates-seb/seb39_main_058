@@ -5,19 +5,21 @@ import AnswerMap from './AnswerMap';
 import { useLocation, useNavigate, useParams} from 'react-router-dom'
 import { useEffect } from 'react';
 
+
 //댓글 리스트 나오는 곳
 function CommunityAnswer({data}) {
   const navigate=useNavigate();
   const location = useLocation();
- 
-// const year= new Date().toLocaleDateString('ko-KR');
-// const time = new Date().getHours();
-// const minute = new Date().getMinutes();
-// const todayInfo = `${year} ${time}:${minute<10?'0':''}${minute}`;
-const [commentText,setCommentText]=useState('');
-const [newest,setNewest]=useState(false)
+  
+  // const year= new Date().toLocaleDateString('ko-KR');
+  // const time = new Date().getHours();
+  // const minute = new Date().getMinutes();
+  // const todayInfo = `${year} ${time}:${minute<10?'0':''}${minute}`;
+  
+  const [newest,setNewest]=useState(false)
+  
+  let {id}=useParams();
 
-let {id}=useParams();
 
 
 
@@ -41,18 +43,19 @@ function spaceCheck(txt){
 
 //댓글 포스트함수
 const submitFunc=async(event)=>{
-  // event.preventDefault()/*통신되면 지워주자 */
+  event.preventDefault()
+ 
   if(!sessionStorage.getItem("accessToken")){
     alert('로그인 후 이용 가능 합니다')
     navigate('/login',{state: {path:location.pathname}})
   }else if(sessionStorage.getItem("accessToken")){
 
-    if(spaceCheck(commentText)===false){
+    if(spaceCheck(event.target.body.value)===false){
       alert('내용을 입력해 주세요.')
-    }else if(spaceCheck(commentText)===true){
+    }else if(spaceCheck(event.target.body.value)===true){
       const answerInfo={
           "forumId" : id,
-          "commentText" : commentText,
+          "commentText" : event.target.body.value,
           "userId": 1,
 
       }
@@ -62,14 +65,18 @@ const submitFunc=async(event)=>{
             headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,},
             body: JSON.stringify(answerInfo)
           })
-        .then((res) => res.json())
-          .then((data)=>{
-                  console.log('정보',answerInfo)
-                  console.log(data)       
+        // .then((res) => res.json())
+        //   .then((data)=>{
+        //           console.log('정보',answerInfo)
+        //           console.log(data)       
                   
-          })
+        //   })
+        .catch(()=>{
+          alert('세션이 만료되었습니다.')
+          navigate('/login',{state: {path:location.pathname}})
+        })
           // 응답받을게머가있나?
-        //  window.location.reload()
+         window.location.reload()
       }
 
   }
@@ -79,47 +86,63 @@ const submitFunc=async(event)=>{
 
 //등록순최신순함수
 const changeRow=(e)=>{
-     if(e?.target.name==='oldest'){
-      setNewest(false)
-      console.log(newest)
+  
+   if(e?.target.name==='oldest'){
+  
+      window.location.reload()
+      
+
+    
+  
      }
      if(e?.target.name==='newest'){
-      setNewest(true)
-      console.log(newest)
+      
+      
+        setTimeout(() => {
+          
+          setNewest(true)
+       
+        }, 4000);
+      
+     
 
      }
 }
+
+
 useEffect(()=>{
-  changeRow()
+  return
+  
 },[newest])
+
   return (
     <Container>
       <Head>
-        댓글({data.data?.commentResponses.length}) <button name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
-
+        댓글({data.data?.commentResponses.length}) <button className='newestButton' name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button className='newestButton' name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
       </Head>
       
       <AnswerPostForm  onSubmit={(event)=>submitFunc(event)}>
-      <AnswerText id='body' cols='5' rows="3" onChange={(e) => setCommentText(e.target.value)}></AnswerText>
-      <button type='submit'>등록</button>
-       
+      <AnswerText id='body' cols='5' rows="3" ></AnswerText>
+      <button type='submit' >등록</button>
+     
       </AnswerPostForm>
 
-     {newest ? 
+{newest ? 
      <AnswerList>
      {data.data?.commentResponses.reverse().map((item)=>(
      <AnswerMap key={item.commnetId} item={item}/>
      ))}
      </AnswerList>
-     : 
-     <AnswerList>
-      {data.data?.commentResponses.map((item)=>(
-      <AnswerMap key={item.commnetId} item={item}/>
-      ))}
-      </AnswerList>
+     :
+    <AnswerList>
+    {data.data?.commentResponses.map((item)=>(
+    <AnswerMap key={item.commnetId} item={item}/>
+    ))}
+    </AnswerList>
      }
-    
 
+
+    
 
     </Container>
   )
@@ -145,6 +168,13 @@ width: 70%;
 white-space:nowrap;
 border-bottom:1px solid;
 margin-bottom: 10px;
+.newestButton{
+  border: none;
+  /* outline: none; */
+  background-color: white;
+  cursor: pointer;
+
+}
 @media screen and (max-width: 500px){
         width:90%;
     }

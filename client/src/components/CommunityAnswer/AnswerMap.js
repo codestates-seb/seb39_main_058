@@ -63,7 +63,7 @@ useEffect(()=>{
       <Head >
  
       <div>{item.userName}</div><div className='time'>{item.dateCreated}</div>
-      {item.userName===sessionStorage.getItem('userName') ?<button onClick={(e)=>answerDelete(e)} name={item.commnetId}>x</button> :''}
+      {item.userName===sessionStorage.getItem('userName')||sessionStorage.getItem('role')==="ROLE_ADMIN" ?<button onClick={(e)=>answerDelete(e)} name={item.commnetId}>x</button> :''}
       </Head>
       <div>{item.commentText}</div>
     </Container>

@@ -74,7 +74,7 @@ const tabKey2=(event)=>{
     body: JSON.stringify(loginInfo)
   }).then((res) => res.json())
   .then((data)=>{
-        console.log(data)
+        // console.log(data)
         if(data){
           sessionStorage.setItem("accessToken", data.data.accessToken)
           sessionStorage.setItem("userName", data.data.userName)
