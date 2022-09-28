@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { AiFillGold } from 'react-icons/ai';
+import { FcLike } from 'react-icons/fc';
+import { BsPencilSquare } from 'react-icons/bs'
 
 function User() {
     
@@ -58,9 +61,9 @@ function User() {
             {/* </div> */}
             <UserInfo>
                 <div className='user-status'>
-                    <h3 className='user-level'>현재 등급: 실버</h3>
-                    <h3>작성글 횟수: 3회</h3>
-                    <h3>받은 추천수: 2회</h3>
+                    <h3 className='user-level'><AiFillGold className='status-icon'/>현재 등급: 실버</h3>
+                    <h3 className='user-writing'><BsPencilSquare className='status-icon'/>작성글 횟수: 3회</h3>
+                    <h3 className='user-received-likes'><FcLike className='status-icon'/>받은 추천수: 2회</h3>
                 </div>
                 <div className='user-point-history'>
                     <div className='user-point-content'>
@@ -205,6 +208,17 @@ const UserInfo = styled.div`
             justify-content: space-evenly;
             align-items: center;
         }
+        .user-level, .user-writing, .user-received-likes {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            @media (max-width: 950px) {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
     }
 
     .user-point-history {
