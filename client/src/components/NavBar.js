@@ -66,10 +66,10 @@ function NavBar({welcome}) {
             <Link to='/login' onClick={clear}>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
-                    <li><Link to='/users/:id' onClick={clear}>내정보</Link></li>
+                    <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
                     <li>회원수정</li>
                     <li>회원삭제</li>
-                    {1 === 1 ? <li>관리자</li> : undefined}
+                    {sessionStorage.getItem("role") !== "ROLE_USER" ? <li>관리자</li> : undefined}
                 </div>
             </div>}
             {!sessionStorage.getItem("accessToken") ?

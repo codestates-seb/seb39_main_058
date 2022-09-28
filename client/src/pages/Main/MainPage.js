@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
-import { BiCurrentLocation } from "react-icons/bi";
+import { BiChevronDownCircle, BiCurrentLocation } from "react-icons/bi";
 import Loading from "../../components/Loading";
 
 function MainPage(){
-
 
     // 초기 위치 상태
     const [ initLoc, setInitLoc ] = useState({
@@ -28,7 +27,6 @@ function MainPage(){
     const [loading, setLoading] = useState(false)
     const [click, setClick] = useState(false)
     
-
     // 구로구 쓰레기통 API
     useEffect(() => {
         fetch(`https://api.odcloud.kr/api/15087773/v1/uddi:d9bdf233-ee41-46fe-8e08-bb74980f1155?page=1&perPage=292&serviceKey=JLEKtRKG4tdEBz4y7sC%2FevNdcgS0EiQ9jhzT%2Bt2pQyQdZyGO0DtMfVGTiosROFjB%2BgYobwwT2wuL5nIXoT4tQA%3D%3D`)
@@ -59,6 +57,9 @@ function MainPage(){
     const findNearestTrash = () => {
         setRoadView(!roadView);
     }
+    
+    console.log(guro[0].수거쓰레기종류)
+
     return (
         <MainStyle>
         {click && !loading ? <Loading /> : undefined }
@@ -87,15 +88,15 @@ function MainPage(){
                     </CustomInfoWindow>
                 </CustomOverlayMap>
                 {guro.map((ele, idx) => (
-                    <MapMarker 
+                    <MapMarker
                         key={idx}
                         position={!ele.위도 ? { lat: 37.48289633, lng: 126.8868871 } : { lat: ele.위도, lng: ele.경도}}
                         image={{
-                            src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png", // 마커이미지의 주소입니다
+                            src: ele.수거쓰레기종류 === "일반쓰레기" ? "/trash.png" : "/recycle.png",
                             size: {
-                            width: 24,
-                            height: 35
-                            }, 
+                            width: 30,
+                            height: 30
+                            },
                         }}
                     />
                 ))}
