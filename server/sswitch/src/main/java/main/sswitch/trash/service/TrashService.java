@@ -1,9 +1,9 @@
-package main.sswitch.boards.trash.service;
+package main.sswitch.trash.service;
 
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
-import main.sswitch.boards.trash.entity.TrashCan;
-import main.sswitch.boards.trash.repository.TrashRepository;
+import main.sswitch.trash.entity.TrashCan;
+import main.sswitch.trash.repository.TrashRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

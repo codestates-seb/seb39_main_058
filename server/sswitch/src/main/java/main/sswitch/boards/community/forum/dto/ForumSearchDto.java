@@ -8,7 +8,6 @@ public class ForumSearchDto {
     private long forumId;
 
     private String tag;
-//    private Forum.Tag tag;
 
     private String forumTitle;
 

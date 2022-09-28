@@ -26,7 +26,7 @@ public interface NoticeMapper {
                 .map(notice -> NoticeResponseDto
                         .builder()
                         .noticeId(notice.getNoticeId())
-                        .userId(notice.getUser().getUserId())
+                        .loginId(notice.getUser().getLoginId())
                         .noticeTitle(notice.getNoticeTitle())
                         .noticeText(notice.getNoticeText())
                         .userName(notice.getUser().getUserName())

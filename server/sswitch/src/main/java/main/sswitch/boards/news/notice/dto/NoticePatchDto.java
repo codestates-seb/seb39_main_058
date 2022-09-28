@@ -17,7 +17,7 @@ public class NoticePatchDto {
     @NotBlank
     private String noticeText;
 
-    private long userId;
+    private String loginId;
 
     public void setNoticeId(long noticeId) {
         this.noticeId = noticeId;
