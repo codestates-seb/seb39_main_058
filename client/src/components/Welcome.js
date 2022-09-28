@@ -25,6 +25,7 @@ function Welcome() {
 export default Welcome
 
 const WelcomeStyle = styled.div`
+  user-select: none;
 
   margin: -10px 0px 0px -10px;
 
