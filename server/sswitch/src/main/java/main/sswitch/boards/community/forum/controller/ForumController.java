@@ -33,7 +33,7 @@ public class ForumController {
     }
 
     //게시글 등록
-    @PostMapping("/create")
+    @PostMapping("/take/create")
     public ResponseEntity postForum(@Valid @RequestBody ForumPostDto forumPostDto) {
         Forum forum = forumService.createForum(mapper.ForumPostDtoToForum(forumPostDto));
 
@@ -43,7 +43,7 @@ public class ForumController {
     }
 
     //게시글 따봉
-    @PatchMapping("/like/{forum-id}")
+    @PatchMapping("/take/like/{forum-id}")
     public ResponseEntity likeForum(@Positive @PathVariable("{forum-id}") long forumId,
                                     @Valid @RequestBody ForumPatchDto forumPatchDto) {
         forumPatchDto.setForumId(forumId);
@@ -56,7 +56,7 @@ public class ForumController {
     }
 
     //게시글 수정
-    @PatchMapping("/{forum_id}")
+    @PatchMapping("/take/{forum_id}")
     public ResponseEntity patchForum(@Positive @PathVariable("forum_id") long forumId,
                                      @Valid @RequestBody ForumPatchDto forumPatchDto) {
         forumPatchDto.setForumId(forumId);
@@ -105,7 +105,7 @@ public class ForumController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/{forum-id}")
+    @DeleteMapping("/take/{forum-id}")
     public ResponseEntity deleteForum(@PathVariable("forum-id") @Positive long forumId) {
         forumService.deleteForum(forumId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
