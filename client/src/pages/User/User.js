@@ -2,20 +2,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { AiFillGold } from 'react-icons/ai';
+import { FcLike } from 'react-icons/fc';
+import { BsPencilSquare } from 'react-icons/bs'
 
 function User() {
-    const { id } = useParams();
-
+    
+    // const [ userName, setUserName ] = useState("");
+    const [ userData, setUserData ] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/${id}`, {
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
             headers: {
-                Authorization: sessionStorage.getItem("accessToken")
+                "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+                "Content-Type": "application/json"
             }
         })
-            .then(res => console.log(res))
-
+            .then(res => res.json())
+            .then(data => setUserData(data.data))
+            .catch(err => console.log(err))
     },[])
+
+    console.log(userData)
+
+    const userLogout = () => {
+        sessionStorage.clear();
+        navigate("/");
+    };
+
+    const userRevise = () => {
+
+    };
+
+    const userWithdraw = () => {
+
+    };
 
     return (
     <Main>
@@ -25,23 +47,23 @@ function User() {
             {/* <div className='user-private'> */}
                 <UserPrivate>
                     <img className='user-profile' src="/profile.png" alt='profile'/>
-                    <div className='user-name'><b>김야긴(Jakin)</b>님</div>
+                    <div className='user-name'><b>{userData.userName}</b>님</div>
                     <div className='user-level'>현재 등급: 실버</div>
-                    <div className='user-email'>이메일: kimyagin94@gmail.com</div>
-                    <div className='user-point'>보유 포인트: 7777p</div>
+                    <div className='user-email'>이메일: {userData.email}</div>
+                    <div className='user-point'>보유 포인트: {userData.point}p</div>
                     <div className='user-point'>누적 포인트: 12345p</div>
                     <div className='button-wrapper'>
-                        <button className='user-logout' > 로그아웃 </button>
-                        {/* <button className='user-logout'> 회원정보 수정 </button>
-                        <button className='user-logout'> 회원탈퇴 </button> */}
+                        <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
+                        <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
+                        <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
                     </div>
                 </UserPrivate>
             {/* </div> */}
             <UserInfo>
                 <div className='user-status'>
-                    <h3 className='user-level'>현재 등급: 실버</h3>
-                    <h3>작성글 횟수: 3회</h3>
-                    <h3>받은 추천수: 2회</h3>
+                    <h3 className='user-level'><AiFillGold className='status-icon'/>현재 등급: 실버</h3>
+                    <h3 className='user-writing'><BsPencilSquare className='status-icon'/>작성글 횟수: 3회</h3>
+                    <h3 className='user-received-likes'><FcLike className='status-icon'/>받은 추천수: 2회</h3>
                 </div>
                 <div className='user-point-history'>
                     <div className='user-point-content'>
@@ -149,7 +171,7 @@ const UserPrivate = styled.div`
         align-items: center;
         border-top: 1px solid gray;
         
-        .user-logout {
+        .user-logout, .user-revise, .user-withdraw {
             margin: 1rem;
             padding: 1vmin 4vmin;
             border-radius: 1rem;
@@ -186,6 +208,17 @@ const UserInfo = styled.div`
             justify-content: space-evenly;
             align-items: center;
         }
+        .user-level, .user-writing, .user-received-likes {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            @media (max-width: 950px) {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
     }
 
     .user-point-history {

@@ -13,10 +13,11 @@ function CommunityDetail() {
 
   const [ title, setTitle ] = useState("");
   const [ content, setContent ] = useState("");
-  const [ name, setName ] = useState("");
+  const [ userName, setUserName ] = useState("");
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState("");
+
   const [ dateCreated, setDateCreated ] = useState("");
     // 서버 날짜 기반 customizing
     const createdDate = new Date(dateCreated);
@@ -39,10 +40,11 @@ function CommunityDetail() {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`)
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         setData(data) // CommunityAnswer 컴포넌트에 props로 전달해준 데이터!
         setTitle(data.data.forumTitle);
         setContent(data.data.forumText);
-        setName(data.data.userName);
+        setUserName(data.data.userName);
         setLike(data.data.forumLike);
         setSecret(data.data.secret);
         setTag(data.data.tag);
@@ -65,13 +67,13 @@ function CommunityDetail() {
             <UserInfo>
               <img className='user-profile' src="/profile.png" alt='profile'/>
               <ul>
-                <li>{!name ? "Anonymous" : name}</li>
+                <li>{(userName === sessionStorage.getItem("userName")) ? userName : "Anonymous" }</li>
                 <li>{year}년 {month}월 {date}일 {today()}</li>
                 <li>{hours}시 {minutes}분</li>
               </ul>
               <div className="secret">
                 {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
-                {secret === "SECRET" ? undefined : <span><FcLock className="lock-icon"/>해당 글은 비밀글입니다.</span>}
+                {secret === "OPEN" ? undefined : <span><FcLock className="lock-icon"/>해당 글은 비밀글입니다.</span>}
               </div>
               <div className="tag-container"> 
                 {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
