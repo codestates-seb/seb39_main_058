@@ -118,7 +118,7 @@ useEffect(()=>{
   return (
     <Container>
       <Head>
-        댓글({data.data?.commentResponses.length}) <button name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
+        댓글({data.data?.commentResponses.length}) <button className='newestButton' name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button className='newestButton' name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
       </Head>
       
       <AnswerPostForm  onSubmit={(event)=>submitFunc(event)}>
@@ -168,6 +168,13 @@ width: 70%;
 white-space:nowrap;
 border-bottom:1px solid;
 margin-bottom: 10px;
+.newestButton{
+  border: none;
+  /* outline: none; */
+  background-color: white;
+  cursor: pointer;
+
+}
 @media screen and (max-width: 500px){
         width:90%;
     }
