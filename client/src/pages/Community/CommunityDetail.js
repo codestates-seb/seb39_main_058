@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
@@ -8,9 +9,11 @@ import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer';
 // 특정 질문을 눌렀을 때 나오는 세부 페이지
 function CommunityDetail() {
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
+  
   const [ data, setData ] = useState([]);
-
+  console.log(data)
   const [ title, setTitle ] = useState("");
   const [ content, setContent ] = useState("");
   const [ userName, setUserName ] = useState("");
@@ -26,18 +29,15 @@ function CommunityDetail() {
     const date = createdDate.getDate();
     const hours = createdDate.getHours();
     const minutes = createdDate.getMinutes();
-    const today = () => {
-      if(createdDate.getDay() === 0) return '일요일'
-      if(createdDate.getDay() === 1) return '월요일'
-      if(createdDate.getDay() === 2) return '화요일'
-      if(createdDate.getDay() === 3) return '수요일'
-      if(createdDate.getDay() === 4) return '목요일'
-      if(createdDate.getDay() === 5) return '금요일'
-      if(createdDate.getDay() === 6) return '토요일'
-    }
-
+    const today = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)'];
+    
   useEffect(() => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`)
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`,{
+      headers: { 
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      },
+    })
       .then(res => res.json())
       .then(data => {
         setData(data) // CommunityAnswer 컴포넌트에 props로 전달해준 데이터!
@@ -51,10 +51,12 @@ function CommunityDetail() {
       })
       .catch(err => console.log(err))
   },[]);
+  // console.log(userName); // 글쓴이
+  // console.log(userInfo.userName); // 나
   
   const backToBoard = () => navigate("/community/forum");
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
-
+  
   return (
       <>
         <Main>
@@ -66,9 +68,9 @@ function CommunityDetail() {
             <UserInfo>
               <img className='user-profile' src="/profile.png" alt='profile'/>
               <ul>
-                <li>{(userName === sessionStorage.getItem("userName")) ? userName : "Anonymous" }</li>
-                <li>{year}년 {month}월 {date}일 {today()}</li>
-                <li>{hours}시 {minutes}분</li>
+                <li>{userName}</li>
+                <li>{year}년 {month}월 {date}일 {today[createdDate.getDay()]}</li>
+                <li>{hours + 9}시 {minutes}분</li>
               </ul>
               <div className="secret">
                 {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
@@ -104,7 +106,7 @@ const Main = styled.main`
   justify-content: center;
   align-items: center;
   width: 95vw;
-  height: 65vh;
+  height: 100%;
   margin: 20px;
   padding: 10px;
   border: 1px solid black;
