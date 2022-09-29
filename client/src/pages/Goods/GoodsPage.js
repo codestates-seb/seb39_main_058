@@ -36,9 +36,7 @@ const dispatch=useDispatch();
 
   }
 
-const logout=()=>{
-  dispatch({type:'LOGOUT'})
-}
+
   useEffect(()=>{
     getUserInfo()
   },[])
@@ -47,19 +45,22 @@ const logout=()=>{
   return (
 <Container>
   <UserInfoContainer>
-    {accesstoken ? 
-    <UserInfo >
-      <div>{userInfo.userName}님</div> <div>보유포인트{userInfo.point}</div>
-    </UserInfo> 
-    :
-      <div>서비스는 로그인 후 이용 하실 수 있습니다.</div>
-     }
+     <BoardHeader>
+                  <div>포인트교환</div>
+     </BoardHeader>
+      {accesstoken ? 
+      <UserInfo >
+        <div>{userInfo.userName}님</div> <div>보유포인트{userInfo.point}</div>
+      </UserInfo> 
+      :
+        <div>서비스는 로그인 후 이용 하실 수 있습니다.</div>
+      }
         
         {sessionStorage.getItem('role')==="ROLE_ADMIN" ? <Link to='/goods/create'> <button>상품등록하기</button> </Link>:''}
-        <button onClick={logout}>로그아웃</button>
+        
   </UserInfoContainer>
 
-   {console.log('엑세스토큰굳즈',accesstoken)}
+  
 
   <GoodsCart>
 
@@ -85,10 +86,40 @@ align-items: center;
 flex-direction: column;
 `
 const UserInfoContainer=styled.div`
-width: 70%;
-margin-top: 30px;
+width: 80%;
 
+text-align : center;
+
+
+@media (max-width: 550px) {
+            
+           width: 90%;
+          
+
+          
+      }
 `
+const BoardHeader = styled.div`
+
+  display: flex;  
+  width: 100%;
+  margin-top: 20px;
+ border-bottom: 3px solid;
+  
+
+    div {
+        font-size: 7vmin;
+        font-family: "Courier New", Courier, monospace;
+        letter-spacing: 3px;
+        font-family: 'Nanum Pen Script', cursive;
+       
+        @media (max-width: 550px) {
+            
+          font-size: 30px;
+
+        }
+    }
+   `
 const UserInfo=styled.div`
 display: flex;
 justify-content: space-between;
