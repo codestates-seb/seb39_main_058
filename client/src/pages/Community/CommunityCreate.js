@@ -192,11 +192,11 @@ const BoardHeader = styled.div`
 
     width: 90vw;
     border-bottom: 3px solid black;
-
+    
     h1 {
         margin-top: 2rem;
         font-size: 4vmin;
-        font-family: "Courier New", Courier, monospace;
+        font-family: 'Jua', sans-serif;
         letter-spacing: 3px;
         @media (max-width: 550px) {
             font-size: 30px;
@@ -205,7 +205,7 @@ const BoardHeader = styled.div`
     
     h2{
         font-size: 2vmin;
-        font-family: "Courier New", Courier, monospace;
+        font-family: 'Jua', sans-serif;
         @media (max-width: 550px) {
             font-size: 20px;
         }
@@ -214,6 +214,7 @@ const BoardHeader = styled.div`
         color: red;
         font-size: 1.5vmin;
         padding-bottom: 1vh;
+        font-family: 'Jua', sans-serif;
         @media (max-width: 550px) {
             font-size: 14px;
         }
