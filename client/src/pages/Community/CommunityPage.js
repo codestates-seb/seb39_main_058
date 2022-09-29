@@ -101,7 +101,7 @@ function CommunityPage() {
                 }}>{el.forumTitle}</span> :
                 <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
                 <span className='user'>{el.userName}글쓴이</span>
-                <span className='updateAT'>{el.dateCreated.slice(5,10)}</span>
+                {/* <span className='updateAT'>{el.dateCreated.slice(5,10)}</span> */}
                 <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
                 <span className='suggestion'>{el.forumLike}</span>
               </div>
