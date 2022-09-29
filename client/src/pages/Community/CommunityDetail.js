@@ -23,6 +23,8 @@ function CommunityDetail() {
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState("");
   const [ remove, setRemove ] = useState(false);
+
+  const [ revise, setRevise ] = useState(false);
   
   const [ dateCreated, setDateCreated ] = useState("");
     // 서버 날짜 기반 customizing
@@ -58,6 +60,14 @@ function CommunityDetail() {
   // console.log(userName); // 글쓴이
   // console.log(userInfo); // 나
   
+  const revisedBoard = {
+    "forumId" : id,
+    "forumTitle" : title,
+    "forumText" : content,
+    "tag" : "REPORT",
+    "secret" : "SECRET"
+  }
+  console.log(tag.split(','))
   const backToBoard = () => navigate("/community/forum");
   const deleteBoard = () => setRemove(!remove); 
   
@@ -65,24 +75,54 @@ function CommunityDetail() {
 
   const reviseBoard = () => {
     console.log('수정하기 버튼!');
+    setRevise(!revise);
+
+    // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`, {
+    //   method: "PATCH",
+    //   headers: {
+    //     "Authorization": `Bearer ${userInfo.accessToken}`,
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify(revisedBoard)
+    // })
+    //   .then(res => res.json())
+    //   .then(data => console.log(data))
+    //   .catch(err => console.log(err))
+
     // navigate("/community/create");
   };
   
-  // console.log(data);
+  console.log(data);
+  console.log(userInfo.accessToken)
   
   const confirmRemove = () => {
-    console.log('게시글 삭제!');
+    // console.log('게시글 삭제!');
+    // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`, {
+    //   method: "DELETE"
+    // })
+    //   .then(res => res.json())
+    //   .then(data => console.log(data))
+    //   .catch(err => console.log(err))
+
     // forumId를 delete 요청보내면 된다!
     // navigate("/community/forum");
   }
+
+
   return (
       <>
         <Main>
           <div className="header-wrapper">
             <div className="back-to-board" onClick={backToBoard}>자유게시판<BiRightArrow/></div>
             <Title>
-              <div>{title}</div>
-              {userInfo.userName === userName && <RiDeleteBack2Fill className="delete-btn" onClick={deleteBoard}/>}
+              {revise ? 
+                <input autoFocus type="text" value={title} 
+                  onChange={(e) => setTitle(e.target.value)}>
+                </input> : 
+                <div className="title-container">
+                  <div>{title}</div>
+                  {userInfo.userName === userName && <RiDeleteBack2Fill className="delete-btn" onClick={deleteBoard}/>}
+                </div>}
             </Title>
             
             <UserInfo>
@@ -104,19 +144,30 @@ function CommunityDetail() {
           </div>
 
           <Content>
-            <div className="content">
-              {content.replace(/(?:\r\n|\r|\n)/g, '<br/>').split('<br/>').map(item => <p key={item}>{item}</p>)}
-            </div>  
+            {revise ?  
+              <textarea id="content" value={content} 
+                onChange={(e) => setContent(e.target.value)}>
+              </textarea> :
+              <div className="content">
+                {content.replace(/(?:\r\n|\r|\n)/g, '<br/>').split('<br/>').map(item => <p key={item}>{item}</p>)}
+              </div>}
           </Content>
-          <ButtonContainer>
-            <button className="like-btn" onClick={addLike}>
-              {!like ? <FcLikePlaceholder className="like-btn"/> : <FcLike className="like-btn"/>}
-            </button>
-            {(userInfo.userName === userName) && 
-              <button className="revise-btn" onClick={reviseBoard} > 
-                <BsFillPencilFill  className="revise-btn"/> 
-              </button>}
-          </ButtonContainer>
+
+          {revise ? 
+            <RevisedButtonWrapper>
+              <button className="writer-submit" form="board"> 수정하기 </button>
+              <button className="writer-cancel" onClick={() => setRevise(!revise)}> 취소 </button>
+            </RevisedButtonWrapper> :
+            <ButtonContainer>
+              <button className="like-btn" onClick={addLike}>
+                {!like ? <FcLikePlaceholder className="like-btn"/> : <FcLike className="like-btn"/>}
+              </button>
+              {(userInfo.userName === userName) && 
+                <button className="revise-btn" onClick={reviseBoard} > 
+                  <BsFillPencilFill  className="revise-btn"/> 
+                </button>}
+            </ButtonContainer>}
+
           {remove && <RemoveModal>
               <div className="delete-warning">
                 <ImWarning className="delete-warning-icon"/>
@@ -187,6 +238,19 @@ const Title = styled.h1`
   border-bottom: 1px solid lightgray;
   font-size: 3.5vmin;
   font-family: Jua, serif;
+
+  input {
+    margin: 1rem;
+    width: 70vw;
+    height: 5vh;
+    text-align: center;
+    font-size: 3vmin;
+  }
+
+  .title-container {
+    display: flex;
+    justify-content: center;
+  }
 
   .delete-btn {
     padding: 0 20px;
@@ -273,6 +337,69 @@ const UserInfo = styled.div`
 const Content = styled.div`
   margin: 30px;
   font-size: 2vmin;
+  textarea {
+
+    @media (max-width: 550px) {
+      width: 45vw;
+    }
+    width: 65vw;
+    height: 30vh;
+    padding: 10px 15px;
+    font-size: 2vmin;
+    resize: none;
+  }
+`;
+
+const RevisedButtonWrapper = styled.div`
+  display: flex;
+
+@media (max-width: 550px) {
+    display: flex;
+    flex-direction: column;
+    
+
+    .writer-submit {
+        width: 50vw;
+        height: 5vh;
+        
+    }
+
+    .writer-cancel {
+        width: 50vw;
+        height: 5vh;
+        
+    }
+}
+
+.writer-submit {
+    margin: 1rem;
+    padding: 1vmin 4vmin;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    background-color: #38d9a9;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+        color: white;
+        background-color: rgb(71,182,181);
+        border: 1px solid rgb(71,182,181);
+    }
+}
+
+.writer-cancel {
+    margin: 1rem;
+    padding: 1vmin 4vmin;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+        color: black;
+        background-color: lightgray;
+        border: 1px solid lightgray;
+    }
+}
 `;
 
 const ButtonContainer = styled.div`
