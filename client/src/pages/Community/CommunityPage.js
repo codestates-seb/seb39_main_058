@@ -22,6 +22,8 @@ function CommunityPage() {
     return state.CurrentPageReducer.page
   })
 
+  const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
+
   useEffect(() => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum?page=${page}&size=20`)
     .then(res => res.json())
@@ -54,7 +56,7 @@ function CommunityPage() {
       <div className='btn'>
         <span className='list'>목록</span>
         <span className='write' onClick={() => {
-          sessionStorage.getItem("accessToken") ?
+          userInfo.accessToken ?
           navigate('/community/create') :
           navigate('/login', {state: {path:location.pathname}})
         }}>글쓰기</span>
@@ -101,7 +103,7 @@ function CommunityPage() {
                 }}>{el.forumTitle}</span> :
                 <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
                 <span className='user'>{el.userName}글쓴이</span>
-                <span className='updateAT'>{el.dateCreated.slice(5,10)}</span>
+                <span className='updateAT'>{el.dateModified.slice(5,10)}</span>
                 <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
                 <span className='suggestion'>{el.forumLike}</span>
               </div>

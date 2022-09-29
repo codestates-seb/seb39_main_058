@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineBell } from "react-icons/ai";
 import { FaSearch, FaBars } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux"
+
 
 function NavBar({welcome}) {
 
@@ -16,6 +18,10 @@ function NavBar({welcome}) {
         setNoticeOn(false)
         setSearchOn(false)
     }
+
+    const dispatch = useDispatch()
+
+    const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
   return (
     <>
@@ -62,17 +68,17 @@ function NavBar({welcome}) {
                     <li>이벤트</li>
                 </div>
             </div>
-            {!sessionStorage.getItem("accessToken") ?
+            {!userInfo.accessToken ?
             <Link to='/login' onClick={clear}>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
                     <li>회원수정</li>
                     <li>회원삭제</li>
-                    {sessionStorage.getItem("role") !== "ROLE_USER" ? <li>관리자</li> : undefined}
+                    {userInfo.role === "ROLE_ADMIN" ? <li>관리자</li> : undefined}
                 </div>
             </div>}
-            {!sessionStorage.getItem("accessToken") ?
+            {!userInfo.accessToken ?
             <Link to='/signup' onClick={clear}>회원가입</Link> :
             <div className='logout' onClick={() => {
                 setLogout(true)
@@ -89,7 +95,7 @@ function NavBar({welcome}) {
           <div>로그아웃 하시겠습니까?</div>
           <div className='confirm'>
             <div onClick={() => {
-                sessionStorage.removeItem("accessToken")
+                dispatch({type:'LOGOUT'})
                 navigate('/')
                 setLogout(false)
             }}>확인</div>
