@@ -23,7 +23,7 @@ public class Order extends BaseEntity {
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "LOGIN_ID")
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)

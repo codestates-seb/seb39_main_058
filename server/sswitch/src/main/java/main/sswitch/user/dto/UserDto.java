@@ -51,6 +51,8 @@ public class UserDto {
     public static class Patch {
         private long userId;
 
+        private String loginId;
+
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
         private String userName;
 
@@ -61,9 +63,8 @@ public class UserDto {
 
         private String role;
 
-        public void setUserId(long userId) {
-            this.userId = userId;
-        }
+        private String email;
+
     }
 
     @AllArgsConstructor
@@ -71,7 +72,6 @@ public class UserDto {
     @Setter
     @NoArgsConstructor
     public static class ResponseDto {
-
         private long userId;
         private String loginId;
 
@@ -87,16 +87,23 @@ public class UserDto {
 
         private LocalDateTime dateModified;
         public ResponseDto(User user) {
-            this.userId = userId;
+//            this.userId = userId;
             this.loginId = loginId;
             this.userName = userName;
             this.email = email;
             this.userStatus = userStatus;
-            this.providers = providers;
+//            this.providers = providers;
             this.role = role;
             this.point = point;
             this.dateCreated = dateCreated;
-            this.dateModified = dateModified;
+//            this.dateModified = dateModified;
+        }
+
+
+
+        public static ResponseDto of(User user) {
+            return new ResponseDto(user.getUserId(),user.getLoginId(),user.getPassword(),user.getUserName(),user.getEmail(),
+                    user.getUserStatus(),user.getProviders(),user.getRole(),user.getPoint(),user.getDateCreated(),user.getDateModified());
         }
 
     }
@@ -111,6 +118,7 @@ public class UserDto {
         private String accessToken;
         private long accessTokenExpiredAt;
         private LocalDateTime dateCreated;
+        private long userId;
         private String userName;
         private String role;
 
@@ -119,6 +127,7 @@ public class UserDto {
             this.accessToken = accessToken;
             this.accessTokenExpiredAt = accessTokenExpiredAt;
             this.dateCreated = dateCreated;
+            this.userId=userId;
             this.userName = userName;
             this.role = role;
         }

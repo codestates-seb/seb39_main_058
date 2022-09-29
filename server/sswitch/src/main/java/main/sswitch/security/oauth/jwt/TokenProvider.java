@@ -28,12 +28,8 @@ public class TokenProvider{
     private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;		// 1hour
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;
 
-//    @Value(value = "${jwt.token-validity-in-seconds}")
-//    private final long tokenValidityInMilliseconds;
     @Value(value = "${jwt.secret}")
     private String SECRET_KEY;
-    @Value(value = "${jwt.cookie-secret}")
-    private String COOKIE_REFRESH_TOKEN_KEY;
 
     @PostConstruct
     protected void init() {
@@ -55,58 +51,19 @@ public class TokenProvider{
                 .setExpiration(validity)
                 .compact();
 
-//        String refreshToken = Jwts.builder()
-//                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-//                .setIssuedAt(now)
-//                .setExpiration(validity)
-//                .compact();
-//
-//        ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
-//                .httpOnly(true)
-//                .secure(true)
-//                .sameSite("Lax")
-//                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
-//                .path("/")
-//                .build();
-//
-//        response.addHeader("Set-Cookie", cookie.toString());
+
 
         return UserDto.TokenDetailsDto.builder()
                 .accessToken(accessToken)
                 .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
                 .grantType("Bearer")
+                .userId(user.getUserId())
                 .userName(user.getUserName())
                 .role(user.getRole())
                 .dateCreated(LocalDateTime.now())
                 .build();
     }
 
-//    public TokenDto.TokenDetailsDto createAccessToken(Authentication authentication) {
-//        Date now = new Date();
-//        Date validity = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_LENGTH);
-//
-//        PrincipalDetails user = (PrincipalDetails) authentication.getPrincipal();
-//
-//        // principalDetails 자동 implements loginId 로 세팅
-//        String userName = user.getUsername();
-//        String role = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(","));
-//
-//        String accessToken = Jwts.builder()
-//                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-//                .setSubject(userName)
-//                .claim(AUTHORITIES_KEY,role)
-//                .setIssuedAt(now)
-//                .setExpiration(validity)
-//                .compact();
-//        return TokenDto.TokenDetailsDto.builder()
-//                .accessToken(accessToken)
-//                .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
-//                .grantType("Bearer")
-//                .build();
-//
-//    }
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
         String role = claims.get(AUTHORITIES_KEY).toString();

@@ -10,7 +10,7 @@ import main.sswitch.security.oauth.PrincipalDetails;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
-import main.sswitch.user.repository.UserRepository;
+
 import main.sswitch.user.service.UserService;
 
 import org.springframework.data.domain.Page;
@@ -20,7 +20,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +38,8 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    private final UserRepository userRepository;
-
-    private final PasswordEncoder encoder;
-
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
+    public String home() {
         return "Main Page";
     }
 
@@ -66,8 +61,6 @@ public class UserController {
 
     @PostMapping("/users/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        String jwtToken = response.getHeader("Authorization");
-        response.setHeader("Authorization","Expired");
         return "로그아웃";
     }
 
@@ -80,27 +73,26 @@ public class UserController {
 
     @PatchMapping("/users/profile")
     public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
-        User user = userService.findUserWithLoginId(principalDetails.getUsername());
-        requestBody.setUserName(principalDetails.getUser().getUserName());
-        requestBody.setPassword(principalDetails.getPassword());
-        userService.update(userMapper.userPatchToUser(requestBody));
+        requestBody.setLoginId(principalDetails.getUsername());
+        User user = userService.updateProfile(requestBody.getLoginId(), userMapper.userPatchToUser(requestBody));
         return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
     }
 
-    @DeleteMapping("/users/signout/{user_id}")
-    public ResponseEntity delete(@PathVariable("user_id") @Positive long userId) {
-        userService.delete(userId);
+    @DeleteMapping("/users/signout")
+    public ResponseEntity delete(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+        userService.delete(user.getLoginId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/users/{user_id}")
-    public ResponseEntity getUser(@PathVariable("user_id") @Positive long userId) {
-        User user = userService.findUserWithId(userId);
+    @GetMapping("/users/{user_name}")
+    public ResponseEntity getUser(@PathVariable("user_name")String userName) {
+        User user = userService.findUserWithUserName(userName);
         UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
-    @PatchMapping("/users/{user_id}")
+    @PatchMapping("/admin/users/{user_id}")
     public ResponseEntity updateUser(@PathVariable("user_id") @Positive long userId, @Valid @RequestBody UserDto.Patch requestBody) {
         requestBody.setUserId(userId);
         User user = userService.update(userMapper.userPatchToUser(requestBody));
