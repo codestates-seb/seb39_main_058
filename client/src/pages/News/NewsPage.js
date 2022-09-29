@@ -236,8 +236,9 @@ const NewsStyle = styled.div`
     height: 15vh;
     display: flex;
     align-items: center;
-    font-size: 5vmin;
+    font-size: 7vmin;
     font-weight: bold;
+    font-family: 'Nanum Pen Script', cursive;
   }
 
   .list_container{

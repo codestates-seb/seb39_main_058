@@ -178,6 +178,7 @@ const NavBarStyle = styled.div`
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
     white-space: nowrap;
+    font-family: 'Jua', sans-serif;
 
     a{
         text-decoration: none;
@@ -189,6 +190,7 @@ const NavBarStyle = styled.div`
     }
 
     .drop{
+        font-family: 'Jua', sans-serif;
         list-style: none;
         position: absolute;
         margin-top: 2vh;
@@ -280,6 +282,7 @@ const NavBarStyle = styled.div`
         width: 15%;
         display: flex;
         justify-content: center;
+        font-family: 'Gugi', cursive;
         a{
             color: rgb(71,182,181);
             font-weight: bold;
