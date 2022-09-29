@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import {Link} from "react-router-dom"
+import { useSelector } from "react-redux"
 
 const NewsPage = () => {
 
@@ -11,6 +12,8 @@ const NewsPage = () => {
   const [check, setCheck] = useState([]) // 삭제할때 체크박스 다중체크할때 어떤것들이 체크되었나 담아주기위한 스테이트
   const [completion, setCompletion] = useState(false) // 체크박스를 선택하고 삭제버튼을 누를때 최종적으로 확인을 물어보는 창을 열고 닫기위한 스테이트 
   const [data, setData] = useState([]) // 겟 받아온 데이터들
+
+  const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
   const handleCheckButton = (id) => { // 체크된 항목의 id가 이미 있는지 비교해주기 위한 함수
     if(check.includes(id) === true){ // 이미 있는 값이라면 필터링해서 그얘를 제외한 나머지를 다시 check에 할당해줌
@@ -36,7 +39,7 @@ const NewsPage = () => {
       fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/${check[i]}`,{
         method: "DELETE",
         headers: { 
-          "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+          "Authorization": `Bearer ${userInfo.accessToken}`,
           "Content-Type": "application/json"
       }
       }).then(() => {
@@ -48,7 +51,7 @@ const NewsPage = () => {
   return (
     <NewsStyle>
       <div className='title'>공지사항</div>
-      {sessionStorage.getItem("role") !== "ROLE_USER" ?
+      {userInfo.role === "ROLE_ADMIN" ?
         <div className='manager'>
           <Link to="/news/notice/create" className='ask'>글쓰기</Link>
           {del ?
