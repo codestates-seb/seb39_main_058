@@ -76,9 +76,10 @@ const BoardHeader = styled.div`
 
     h1 {
         margin-top: 2rem;
-        font-size: 4vmin;
+        font-size: 7vmin;
         font-family: "Courier New", Courier, monospace;
         letter-spacing: 3px;
+        font-family: 'Nanum Pen Script', cursive;
         @media (max-width: 550px) {
             font-size: 30px;
         }

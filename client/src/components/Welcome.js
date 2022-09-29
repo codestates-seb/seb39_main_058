@@ -59,11 +59,13 @@ const WelcomeStyle = styled.div`
 
   .red{
     color: red;
+    font-family: 'Gugi', cursive;
   }
 
   .green{
     color: #277BC0;
     font-style: oblique;
+    font-family: 'Gugi', cursive;
   }
 
   .first_title{

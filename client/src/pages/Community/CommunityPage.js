@@ -176,7 +176,7 @@ const CommunityPageStyle = styled.div`
     height: 7vh;
     display: flex;
     align-items: center;
-    font-size: 4vmin;
+    font-size: 7vmin;
     font-weight: bold;
     background: linear-gradient(-45deg, #037E99 65%, #065068 35%);
     color: white;
@@ -184,6 +184,7 @@ const CommunityPageStyle = styled.div`
 
     p{
       margin-left: 2vw;
+      font-family: 'Nanum Pen Script', cursive;
     }
   }
 
