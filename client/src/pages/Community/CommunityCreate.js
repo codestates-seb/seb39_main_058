@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { GiCheckedShield } from "react-icons/gi";
 // import { CKEditor } from '@ckeditor/ckeditor5-react'; // 추후 리팩토링 시, CKEditor를 사용해봐야겠다.
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -11,6 +12,8 @@ const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"];
 
 // 게시글 생성
 function CommunityCreate() {
+
+  const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
     const [ title, setTitle ] = useState("");
     const [ titleState, setTitleState ] = useState(false); // 제목 입력 상태여부
@@ -31,6 +34,7 @@ function CommunityCreate() {
         "forumText" : content,
         "tag" : tag.join(','),
         "secret" : secret, 
+        "userId": userInfo.userId,
     }
 
     // 게시판 내용 제출
@@ -51,7 +55,7 @@ function CommunityCreate() {
             fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/create", {
                 method: "POST",
                 headers: { 
-                    "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+                    "Authorization": `Bearer ${userInfo.accessToken}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(boardPost)
