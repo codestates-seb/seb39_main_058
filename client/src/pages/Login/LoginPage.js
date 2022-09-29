@@ -1,6 +1,7 @@
 import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -14,6 +15,8 @@ const LoginPage = () => {
 
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
+
+  const dispatch=useDispatch();
 
   const loginInfo={
     "loginId":id,
@@ -76,10 +79,8 @@ const tabKey2=(event)=>{
   .then((data)=>{
         // console.log(data)
         if(data){
-          sessionStorage.setItem("accessToken", data.data.accessToken)
-          sessionStorage.setItem("userName", data.data.userName)
-          sessionStorage.setItem("role", data.data.role)
-
+        
+             dispatch({type:'USERINFO',payload:{userInfo:data.data}})
             if(location.state?.path){
               navigate(`${location.state.path}`)
             }else{
@@ -87,9 +88,18 @@ const tabKey2=(event)=>{
               // window.location.reload()
             }
         }
-        // else{setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')}
-      //그런데 우리는 자동로그인 기능이없으므로 refresh 토큰을 받았지만 쓸일이없음
-      //그러므로  refresh 토큰은 받았지만 어디다 저장하지 않을거임 쓸일이없고 로그인 할때마다 엑세스 토큰을 받아야하기때문
+   // access 토큰및 유저정보를 redux로 저장함 정보를이용하고싶으면
+   //import { useSelector } from 'react-redux';를하고
+  //  const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken); *토큰정보만가져오고싶을때임
+  //  원하는변수를 설정하고useSelector를통해 그변수에 리덕스정보를 저장하는거임
+  //  리덕스에 저장된 다양한 정보를 보고싶다면
+  // const 아무거나=useSelector(state=>state.LoginPageReducer.userinfo)
+  // console.log('리덕스저장되있는정보',아무거나) *리덕스 userinfo에 어떤 정보가있는지 볼 수 있을거임
+  // 로그아웃시에 리덕스정보를 지워야해서 원래는  sessionStorage.removeItem("accessToken") 를해서 세션정보를지웠다면
+  //import { useDispatch} from 'react-redux';를한후에
+  //dispatch({type:'LOGOUT'}) 이라는 액션을 해야함
+  // 
+     
     
 
       // access 토큰만 사용하는데 sessionStorage에 저장하니까 페이지 닫으면 사라짐  

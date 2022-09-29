@@ -4,6 +4,7 @@ import styled from "styled-components";
 import AnswerMap from './AnswerMap';
 import { useLocation, useNavigate, useParams} from 'react-router-dom'
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 
 //댓글 리스트 나오는 곳
@@ -18,6 +19,8 @@ function CommunityAnswer({data}) {
   
   const [newest,setNewest]=useState(false)
   
+  
+  const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
   let {id}=useParams();
 
 
@@ -45,10 +48,10 @@ function spaceCheck(txt){
 const submitFunc=async(event)=>{
   event.preventDefault()
  
-  if(!sessionStorage.getItem("accessToken")){
+  if(!accesstoken){
     alert('로그인 후 이용 가능 합니다')
     navigate('/login',{state: {path:location.pathname}})
-  }else if(sessionStorage.getItem("accessToken")){
+  }else if(accesstoken){
 
     if(spaceCheck(event.target.body.value)===false){
       alert('내용을 입력해 주세요.')
@@ -62,7 +65,7 @@ const submitFunc=async(event)=>{
         await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/create', {
         
             method: 'POST',
-            headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`,},
+            headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`,},
             body: JSON.stringify(answerInfo)
           })
         // .then((res) => res.json())
@@ -119,6 +122,7 @@ useEffect(()=>{
     <Container>
       <Head>
         댓글({data.data?.commentResponses.length}) <button className='newestButton' name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button className='newestButton' name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
+        {console.log('엑세스',accesstoken)}
       </Head>
       
       <AnswerPostForm  onSubmit={(event)=>submitFunc(event)}>
