@@ -21,6 +21,7 @@ function CommunityAnswer({data}) {
   
   
   const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
+  const userid=useSelector(state=>state.LoginPageReducer.userinfo.userId)
   let {id}=useParams();
 
 
@@ -59,7 +60,7 @@ const submitFunc=async(event)=>{
       const answerInfo={
           "forumId" : id,
           "commentText" : event.target.body.value,
-          "userId": 1,
+          "userId": userid,
 
       }
         await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/create', {
@@ -122,7 +123,6 @@ useEffect(()=>{
     <Container>
       <Head>
         댓글({data.data?.commentResponses.length}) <button className='newestButton' name='oldest' onClick={(e)=>changeRow(e)}>등록순</button> | <button className='newestButton' name='newest' onClick={(e)=>changeRow(e)}>최신순</button>
-        {console.log('엑세스',accesstoken)}
       </Head>
       
       <AnswerPostForm  onSubmit={(event)=>submitFunc(event)}>
