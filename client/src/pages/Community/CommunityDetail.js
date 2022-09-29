@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
 import { FcLikePlaceholder, FcLike, FcLock } from 'react-icons/fc';
+import { BsFillPencilFill } from 'react-icons/bs';
+import { RiDeleteBack2Fill } from 'react-icons/ri';
+import { ImWarning } from 'react-icons/im';
 import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer';
 
 // 특정 질문을 눌렀을 때 나오는 세부 페이지
@@ -13,14 +16,14 @@ function CommunityDetail() {
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
   
   const [ data, setData ] = useState([]);
-  console.log(data)
   const [ title, setTitle ] = useState("");
   const [ content, setContent ] = useState("");
   const [ userName, setUserName ] = useState("");
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState("");
-
+  const [ remove, setRemove ] = useState(false);
+  
   const [ dateCreated, setDateCreated ] = useState("");
     // 서버 날짜 기반 customizing
     const createdDate = new Date(dateCreated);
@@ -51,12 +54,27 @@ function CommunityDetail() {
       })
       .catch(err => console.log(err))
   },[]);
+
   // console.log(userName); // 글쓴이
-  // console.log(userInfo.userName); // 나
+  // console.log(userInfo); // 나
   
   const backToBoard = () => navigate("/community/forum");
-  const addLike = () => (!like) ? setLike(like + 1) : setLike(0);
+  const deleteBoard = () => setRemove(!remove); 
   
+  const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
+
+  const reviseBoard = () => {
+    console.log('수정하기 버튼!');
+    // navigate("/community/create");
+  };
+  
+  // console.log(data);
+  
+  const confirmRemove = () => {
+    console.log('게시글 삭제!');
+    // forumId를 delete 요청보내면 된다!
+    // navigate("/community/forum");
+  }
   return (
       <>
         <Main>
@@ -64,21 +82,24 @@ function CommunityDetail() {
             <div className="back-to-board" onClick={backToBoard}>자유게시판<BiRightArrow/></div>
             <Title>
               <div>{title}</div>
+              {userInfo.userName === userName && <RiDeleteBack2Fill className="delete-btn" onClick={deleteBoard}/>}
             </Title>
+            
             <UserInfo>
               <img className='user-profile' src="/profile.png" alt='profile'/>
               <ul>
                 <li>{userName}</li>
-                <li>{year}년 {month}월 {date}일 {today[createdDate.getDay()]}</li>
-                <li>{hours + 9}시 {minutes}분</li>
+                <li>{year}년 {month}월 {(hours + 9) > 24 ? date + 1 : date}일 {(hours + 9) > 24 ? today[createdDate.getDay() + 1 ] : today[createdDate.getDay()]}</li>
+                <li>{(hours + 9) > 24 ? hours - 15 : hours + 9}시 {minutes}분</li>
               </ul>
+             {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
+             {secret === "SECRET" && 
               <div className="secret">
-                {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
-                {secret === "OPEN" ? undefined : <span><FcLock className="lock-icon"/>해당 글은 비밀글입니다.</span>}
-              </div>
-              <div className="tag-container"> 
+                <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
+              </div>}
+              {tag && <div className="tag-container"> 
                 {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
-              </div>
+              </div>}
             </UserInfo>
           </div>
 
@@ -87,10 +108,26 @@ function CommunityDetail() {
               {content.replace(/(?:\r\n|\r|\n)/g, '<br/>').split('<br/>').map(item => <p key={item}>{item}</p>)}
             </div>  
           </Content>
-
-          <button className="like-btn" onClick={addLike}>
-            {!like ? <FcLikePlaceholder className="like-btn"/> : <FcLike className="like-btn"/>}
-          </button>
+          <ButtonContainer>
+            <button className="like-btn" onClick={addLike}>
+              {!like ? <FcLikePlaceholder className="like-btn"/> : <FcLike className="like-btn"/>}
+            </button>
+            {(userInfo.userName === userName) && 
+              <button className="revise-btn" onClick={reviseBoard} > 
+                <BsFillPencilFill  className="revise-btn"/> 
+              </button>}
+          </ButtonContainer>
+          {remove && <RemoveModal>
+              <div className="delete-warning">
+                <ImWarning className="delete-warning-icon"/>
+                <div>삭제 이후 복구할 수 없습니다.</div>
+                <div>정말 해당 글을 삭제하시겠습니까?</div>
+                <div className="confirm-wrapper">
+                  <div className="confirm" onClick={confirmRemove}>확인</div>
+                  <div className="cancel" onClick={() => setRemove(!remove)}>취소</div>
+                </div>
+              </div>
+          </RemoveModal>}
         </Main>
         
         <CommunityAnswer data={data}/>
@@ -131,7 +168,7 @@ const Main = styled.main`
 
     .back-to-board {
       display: flex;
-      
+      font-family: Jua, serif;
       color: rgb(70,183,182);
       :hover {
         color: rgb(56,217,169);
@@ -140,24 +177,25 @@ const Main = styled.main`
     }
 
   }
-
-  button {
-    width: 65px;
-    height: 5vh;
-    
-    .like-btn {
-      width: 40px;
-      height: 3vh;
-    }
-  }
 `;
 
 const Title = styled.h1`
   width: 70vw;
   margin: 30px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
   border-bottom: 1px solid lightgray;
   font-size: 3.5vmin;
+  font-family: Jua, serif;
+
+  .delete-btn {
+    padding: 0 20px;
+    :hover {
+      font-size: larger;
+      padding: 0 16.5px;
+      cursor: pointer;
+    }
+  }
 `;
 
 const UserInfo = styled.div`
@@ -184,7 +222,6 @@ const UserInfo = styled.div`
     height: 5vh;
     padding: 0;
     padding-right: 20px;
-    border-right: 1px solid black;
     > li {
       font-size: 1.5vmin;
     }
@@ -196,13 +233,16 @@ const UserInfo = styled.div`
     padding: 0 2rem;
     font-size: 2vmin;
     font-weight: bold;
+    
+    border-left: 1px solid black;
     border-right: 1px solid black;
+    
     height: 5vh;
     @media (max-width: 450px) {
       padding: 0 0.5rem;
     }
 
-    span > .lock-icon{
+    span > .lock {
       padding: 0 10px;
     }
   }
@@ -233,4 +273,78 @@ const UserInfo = styled.div`
 const Content = styled.div`
   margin: 30px;
   font-size: 2vmin;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3vw;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 60px;
+    height: 5vh;
+    background-color:  #ffff99;
+    cursor: pointer;
+    :hover {
+      background-color: ivory;
+    }
+    
+    .like-btn, .revise-btn {
+      width: 5vw;
+      height: 3.5vh;
+    }
+  }
+`;
+
+const RemoveModal = styled.div`
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  white-space: nowrap;
+
+  .delete-warning {
+    .delete-warning-icon {
+      color: rgb(254,104,0);
+      font-size: 5vmin;
+    }
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: white;
+    width: 40vw;
+    height: 25vh;
+    border-radius: 10px;
+    font-family: Jua, serif;
+    font-size: 3vmin;
+  }
+
+  .confirm-wrapper {
+    display: flex;
+    .confirm, .cancel {
+      margin: 0.2rem;
+      padding: 0.3rem;
+      border: 3px solid black;
+      border-radius: 5px;
+      :hover {
+        cursor: pointer;
+        background-color: lightgray;
+      }
+    }
+  }
 `;
