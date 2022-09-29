@@ -342,7 +342,7 @@ align-items: center;
 flex-direction: column;
 .title-style{
   margin-bottom: 30px;
- 
+  font-family: 'Gugi', cursive;
   a{
     text-decoration: none;
     color: rgb(71,182,181);

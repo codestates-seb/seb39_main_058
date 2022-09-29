@@ -157,21 +157,21 @@ export default CommunityAnswer
 
 const Container=styled.div`
 display: flex;
-height: 90vh;
-width: 100vw;
+height: 100%;
+width: 100%;
 justify-content: center;
 align-items: center;
 flex-direction: column;
-
+margin-bottom: 50px;
 `
 
 const Head=styled.div`
 display: flex;
 text-align: start;
-width: 70%;
+width: 80%;
 white-space:nowrap;
 border-bottom:1px solid;
-margin-bottom: 10px;
+padding-bottom:2px;
 .newestButton{
   border: none;
   /* outline: none; */
@@ -179,27 +179,29 @@ margin-bottom: 10px;
   cursor: pointer;
 
 }
-@media screen and (max-width: 500px){
+@media screen and (max-width: 550px){
         width:90%;
     }
 `
 
 const AnswerList=styled.div`
-width: 70%;
-@media screen and (max-width: 500px){
+margin-top:5px;
+width: 80%;
+@media screen and (max-width: 550px){
         width:90%;
     }
 `
 
 const AnswerPostForm=styled.form`
 display: flex;
-width: 70%;
+width: 80%;
 justify-content: space-between;
+margin-top:5px;
 button{
   white-space:nowrap;
 
 }
-@media screen and (max-width: 500px){
+@media screen and (max-width: 550px){
         width:90%;
     }
 `
@@ -207,4 +209,5 @@ const AnswerText=styled.textarea`
 resize: none;
 width: 100%;
 margin-right: 10px;
+
 `
