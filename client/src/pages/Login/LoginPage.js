@@ -1,6 +1,7 @@
 import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -14,6 +15,8 @@ const LoginPage = () => {
 
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
+
+  const dispatch=useDispatch();
 
   const loginInfo={
     "loginId":id,
@@ -76,10 +79,8 @@ const tabKey2=(event)=>{
   .then((data)=>{
         // console.log(data)
         if(data){
-          sessionStorage.setItem("accessToken", data.data.accessToken)
-          sessionStorage.setItem("userName", data.data.userName)
-          sessionStorage.setItem("role", data.data.role)
-
+        
+             dispatch({type:'USERINFO',payload:{userInfo:data.data}})
             if(location.state?.path){
               navigate(`${location.state.path}`)
             }else{

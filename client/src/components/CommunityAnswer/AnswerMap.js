@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useLocation, useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
 // 매핑돌린 댓글의 css 및 버튼이라든지 설정해주는곳
 const AnswerMap = ({item}) => {
   const navigate=useNavigate();
   const location = useLocation();
   const [clickCommentId,setClickCommentId]=useState('');
-
-
+  const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
+  const userName=useSelector(state=>state.LoginPageReducer.userinfo.userName)
+  const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
 
 // 댓글삭제 요청 fetch
@@ -17,7 +19,7 @@ const answerDeleteFetch=async()=>{
 
     await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/${clickCommentId}`, {
       method: "DELETE",
-      headers: { 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`}
+      headers: { 'Authorization': `Bearer ${accesstoken}`}
 
     })
     
@@ -34,10 +36,10 @@ const answerDelete=(e)=>{
   console.log('eeeffe',e.target.name)
   
   if(window.confirm('댓글을 삭제하시겠습니까?')){
-    if (!sessionStorage.getItem("accessToken")){
+    if (!accesstoken){
       alert('로그인 후 이용 가능 합니다')
       navigate('/login',{state: {path:location.pathname}})
-    }else if(sessionStorage.getItem("accessToken")){
+    }else if(accesstoken){
     setClickCommentId(e.target.name)
     answerDeleteFetch()
     
@@ -63,7 +65,7 @@ useEffect(()=>{
       <Head >
  
       <div>{item.userName}</div><div className='time'>{item.dateCreated}</div>
-      {item.userName===sessionStorage.getItem('userName')||sessionStorage.getItem('role')==="ROLE_ADMIN" ?<button onClick={(e)=>answerDelete(e)} name={item.commnetId}>x</button> :''}
+      {item.userName===userName||role==="ROLE_ADMIN" ?<button onClick={(e)=>answerDelete(e)} name={item.commnetId}>x</button> :''}
       </Head>
       <div>{item.commentText}</div>
     </Container>
