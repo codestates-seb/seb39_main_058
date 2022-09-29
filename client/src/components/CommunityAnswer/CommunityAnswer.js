@@ -162,7 +162,7 @@ width: 100%;
 justify-content: center;
 align-items: center;
 flex-direction: column;
-
+margin-bottom: 50px;
 `
 
 const Head=styled.div`
