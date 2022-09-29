@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { AiFillGold } from 'react-icons/ai';
@@ -7,7 +8,7 @@ import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs'
 
 function User() {
-    
+    const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
     // const [ userName, setUserName ] = useState("");
     const [ userData, setUserData ] = useState({});
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ function User() {
     useEffect(() => {
         fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
             headers: {
-                "Authorization": `Bearer ${sessionStorage.getItem("accessToken")}`,
+                "Authorization": `Bearer ${userInfo.accessToken}`,
                 "Content-Type": "application/json"
             }
         })
@@ -24,7 +25,7 @@ function User() {
             .catch(err => console.log(err))
     },[])
 
-    console.log(userData)
+    // console.log(userData)
 
     const userLogout = () => {
         sessionStorage.clear();
