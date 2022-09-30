@@ -41,6 +41,8 @@ function User() {
     // 회원정보 수정
     const userRevise = () => {
         console.log('회원정보 수정!')
+        console.log(userInfo.accessToken);
+        // console.log(userData);
     };
 
     // 회원탈퇴
