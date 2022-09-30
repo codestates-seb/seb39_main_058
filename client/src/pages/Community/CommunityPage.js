@@ -7,13 +7,17 @@ import PageNation from '../../components/PageNation';
 import { useSelector } from 'react-redux'
 import { FaSearch } from "react-icons/fa";
 
-const tag = ["강동구", "강서구", "강남구", "강북구"]
+const tag = ["구로구","강남구","관악구","동작구","마포구"]
 
 // 커뮤니티 게시판 리스트가 나오는 메인페이지
 function CommunityPage() {
 
   const [tags, setTags] = useState([])
   const [data, setData] = useState([])
+  const [search, setSearch] = useState({
+    select : undefined,
+    content : undefined
+  })
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,6 +52,16 @@ function CommunityPage() {
     setTags(result)
   }
 
+  const handleSearchButton = () => {
+    if(search.content !== undefined){
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search?page=1&size=20&keyword=${search.content}`)
+      .then(res => res.json())
+      .then(res => {
+        setData(res.data)
+      })
+    }
+  }
+
   return (
     <CommunityPageStyle>
       <div className='title_container'>
@@ -72,10 +86,11 @@ function CommunityPage() {
         {tags.map(el => {
           return (
             <div className='tags_container' key={el}>
-              <div className={el === "강동구" ? "red" :
-                   el === "강서구" ? "orange" :
-                   el === "강남구" ? "blue" :
-                   el === "강북구" ? "green" :
+              <div className={el === "구로구" ? "red" :
+                   el === "강남구" ? "orange" :
+                   el === "관악구" ? "blue" :
+                   el === "마포구" ? "green" :
+                   el === "동작구" ? "violet" :
                    undefined}> {el}
               </div>
               <GiCancel className='cancle_icon' onClick={() => {
@@ -102,7 +117,7 @@ function CommunityPage() {
                   navigate(`/community/${el.forumId}`)
                 }}>{el.forumTitle}</span> :
                 <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
-                <span className='user'>{el.userName}글쓴이</span>
+                <span className='user'>{el.userName}</span>
                 <span className='updateAT'>{el.dateModified.slice(5,10)}</span>
                 <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
                 <span className='suggestion'>{el.forumLike}</span>
@@ -114,13 +129,13 @@ function CommunityPage() {
           <PageNation data={data} />
         </div>
         <div className='search_container'>
-          <select>
+          <select onChange={e => setSearch({select : e.target.value, content : search.select})}>
             <option>제목</option>
             <option>내용</option>
             <option>작성자</option>
           </select>
-          <input type='search' />
-          <span><FaSearch /></span>
+          <input type='search' onChange={e => setSearch({select : search.select, content : e.target.value})} />
+          <span onClick={handleSearchButton}><FaSearch /></span>
         </div>
     </CommunityPageStyle>
   )
@@ -265,6 +280,14 @@ const CommunityPageStyle = styled.div`
 
   .green{
     background-color: green;
+    padding: .3vh .7vw;
+    color: white;
+    margin: 0 .5vw;
+    border-radius: .5rem;
+  }
+
+  .violet{
+    background-color: violet;
     padding: .3vh .7vw;
     color: white;
     margin: 0 .5vw;

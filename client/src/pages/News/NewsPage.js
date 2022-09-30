@@ -43,7 +43,7 @@ const NewsPage = () => {
           "Content-Type": "application/json"
       }
       }).then(() => {
-        console.log("삭제됐습니다")
+        window.location.reload()
       }).catch((err) => console.log(err))
     }
   }
@@ -77,7 +77,6 @@ const NewsPage = () => {
           <div className='confirm'>
             <div onClick={() => {
               setCompletion(false)
-              // window.location.reload()
               handleDeletButton()
             }}>확인</div>
             <div onClick={() => {
