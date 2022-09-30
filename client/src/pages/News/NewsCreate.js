@@ -1,17 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 // 게시글 생성
 function CommunityCreate() {
 
     const navigate = useNavigate();
+
+    const [write, setWrite] = useState({
+        title : '',
+        content : ''
+    })
+
+    const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
     
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
+        const boardPost = {
+            "userId" : userInfo.userId,
+            "noticeTitle" : write.title,
+            "noticeText" : write.content
+        }
+        
+        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/create",{
+            method: "POST",
+            headers: { 
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(boardPost)
+        })
+        .then(() => navigate('/news/notice'))
+        .catch((err) => console.log(err))
     }
-
 
     return (
     <Main>
@@ -26,8 +50,8 @@ function CommunityCreate() {
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="title">제목</label>
                         <input type="text" id="title" placeholder="제목을 입력해주세요." 
-                            onChange={() => {
-
+                            onChange={(e) => {
+                                setWrite({title : e.target.value , content : write.content})
                             }}/>
                     </form>
                 </div>
@@ -35,8 +59,8 @@ function CommunityCreate() {
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="content"></label>
                         <textarea id="content" placeholder="내용을 입력해주세요." 
-                            onChange={() => {
-
+                            onChange={(e) => {
+                                setWrite({title : write.title , content : e.target.value})
                             }}/>
                     </form>
                 </div>
@@ -44,7 +68,7 @@ function CommunityCreate() {
             </BoardWrite>
             <ButtonWrapper>
                 <button className="writer-submit" form="board"> 등록 </button>
-                <button className="writer-cancel" onClick={() => navigate("/community/forum")}> 취소 </button>
+                <button className="writer-cancel" onClick={() => navigate("/news/notice")}> 취소 </button>
             </ButtonWrapper>
         </div>
 

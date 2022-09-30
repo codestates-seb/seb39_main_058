@@ -32,7 +32,7 @@ function PageNation({data}) { // 더미 props 받아온거임
             count = Math.ceil((data.length)/20)
         }
 
-        for(let i = 1 ; i <= count+1 ; i++){
+        for(let i = 1 ; i <= count ; i++){
             arr.push(i)
         }
         

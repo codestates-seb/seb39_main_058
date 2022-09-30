@@ -242,7 +242,9 @@ const NavBarStyle = styled.div`
         position: absolute;
         right: 0;
         top: 6%;
-        background-color: lightgray;
+        background-color: #F2F2F2;
+        border-left: 3px solid rgb(71,182,181);
+        border-bottom: 3px solid rgb(71,182,181);
         width: 79%;
         height: 20vh;
         z-index: 3;
