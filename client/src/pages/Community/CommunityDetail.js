@@ -25,7 +25,7 @@ function CommunityDetail() {
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState([]);
-  
+
   const [ remove, setRemove ] = useState(false);
   const [ revise, setRevise ] = useState(false);
   
@@ -38,7 +38,8 @@ function CommunityDetail() {
     const hours = createdDate.getHours();
     const minutes = createdDate.getMinutes();
     const today = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)'];
-    
+  
+  // 특정 게시글 조회
   useEffect(() => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`,{
       headers: { 
@@ -73,10 +74,7 @@ function CommunityDetail() {
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
 
   // 게시글 수정
-  const reviseBoard = () => {
-    setRevise(!revise);
-
-  }
+  const reviseBoard = () => setRevise(!revise);
   const confirmRevise = () => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
       method: "PATCH",
@@ -112,22 +110,22 @@ function CommunityDetail() {
 
   // 태그 삭제
   const deleteTag = (el) => {
-    const filteredTag = tag.filter(tag => tag !== el)
+    const filteredTag = tag.filter(tag => tag !== el);
     setTag(filteredTag);        
   }
 
   // 특정 태그 선택
   const selectTag = (e) => {
     if(tags.includes(e.target.value)) {
-       setTag([...tag, e.target.value])
+       setTag([...tag, e.target.value]);
     }
     if(tag.includes(e.target.value)) {
-        setTag(tag)
+        setTag(tag);
     }
-}
-  console.log(tag)
+  }
+  
   // 비밀글 여부 선택
-  const handleSecret = (e) => {
+  const handleSecret = () => {
     if(secret === "OPEN") {
         setSecret("SECRET");
     } else if (secret === "SECRET") {
