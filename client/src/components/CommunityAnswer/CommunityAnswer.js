@@ -69,15 +69,18 @@ const submitFunc=async(event)=>{
             headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`,},
             body: JSON.stringify(answerInfo)
           })
-        // .then((res) => res.json())
-        //   .then((data)=>{
-        //           console.log('정보',answerInfo)
-        //           console.log(data)       
+        .then((res) => res.json())
+          .then((data)=>{
+                  if(data.error==='Unauthorized'){
+                    alert('세션이 만료되었습니다.')
+                    navigate('/login',{state: {path:location.pathname}})
+                  }
                   
-        //   })
-        .catch(()=>{
-          alert('세션이 만료되었습니다.')
-          navigate('/login',{state: {path:location.pathname}})
+                  
+          })
+        .catch((error )=>{
+          console.log(error )
+          
         })
           // 응답받을게머가있나?
          window.location.reload()

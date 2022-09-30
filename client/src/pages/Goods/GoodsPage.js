@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GoodsDetail from './GoodsDetail';
@@ -12,7 +12,7 @@ const [userInfo,setUserInfo]=useState({
   point:'',
 });
 const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken);
-const dispatch=useDispatch();
+const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
 
   const getUserInfo=async()=>{
@@ -26,7 +26,7 @@ const dispatch=useDispatch();
       }).then(res => res.json())
       .then(data => {
         
-        console.log('data',data)
+        // console.log('data',data)
         setUserInfo({userName: data.data.userName,point: data.data.point}) 
       }
       
@@ -46,7 +46,8 @@ const dispatch=useDispatch();
 <Container>
   <UserInfoContainer>
      <BoardHeader>
-                  <div>포인트교환</div>
+       <div>포인트교환</div>
+       {role==="ROLE_ADMIN" ? <Link to='/goods/create'> <button>상품등록하기</button> </Link>:''}
      </BoardHeader>
       {accesstoken ? 
       <UserInfo >
@@ -56,14 +57,27 @@ const dispatch=useDispatch();
         <div>서비스는 로그인 후 이용 하실 수 있습니다.</div>
       }
         
-        {sessionStorage.getItem('role')==="ROLE_ADMIN" ? <Link to='/goods/create'> <button>상품등록하기</button> </Link>:''}
         
   </UserInfoContainer>
 
   
 
   <GoodsCart>
+    쇼핑카트
+    <GooodsCartHeader>
+      <div className='goodsName'>상품명
+        
+      </div>
 
+      <div className='goodsPrice'>가격
+       
+
+      </div>
+
+      <div>수량</div>
+      <div>합계</div>
+      <div>삭제</div>
+    </GooodsCartHeader>
   </GoodsCart>  
 
   <GoodsList>
@@ -84,6 +98,7 @@ width: 100vw;
 
 align-items: center;
 flex-direction: column;
+white-space: nowrap;
 `
 const UserInfoContainer=styled.div`
 width: 80%;
@@ -102,6 +117,7 @@ text-align : center;
 const BoardHeader = styled.div`
 
   display: flex;  
+  justify-content: space-between;
   width: 100%;
   margin-top: 20px;
  border-bottom: 3px solid;
@@ -126,7 +142,27 @@ justify-content: space-between;
 
 `
 
-const GoodsList=styled.div`
-`
 const GoodsCart=styled.div`
+  width: 80%;
+
+
+`
+const GooodsCartHeader=styled.div`
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  width: 100%;
+  .goodsName{
+    width: 50%;
+  }
+  .goodsPrice{
+    width: 20%;
+  }
+
+
+  
+`
+
+
+const GoodsList=styled.div`
 `
