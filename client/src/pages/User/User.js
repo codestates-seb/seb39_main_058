@@ -25,8 +25,6 @@ function User() {
             .catch(err => console.log(err))
     },[])
 
-    // console.log(userData)
-
     const userLogout = () => {
         sessionStorage.clear();
         navigate("/");
