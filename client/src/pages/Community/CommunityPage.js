@@ -18,6 +18,7 @@ function CommunityPage() {
     select : undefined,
     content : undefined
   })
+  const [total, setTotal] = useState(null)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,6 +34,7 @@ function CommunityPage() {
     .then(res => res.json())
     .then(res => {
       setData(res.data)
+      setTotal(res.pageInfo.totalElements)
     })  
   },[page])
 
@@ -58,6 +60,7 @@ function CommunityPage() {
       .then(res => res.json())
       .then(res => {
         setData(res.data)
+        setTotal(res.pageInfo.totalElements)
       })
     }
   }
@@ -126,7 +129,7 @@ function CommunityPage() {
           })}
         </div>
         <div className='pagenation_container'>
-          <PageNation data={data} />
+          <PageNation data={data} total={total}/>
         </div>
         <div className='search_container'>
           <select onChange={e => setSearch({select : e.target.value, content : search.select})}>
