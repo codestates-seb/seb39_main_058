@@ -24,10 +24,9 @@ function CommunityDetail() {
   const [ userName, setUserName ] = useState("");
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
-  const [ tag, setTag ] = useState("");
-  // const [ clickTag, setClickTag ] = useState(false);
+  const [ tag, setTag ] = useState([]);
+  
   const [ remove, setRemove ] = useState(false);
-
   const [ revise, setRevise ] = useState(false);
   
   const [ dateCreated, setDateCreated ] = useState("");
@@ -55,7 +54,7 @@ function CommunityDetail() {
         setUserName(data.data.userName);
         setLike(data.data.forumLike);
         setSecret(data.data.secret);
-        setTag(data.data.tag);
+        setTag(data.data.tag.split(','));
         setDateCreated(data.data.dateCreated);
       })
       .catch(err => console.log(err))
@@ -65,7 +64,7 @@ function CommunityDetail() {
     "forumId" : id,
     "forumTitle" : title,
     "forumText" : content,
-    "tag" : tag,
+    "tag" : tag.join(','),
     "secret" : secret
   }
 
@@ -74,7 +73,10 @@ function CommunityDetail() {
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
 
   // 게시글 수정
-  const reviseBoard = () => setRevise(!revise);
+  const reviseBoard = () => {
+    setRevise(!revise);
+
+  }
   const confirmRevise = () => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
       method: "PATCH",
@@ -110,22 +112,19 @@ function CommunityDetail() {
 
   // 태그 삭제
   const deleteTag = (el) => {
-    const filteredTag = tag.split(',').filter(tag => tag !== el).join(',')
+    const filteredTag = tag.filter(tag => tag !== el)
     setTag(filteredTag);        
   }
 
   // 특정 태그 선택
   const selectTag = (e) => {
-    console.log(e.target.value)
-    // if(!clickTag) setClickTag(!clickTag);
     if(tags.includes(e.target.value)) {
-      setTag([...tag.split(','), e.target.value])
+       setTag([...tag, e.target.value])
     }
     if(tag.includes(e.target.value)) {
-      setTag(tag.join(','))
-      console.log(e.target.value)
+        setTag(tag)
     }
-  }
+}
   console.log(tag)
   // 비밀글 여부 선택
   const handleSecret = (e) => {
@@ -167,8 +166,8 @@ function CommunityDetail() {
                 <div className="secret">
                   <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
                 </div>}
-                {!revise && tag && <div className="tag-container"> 
-                  {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
+                {!revise && <div className="tag-container"> 
+                  {tag.map(item => <span key={item} className="tag">{item}</span>)}
                 </div>}
             </UserInfo>
           </div>
@@ -186,13 +185,15 @@ function CommunityDetail() {
           
           {/* 게시글 태그 수정/삭제 */}
           { revise && <SelectedTag>
-              { tag && <div className="selected-tags">
-                  {tag.split(',').map( el =>
-                    <span className="tag" key={el}>{el} 
-                        <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                    </span>)}
-              </div> }            
-            </SelectedTag> }
+              <div className="selected-tags">
+                  {tag.map( el =>
+                      <span className="tag" key={el}>{el} 
+                          <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                      </span>
+                      )
+                  }
+              </div>                
+            </SelectedTag>}
           
           {/* 수정으로 인한 태그 선택 */}
           {revise && <BoardTag>
