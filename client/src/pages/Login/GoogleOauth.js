@@ -1,31 +1,47 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from "styled-components";
+import {GoogleLogin} from 'react-google-login';
+import { gapi } from 'gapi-script';
 
-
-
-
-
+const ClIENT_ID='719936769714-34a3ukvnh8suuphr41e8105ls08hmtei.apps.googleusercontent.com'
 
 
 const GoogleOauth = () => {
   
+  useEffect(()=>{
+    function start(){
+      gapi.client.init({
+        ClIENT_ID,
+        scope:'email'
+      })
+    }
+   gapi.load('client:auth2', start)
+  },[])
   
   
   
   
   
-  
+  const responseGoogle = (response) => {
+    console.log(response);
+  }
   
   
   
   
   return (
-
-   <LinkStyle>
-    <GoogleLoginButton>
-      <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>
-    </GoogleLoginButton>
-   </LinkStyle>
+    <GoogleLogin
+    clientId={ClIENT_ID}
+    render={renderProps => (
+      <GoogleLoginButton onClick={renderProps.onClick} disabled={renderProps.disabled}>
+        <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>
+      </GoogleLoginButton>
+    )}
+    buttonText="Login"
+    onSuccess={responseGoogle}
+    onFailure={responseGoogle}
+    cookiePolicy={'single_host_origin'}
+  />
   )
 }
 
@@ -63,7 +79,4 @@ const Logo=styled.img`
     width: 30px;
     height: 30px;
     
-`
-const LinkStyle=styled.a`
-text-decoration: none;
 `

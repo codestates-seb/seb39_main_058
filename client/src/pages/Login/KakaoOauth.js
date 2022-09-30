@@ -6,16 +6,16 @@ import styled from "styled-components";
 
 
 
+  const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
+  const KAKAO_REDIRECT_URI='http://localhost:3000/login/'
+  const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+  const kakaoOauthUrl='https://kauth.kakao.com/oauth/token'
+
 
 const KakaoOauth = () => {
   const [searchQ,setSearchQ] = useSearchParams()
   const kakaoCode=searchQ.get('code')
 const dispatch=useDispatch()
-
-  const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
-  const KAKAO_REDIRECT_URI='http://localhost:3000/login/'
-  const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
-  const kakaoOauthUrl='https://kauth.kakao.com/oauth/token'
 
 
 
