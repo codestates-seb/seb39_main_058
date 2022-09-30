@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
@@ -9,10 +9,13 @@ import { RiDeleteBack2Fill } from 'react-icons/ri';
 import { ImWarning } from 'react-icons/im';
 import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer';
 
+const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"];
+
 // 특정 질문을 눌렀을 때 나오는 세부 페이지
 function CommunityDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
   
   const [ data, setData ] = useState([]);
@@ -22,6 +25,7 @@ function CommunityDetail() {
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState("");
+  // const [ clickTag, setClickTag ] = useState(false);
   const [ remove, setRemove ] = useState(false);
 
   const [ revise, setRevise ] = useState(false);
@@ -64,56 +68,75 @@ function CommunityDetail() {
     "forumId" : id,
     "forumTitle" : title,
     "forumText" : content,
-    "tag" : "REPORT",
+    // "tag" : tag,
     "secret" : "SECRET"
   }
-  console.log(tag.split(','))
+
   const backToBoard = () => navigate("/community/forum");
-  const deleteBoard = () => setRemove(!remove); 
-  
+
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
 
-  const reviseBoard = () => {
-    console.log('수정하기 버튼!');
-    setRevise(!revise);
+  // 게시글 수정
+  const reviseBoard = () => setRevise(!revise);
+  const confirmRevise = () => {
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(revisedBoard)
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
 
-    // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`, {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Authorization": `Bearer ${userInfo.accessToken}`,
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(revisedBoard)
-    // })
-    //   .then(res => res.json())
-    //   .then(data => console.log(data))
-    //   .catch(err => console.log(err))
-
-    // navigate("/community/create");
-  };
+    
+    navigate("/community/forum");
+  }
   
-  console.log(data);
-  console.log(userInfo.accessToken)
-  
+  // 게시글 삭제
+  const deleteBoard = () => setRemove(!remove); 
   const confirmRemove = () => {
-    // console.log('게시글 삭제!');
-    // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`, {
-    //   method: "DELETE"
-    // })
-    //   .then(res => res.json())
-    //   .then(data => console.log(data))
-    //   .catch(err => console.log(err))
-
-    // forumId를 delete 요청보내면 된다!
-    // navigate("/community/forum");
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
+    navigate("/community/forum");
+    window.location.reload();
   }
 
+  // 태그 삭제
+  const deleteTag = (el) => {
+    const filteredTag = tag.split(',').filter(tag => tag !== el)
+    setTag(filteredTag);        
+  }
 
+  // 특정 태그 선택
+  const selectTag = (e) => {
+    // if(!clickTag) setClickTag(!clickTag);
+    if(tags.includes(e.target.value)) {
+       setTag([...tag, e.target.value])
+    }
+    if(tag.includes(e.target.value)) {
+        setTag(tag)
+    }
+}
+  // console.log(data);
+  // console.log(userInfo)
+  console.log(tag)
   return (
       <>
         <Main>
           <div className="header-wrapper">
             <div className="back-to-board" onClick={backToBoard}>자유게시판<BiRightArrow/></div>
+            {/* 게시글 제목 */}
             <Title>
               {revise ? 
                 <input autoFocus type="text" value={title} 
@@ -125,6 +148,7 @@ function CommunityDetail() {
                 </div>}
             </Title>
             
+            {/* 게시글 작성자 및 날짜 정보 */}
             <UserInfo>
               <img className='user-profile' src="/profile.png" alt='profile'/>
               <ul>
@@ -132,17 +156,19 @@ function CommunityDetail() {
                 <li>{year}년 {month}월 {(hours + 9) > 24 ? date + 1 : date}일 {(hours + 9) > 24 ? today[createdDate.getDay() + 1 ] : today[createdDate.getDay()]}</li>
                 <li>{(hours + 9) > 24 ? hours - 15 : hours + 9}시 {minutes}분</li>
               </ul>
-             {/* secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
-             {secret === "SECRET" && 
-              <div className="secret">
-                <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
-              </div>}
-              {tag && <div className="tag-container"> 
-                {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
-              </div>}
+              
+              {/* 비밀글 여부 : secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
+              {secret === "SECRET" && 
+                <div className="secret">
+                  <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
+                </div>}
+                {!revise && tag && <div className="tag-container"> 
+                  {tag.split(',').map(item => <span key={item} className="tag">{item}</span>)}
+                </div>}
             </UserInfo>
           </div>
 
+          {/* 게시글 제목 */}
           <Content>
             {revise ?  
               <textarea id="content" value={content} 
@@ -152,10 +178,31 @@ function CommunityDetail() {
                 {content.replace(/(?:\r\n|\r|\n)/g, '<br/>').split('<br/>').map(item => <p key={item}>{item}</p>)}
               </div>}
           </Content>
-
+          
+          {/* 게시글 태그 수정/삭제 */}
+          { revise && <SelectedTag>
+                { tag && <div className="selected-tags">
+                    {tag.split(',').map( el =>
+                      <span className="tag" key={el}>{el} 
+                          <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                      </span>)}
+                </div> }                
+            </SelectedTag> }
+          
+          {/* 수정으로 인한 태그 선택 */}
+          {revise && <BoardTag>
+            <select name="tags" >
+                <option name="tags" onChange={ e => selectTag(e)}>지역 태그를 선택하세요</option>
+                {tags.map(tag => 
+                    <option key={tag} name="tag" value={tag} >{tag}</option>
+                )}
+            </select>
+          </BoardTag>}
+          
+          {/* 좋아요 및 수정/취소 버튼 */}
           {revise ? 
             <RevisedButtonWrapper>
-              <button className="writer-submit" form="board"> 수정하기 </button>
+              <button className="writer-submit" onClick={confirmRevise}> 수정하기 </button>
               <button className="writer-cancel" onClick={() => setRevise(!revise)}> 취소 </button>
             </RevisedButtonWrapper> :
             <ButtonContainer>
@@ -167,7 +214,8 @@ function CommunityDetail() {
                   <BsFillPencilFill  className="revise-btn"/> 
                 </button>}
             </ButtonContainer>}
-
+          
+          {/* 삭제 모달창 */}
           {remove && <RemoveModal>
               <div className="delete-warning">
                 <ImWarning className="delete-warning-icon"/>
@@ -347,6 +395,46 @@ const Content = styled.div`
     padding: 10px 15px;
     font-size: 2vmin;
     resize: none;
+  }
+`;
+
+const SelectedTag = styled.div`
+  display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;    
+    border: 1px solid black;
+    padding: 10px 0;
+    width: 80vw;
+    height: 5vh;
+    @media (max-width: 550px) {
+        width: 55vw;
+        height: 7vh;
+        font-size: 2vmin;
+    }
+
+    .tag {
+        margin: 10px;
+        padding: 0.5rem;
+        border-radius: 10px;
+        color: white;
+        background-color: rgb(56,217,169);
+        font-family: 'Courier New', Courier, monospace;
+        &:hover {
+            background: rgb(71,182,181);
+        }
+
+        .delete-tag {
+            margin: 0;
+            padding: 3px;
+            cursor: pointer;
+        }
+    }
+`
+
+const BoardTag = styled.div`
+  select {
+    padding: 0.5rem 1rem;
   }
 `;
 
