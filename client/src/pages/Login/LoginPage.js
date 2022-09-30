@@ -2,6 +2,9 @@ import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react';
+
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -16,6 +19,8 @@ const LoginPage = () => {
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
 
+  const [searchQ,setSearchQ] = useSearchParams()
+  const kakaoCode=searchQ.get('code')
   const dispatch=useDispatch();
 
   const loginInfo={
@@ -120,16 +125,48 @@ const tabKey2=(event)=>{
 
 
 
-
-
-
-
-
   const loginFunc=(event)=>{
     event.preventDefault();
     loginPost();
    
   }
+//카카오소셜로그인
+ const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=57b175e9a7e058d7b81488512a16d03f&redirect_uri=http://localhost:3000/login/&response_type=code`;
+ const kakaoOauthUrl="https://kauth.kakao.com/oauth/token"
+ 
+const getKakaoToken=()=>{
+  if(kakaoCode){
+   fetch(`${kakaoOauthUrl}?grant_type=authorization_code&client_id=57b175e9a7e058d7b81488512a16d03f&redirect_uri=http://localhost:3000/login/&code=${kakaoCode} `,{
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'}
+   })
+   .then((res) => res.json())
+   .then((data)=>{
+    console.log('데이타',data)
+    if(data.access_token){
+      fetch( "https://kapi.kakao.com/v2/user/me",{
+        headers: { 'Authorization': `Bearer ${data.access_token}`,}
+      }).then((res) => res.json())
+      .then((data2)=>{
+        console.log('토큰정보불러오기',data2)
+      })
+    }
+   })
+    
+  }
+}
+
+useEffect(()=>{
+  getKakaoToken()
+},[kakaoCode])
+
+const kakaoLoginFunc=()=>{
+ window.location.href=kakaoLogin;
+  
+}
+
+
   return (
     <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
         <LoginForm onSubmit={(event)=>loginFunc(event)}>
@@ -143,8 +180,10 @@ const tabKey2=(event)=>{
           <div>아직 회원이 아니십니까? <Link to='/signup'>회원가입</Link></div>
           
         </LoginForm>
-          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div></OauthLoginButton>
-          <OauthLoginButton><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div></OauthLoginButton>
+        {console.log('카카오코드',kakaoCode)}
+          <OauthLoginButton onClick={kakaoLoginFunc}><Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div></OauthLoginButton>
+
+          <OauthLoginButton ><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div></OauthLoginButton>
     </Container>
   )
 }

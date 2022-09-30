@@ -22,9 +22,17 @@ const answerDeleteFetch=async()=>{
       headers: { 'Authorization': `Bearer ${accesstoken}`}
 
     })
-    
+    .then((res) => res.json())
+    .then((data)=>{
+            if(data.error==='Unauthorized'){
+              alert('세션이 만료되었습니다.')
+              navigate('/login',{state: {path:location.pathname}})
+            }
+            
+            
+    })
     .catch((err)=>{
-      // console.log(err)
+      console.log(err)
     })
                   window.location.reload()
   }
