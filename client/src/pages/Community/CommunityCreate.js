@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { GiCheckedShield } from "react-icons/gi";
 // import { CKEditor } from '@ckeditor/ckeditor5-react'; // 추후 리팩토링 시, CKEditor를 사용해봐야겠다.
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
-// 'tag': REPORT, QNA, ASK, FREE_BOARD 
-// const tags = ["REPORT", "QNA", "ASK", "FREE_BOARD"];
 const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"];
 
 // 게시글 생성
@@ -28,7 +25,6 @@ function CommunityCreate() {
 
     const navigate = useNavigate();
     
-    // 'tag': REPORT, QNA, ASK, FREE_BOARD -> 한스님 local에만 O, 아직 ec2에는 X
     const boardPost = {
         "forumTitle" : title,
         "forumText" : content,
@@ -75,6 +71,7 @@ function CommunityCreate() {
 
     // 특정 태그 선택
     const selectTag = (e) => {
+        console.log(e.target.value);
         if(!clickTag) setClickTag(!clickTag);
         if(tags.includes(e.target.value)) {
            setTag([...tag, e.target.value])
@@ -86,8 +83,9 @@ function CommunityCreate() {
 
     // 태그 삭제
     const deleteTag = (el) => {
-        const filteredTag = tag.filter(tag => tag !== el)
-        setTag(filteredTag);        
+        console.log(el)
+        const filteredTag = tag.split(',').filter(tag => tag !== el)
+        setTag(filteredTag.join());        
     }
 
     const handleSecret = (e) => {
@@ -145,7 +143,6 @@ function CommunityCreate() {
                     }
                 </div>                
             </SelectedTag> }
-
            
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>
