@@ -60,16 +60,13 @@ function CommunityDetail() {
       })
       .catch(err => console.log(err))
   },[]);
-
-  // console.log(userName); // 글쓴이
-  // console.log(userInfo); // 나
   
   const revisedBoard = {
     "forumId" : id,
     "forumTitle" : title,
     "forumText" : content,
-    // "tag" : tag,
-    "secret" : "SECRET"
+    "tag" : tag,
+    "secret" : secret
   }
 
   const backToBoard = () => navigate("/community/forum");
@@ -90,9 +87,8 @@ function CommunityDetail() {
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.log(err))
-
-    
     navigate("/community/forum");
+    window.location.reload();
   }
   
   // 게시글 삭제
@@ -114,23 +110,32 @@ function CommunityDetail() {
 
   // 태그 삭제
   const deleteTag = (el) => {
-    const filteredTag = tag.split(',').filter(tag => tag !== el)
+    const filteredTag = tag.split(',').filter(tag => tag !== el).join(',')
     setTag(filteredTag);        
   }
 
   // 특정 태그 선택
   const selectTag = (e) => {
+    console.log(e.target.value)
     // if(!clickTag) setClickTag(!clickTag);
     if(tags.includes(e.target.value)) {
-       setTag([...tag, e.target.value])
+      setTag([...tag.split(','), e.target.value])
     }
     if(tag.includes(e.target.value)) {
-        setTag(tag)
+      setTag(tag.join(','))
+      console.log(e.target.value)
     }
-}
-  // console.log(data);
-  // console.log(userInfo)
+  }
   console.log(tag)
+  // 비밀글 여부 선택
+  const handleSecret = (e) => {
+    if(secret === "OPEN") {
+        setSecret("SECRET");
+    } else if (secret === "SECRET") {
+        setSecret("OPEN");
+    }
+  };
+
   return (
       <>
         <Main>
@@ -181,23 +186,29 @@ function CommunityDetail() {
           
           {/* 게시글 태그 수정/삭제 */}
           { revise && <SelectedTag>
-                { tag && <div className="selected-tags">
-                    {tag.split(',').map( el =>
-                      <span className="tag" key={el}>{el} 
-                          <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                      </span>)}
-                </div> }                
+              { tag && <div className="selected-tags">
+                  {tag.split(',').map( el =>
+                    <span className="tag" key={el}>{el} 
+                        <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                    </span>)}
+              </div> }            
             </SelectedTag> }
           
           {/* 수정으로 인한 태그 선택 */}
           {revise && <BoardTag>
-            <select name="tags" >
-                <option name="tags" onChange={ e => selectTag(e)}>지역 태그를 선택하세요</option>
+            <select name="tags" onChange={ e => selectTag(e)} >
+                <option name="tags">지역 태그를 선택하세요</option>
                 {tags.map(tag => 
                     <option key={tag} name="tag" value={tag} >{tag}</option>
                 )}
             </select>
           </BoardTag>}
+          
+          {/* 비밀글 수정 */}
+         { revise && <Secret>
+            <input type="checkbox" name="secret" onClick={handleSecret}/>
+            <label htmlFor="secret">비밀글</label>
+          </Secret> }
           
           {/* 좋아요 및 수정/취소 버튼 */}
           {revise ? 
@@ -431,6 +442,10 @@ const SelectedTag = styled.div`
         }
     }
 `
+
+const Secret = styled.div`
+  margin-top: 10px;
+`;
 
 const BoardTag = styled.div`
   select {

@@ -71,6 +71,7 @@ function CommunityCreate() {
 
     // 특정 태그 선택
     const selectTag = (e) => {
+        console.log(e.target.value);
         if(!clickTag) setClickTag(!clickTag);
         if(tags.includes(e.target.value)) {
            setTag([...tag, e.target.value])
@@ -82,8 +83,9 @@ function CommunityCreate() {
 
     // 태그 삭제
     const deleteTag = (el) => {
-        const filteredTag = tag.filter(tag => tag !== el)
-        setTag(filteredTag);        
+        console.log(el)
+        const filteredTag = tag.split(',').filter(tag => tag !== el)
+        setTag(filteredTag.join());        
     }
 
     const handleSecret = (e) => {
@@ -141,7 +143,6 @@ function CommunityCreate() {
                     }
                 </div>                
             </SelectedTag> }
-
            
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>
