@@ -2,8 +2,6 @@ import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react';
 import KakaoOauth from './KakaoOauth';
 import GoogleOauth from './GoogleOauth';
 
