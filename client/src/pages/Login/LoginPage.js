@@ -2,9 +2,8 @@ import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react';
-
+import KakaoOauth from './KakaoOauth';
+import GoogleOauth from './GoogleOauth';
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -19,8 +18,6 @@ const LoginPage = () => {
   const [alertId,setAlertId]=useState('');
   const [alertPwd,setAlertPwd]=useState('');
 
-  const [searchQ,setSearchQ] = useSearchParams()
-  const kakaoCode=searchQ.get('code')
   const dispatch=useDispatch();
 
   const loginInfo={
@@ -107,14 +104,6 @@ const tabKey2=(event)=>{
      
     
 
-      // access 토큰만 사용하는데 sessionStorage에 저장하니까 페이지 닫으면 사라짐  
-     // 로그아웃버튼기능에 로그아웃을누르면   sessionStorage.removeItem("accessToken")로 세션에 엑세스토큰을 지워주면됨
-     
-      //headers: {
-	    // Authorization: sessionStorage.getItem("accessToken"),
-      // }
-      //이제 회원정보가 필요한 통신을 할때 위에부분을 헤더부분에 추가해 세션스토레지 저장한 accessToken 을 
-      //불러와서 쓰는거임
 
 
   }).catch((err) => {
@@ -130,41 +119,7 @@ const tabKey2=(event)=>{
     loginPost();
    
   }
-//카카오소셜로그인
- const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=57b175e9a7e058d7b81488512a16d03f&redirect_uri=http://localhost:3000/login/&response_type=code`;
- const kakaoOauthUrl="https://kauth.kakao.com/oauth/token"
- 
-const getKakaoToken=()=>{
-  if(kakaoCode){
-   fetch(`${kakaoOauthUrl}?grant_type=authorization_code&client_id=57b175e9a7e058d7b81488512a16d03f&redirect_uri=http://localhost:3000/login/&code=${kakaoCode} `,{
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'}
-   })
-   .then((res) => res.json())
-   .then((data)=>{
-    console.log('데이타',data)
-    if(data.access_token){
-      fetch( "https://kapi.kakao.com/v2/user/me",{
-        headers: { 'Authorization': `Bearer ${data.access_token}`,}
-      }).then((res) => res.json())
-      .then((data2)=>{
-        console.log('토큰정보불러오기',data2)
-      })
-    }
-   })
-    
-  }
-}
 
-useEffect(()=>{
-  getKakaoToken()
-},[kakaoCode])
-
-const kakaoLoginFunc=()=>{
- window.location.href=kakaoLogin;
-  
-}
 
 
   return (
@@ -180,10 +135,10 @@ const kakaoLoginFunc=()=>{
           <div>아직 회원이 아니십니까? <Link to='/signup'>회원가입</Link></div>
           
         </LoginForm>
-        {console.log('카카오코드',kakaoCode)}
-          <OauthLoginButton onClick={kakaoLoginFunc}><Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div></OauthLoginButton>
-
-          <OauthLoginButton ><Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div></OauthLoginButton>
+       
+          <KakaoOauth/>
+          <GoogleOauth/>
+          
     </Container>
   )
 }
@@ -249,20 +204,4 @@ width: 300px;
 text-align: left;
 font-size: small;
 color: red;
-`
-const OauthLoginButton =styled(LoginButton)`
-background-color: white;
-color: black;
-box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
-display: flex;
-align-items: center;
- div{
-  width: 100%;
- }
-
-`
-const Logo=styled.img`
-    width: 30px;
-    height: 30px;
-    
 `
