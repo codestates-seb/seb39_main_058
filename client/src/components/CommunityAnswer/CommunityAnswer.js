@@ -117,10 +117,10 @@ const changeRow=(e)=>{
 }
 
 
-useEffect(()=>{
-  return
+// useEffect(()=>{
+
   
-},[newest])
+// },[newest])
 
   return (
     <Container>
@@ -202,6 +202,8 @@ justify-content: space-between;
 margin-top:5px;
 button{
   white-space:nowrap;
+  border-radius: 10px;
+  border: 1px solid black;
 
 }
 @media screen and (max-width: 550px){
@@ -212,5 +214,5 @@ const AnswerText=styled.textarea`
 resize: none;
 width: 100%;
 margin-right: 10px;
-
+border-radius: 10px;
 `
