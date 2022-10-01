@@ -66,7 +66,6 @@ function CommunityCreate() {
             setClickTag(!clickTag);
             setTag([]);
         }   
-
     }
 
     // 특정 태그 선택
@@ -139,6 +138,7 @@ function CommunityCreate() {
                         </span>)}
                 </div>                
             </SelectedTag> }
+            
            
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
 import { FcLikePlaceholder, FcLike, FcLock } from 'react-icons/fc';
 import { BsTrashFill, BsFillPencilFill } from 'react-icons/bs';
@@ -14,10 +14,11 @@ const tags = ["구로구", "강남구", "관악구", "동작구", "마포구"];
 function CommunityDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
   
-  const [ data, setData ] = useState([]);
+  const [ data, setData ] = useState({});
   const [ title, setTitle ] = useState("");
   const [ content, setContent ] = useState("");
   const [ userName, setUserName ] = useState("");
@@ -54,7 +55,7 @@ function CommunityDetail() {
         setUserName(data.data.userName);
         setLike(data.data.forumLike);
         setSecret(data.data.secret);
-        setTag(data.data.tag.split(','));
+        setTag(data.data.tag.split(',').slice(1));
         setDateCreated(data.data.dateCreated);
       })
       .catch(err => console.log(err))
@@ -66,13 +67,13 @@ function CommunityDetail() {
     "forumText" : content,
     "tag" : tag.join(','),
     "secret" : secret
-  }
+  };
 
   const backToBoard = () => navigate("/community/forum");
 
   const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
 
-  // 게시글 수정
+  // 게시글 수정 및 수정 확인 버튼
   const reviseBoard = () => setRevise(!revise);
   const confirmRevise = () => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
@@ -90,7 +91,13 @@ function CommunityDetail() {
     window.location.reload();
   }
   
-  // 게시글 삭제
+  // 게시글 수정(모달창) 취소
+  const cancelRevise = () => {
+    setRevise(!revise);
+  }
+
+  
+  // 게시글 삭제 및 삭제 확인 버튼
   const deleteBoard = () => setRemove(!remove); 
   const confirmRemove = () => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
@@ -101,7 +108,12 @@ function CommunityDetail() {
       }
     })
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then((data)=>{
+        if(data.error==='Unauthorized'){
+          alert('세션이 만료되었습니다.')
+          navigate('/login',{state: {path:location.pathname}})
+        }
+      })
       .catch(err => console.log(err))
     navigate("/community/forum");
     window.location.reload();
@@ -112,28 +124,30 @@ function CommunityDetail() {
     const filteredTag = tag.filter(tag => tag !== el);
     setTag(filteredTag);        
   }
-
+    
   // 특정 태그 선택
   const selectTag = (e) => {
+    // 만약 tag(배열)의 0번째 인덱스가 빈문자열이면, 첫 요소 잘라낸 새로운 배열 만들기
+    
     if(tags.includes(e.target.value)) {
-       setTag([...tag, e.target.value]);
+      setTag([...tag, e.target.value]);
     }
     if(tag.includes(e.target.value)) {
-        setTag(tag);
+      setTag(tag);
     }
   }
   
   // 비밀글 여부 선택
   const handleSecret = () => {
     if(secret === "OPEN") {
-        setSecret("SECRET");
+      setSecret("SECRET");
     } else if (secret === "SECRET") {
-        setSecret("OPEN");
+      setSecret("OPEN");
     }
   };
 
-  console.log(userInfo.accessToken)
-  console.log(data)
+  // console.log(userInfo)
+  // console.log(data)
 
   return (
       <>
@@ -166,7 +180,8 @@ function CommunityDetail() {
                 <div className="secret">
                   <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
                 </div>}
-                { !revise && <div className="tag-container"> 
+                { !tag.join().length ? undefined : 
+                  !revise && <div className="tag-container"> 
                   {tag.map(item => <span key={item} className="tag">{item}</span>)}
                 </div>}
               </UserInfo>
@@ -185,26 +200,25 @@ function CommunityDetail() {
           
           {/* 게시글 태그 수정/삭제 */}
           { revise && <SelectedTag>
+              {!tag.join().length ? undefined : 
               <div className="selected-tags">
                   { tag.map( el =>
-                      <span className="tag" key={el}>{el} 
-                          <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                      </span> 
-                      )
+                    <span className="tag" key={el}>{el} 
+                        <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                    </span>)
                   }
-              </div>       
+              </div>}    
             </SelectedTag>}
-          
           {/* 수정으로 인한 태그 선택 */}
           { revise && <BoardTag>
             <select name="tags" onChange={ e => selectTag(e)} >
-                <option name="tags">지역 태그를 선택하세요</option>
+              <option name="tags">지역 태그를 선택하세요</option>
                 {tags.map(tag => 
-                    <option key={tag} name="tag" value={tag} >{tag}</option>
+                  <option key={tag} name="tag" value={tag} >{tag}</option>
                 )}
             </select>
           </BoardTag>}
-          
+
           {/* 비밀글 수정 */}
           { revise && <Secret>
             <input type="checkbox" name="secret" onClick={handleSecret}/>
@@ -215,7 +229,7 @@ function CommunityDetail() {
           { revise ? 
             <RevisedButtonWrapper>
               <button className="writer-submit" onClick={confirmRevise}> 수정하기 </button>
-              <button className="writer-cancel" onClick={() => setRevise(!revise)}> 취소 </button>
+              <button className="writer-cancel" onClick={cancelRevise}> 취소 </button>
             </RevisedButtonWrapper> :
             <ButtonContainer>
               <button className="like-btn" onClick={addLike}>
@@ -412,36 +426,36 @@ const Content = styled.div`
 
 const SelectedTag = styled.div`
   display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 20px;    
-    border: 1px solid black;
-    padding: 10px 0;
-    width: 80vw;
-    height: 5vh;
-    @media (max-width: 550px) {
-        width: 55vw;
-        height: 7vh;
-        font-size: 2vmin;
-    }
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;    
+  border: 1px solid black;
+  padding: 10px 0;
+  width: 80vw;
+  height: 5vh;
+  @media (max-width: 550px) {
+      width: 55vw;
+      height: 7vh;
+      font-size: 2vmin;
+  }
 
-    .tag {
-        margin: 10px;
-        padding: 0.5rem;
-        border-radius: 10px;
-        color: white;
-        background-color: rgb(56,217,169);
-        font-family: 'Courier New', Courier, monospace;
-        &:hover {
-            background: rgb(71,182,181);
-        }
+  .tag {
+      margin: 10px;
+      padding: 0.5rem;
+      border-radius: 10px;
+      color: white;
+      background-color: rgb(56,217,169);
+      font-family: 'Courier New', Courier, monospace;
+      &:hover {
+          background: rgb(71,182,181);
+      }
 
-        .delete-tag {
-            margin: 0;
-            padding: 3px;
-            cursor: pointer;
-        }
-    }
+      .delete-tag {
+          margin: 0;
+          padding: 3px;
+          cursor: pointer;
+      }
+  }
 `
 
 const Secret = styled.div`
