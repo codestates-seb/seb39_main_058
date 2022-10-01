@@ -40,8 +40,8 @@ public class GoodsService {
                 .ifPresent(goodsText -> findGoods.setGoodsText(goodsText));
         Optional.ofNullable(goods.getGoodsImage())
                 .ifPresent(goodsImage -> findGoods.setGoodsImage(goodsImage));
-        Optional.ofNullable(goods.getGoodsPoint())
-                .ifPresent(goodsPoint -> findGoods.setGoodsPoint(goodsPoint));
+        Optional.ofNullable(goods.getPrice())
+                .ifPresent(price -> findGoods.setPrice(price));
         Optional.ofNullable(goods.getGoodsStatus())
                 .ifPresent(goodsStatus -> findGoods.setGoodsStatus(goodsStatus));
 
@@ -64,6 +64,15 @@ public class GoodsService {
 
     public Goods findVerifiedGoods(long goodsId) {
         Optional<Goods> optionalGoods = goodsRepository.findByGoods(goodsId);
+        Goods findGoods =
+                optionalGoods.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.GOODS_NOT_FOUND));
+
+        return findGoods;
+    }
+
+    public Goods findVerifiedGoodsName(String goodsName) {
+        Optional<Goods> optionalGoods = goodsRepository.findByGoodsName(goodsName);
         Goods findGoods =
                 optionalGoods.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.GOODS_NOT_FOUND));

@@ -12,6 +12,6 @@ public class GoodsPostDto {
     private String goodsName;
     private String goodsText;
     @Range(min= 100, max= 1000000)
-    private int goodsPoint;
+    private int price;
     private String goodsImage;
 }

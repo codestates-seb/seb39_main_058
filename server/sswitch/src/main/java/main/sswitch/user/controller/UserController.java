@@ -11,6 +11,7 @@ import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
 
 import main.sswitch.security.oauth.PrincipalDetails;
+import main.sswitch.user.dto.UserClassifiedResponseDto;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
@@ -52,10 +53,7 @@ public class UserController {
     @PostMapping("/signup")
     public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);
-
-        User createUser = userService.createUser(user);
-        UserDto.ResponseDto response = userMapper.userToUserResponse(createUser);
-
+        userService.createUser(user);
         return "회원가입 완료";
     }
 
@@ -73,7 +71,7 @@ public class UserController {
     @GetMapping("/users/profile")
     public ResponseEntity getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         User user = userService.findUserWithLoginId(principalDetails.getUsername());
-        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)),
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponseDto(user)),
                 HttpStatus.OK);
     }
 
@@ -81,7 +79,7 @@ public class UserController {
     public ResponseEntity patchProfile(@AuthenticationPrincipal PrincipalDetails principalDetails,@Valid @RequestBody UserDto.Patch requestBody) {
         requestBody.setLoginId(principalDetails.getUsername());
         User user = userService.updateProfile(requestBody.getLoginId(), userMapper.userPatchToUser(requestBody));
-        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponseDto(user)), HttpStatus.OK);
     }
 
     @DeleteMapping("/users/signout")
@@ -100,16 +98,18 @@ public class UserController {
     @PatchMapping("/reset")
     public String findPassword(@Valid @RequestBody UserDto.passwordPostDto requestBody) {
         String newPassword = UUID.randomUUID().toString().replaceAll("-", "");
+        userService.findUserWithLoginId(requestBody.getLoginId());
+        userService.findUserWithEmail(requestBody.getEmail());
         requestBody.setLoginId(requestBody.getLoginId());
         requestBody.setPassword(newPassword);
-        User user = userService.resetPassword(userMapper.passwordPostToUser(requestBody));
+        userService.resetPassword(userMapper.passwordPostToUser(requestBody));
         return newPassword;
     }
 
     @GetMapping("/users/{user_name}")
     public ResponseEntity getUser(@PathVariable("user_name") String userName) {
         User user = userService.findUserWithUserName(userName);
-        UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
+        UserClassifiedResponseDto responseDto = userMapper.userToUserResponseDto(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
@@ -117,7 +117,7 @@ public class UserController {
     public ResponseEntity updateUser(@PathVariable("user_id") @Positive long userId, @Valid @RequestBody UserDto.Patch requestBody) {
         requestBody.setUserId(userId);
         User user = userService.update(userMapper.userPatchToUser(requestBody));
-        return new ResponseEntity<>(new SingleResponseDto<>(userMapper.userToUserResponse(user)), HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(userMapper.userToAdminResponse(user)), HttpStatus.OK);
     }
 
     @GetMapping("/admin/users")
@@ -125,13 +125,13 @@ public class UserController {
         Page<User> users = userService.userList(pageable);
         List<User> userList = users.getContent();
 
-        return new ResponseEntity<>(new MultiResponseDto<>(userMapper.usersToUserResponses(userList), users), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(userMapper.usersToAdminResponses(userList), users), HttpStatus.OK);
     }
 
     @GetMapping("/users/findusers/{email}")
     public ResponseEntity findUser(@PathVariable("email") String email) {
         User user = userService.findUserWithEmail(email);
-        UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
+        UserClassifiedResponseDto responseDto = userMapper.userToUserResponseDto(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 

@@ -75,13 +75,13 @@ public class UserDto {
         private long userId;
         private String loginId;
 
-        private String password;
+//        private String password;
         private String userName;
         private String email;
         private User.UserStatus userStatus;
         private User.Providers providers;
         private String role;
-        private int point;
+//        private int point;
 
         private String image;
         private LocalDateTime dateCreated;
@@ -95,7 +95,7 @@ public class UserDto {
             this.userStatus = userStatus;
 //            this.providers = providers;
             this.role = role;
-            this.point = point;
+//            this.point = point;
             this.dateCreated = dateCreated;
 //            this.dateModified = dateModified;
             this.image = image;
@@ -140,7 +140,7 @@ public class UserDto {
     @NoArgsConstructor
     public static class passwordPostDto {
         private String loginId;
-
+        private String email;
         private String password;
     }
 

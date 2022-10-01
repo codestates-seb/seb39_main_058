@@ -1,8 +1,6 @@
 package main.sswitch.order.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import main.sswitch.order.entity.Order;
 import main.sswitch.user.entity.User;
 
@@ -10,19 +8,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @Setter
 public class OrderResponseDto {
-    private long orderId;
+    private Long orderId;
 
-    @Setter(AccessLevel.NONE)
-    private String loginId;
-    private Order.OrderStatus orderStatus;
-    private List<OrderGoodsResponseDto> orderGoods;
+    private long userId;
+
+    private String userName;
+
+    private int price;
+
+    private String orderStatus;
+
     private LocalDateTime createdAt;
 
+    private LocalDateTime modifiedAt;
 
-    public void setUser(User user) {
-        this.loginId = user.getLoginId();
-    }
+    private List<OrderGoodsDto.Response> orderGoodsList;
 }
 

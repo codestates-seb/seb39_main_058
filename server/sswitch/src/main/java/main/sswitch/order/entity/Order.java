@@ -8,7 +8,11 @@ import main.sswitch.user.entity.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
@@ -22,19 +26,36 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.ORDER_REQUEST;
 
-    @ManyToOne
-    @JoinColumn(name = "LOGIN_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
-    private List<OrderGoods> orderGoods = new ArrayList<>();
+    private String userName;
 
-    public void setMember(User user) {
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<OrderGoods> orderGoodsList = new ArrayList<>();
+
+
+    public void changeUser(User user) {
+        if(this.user != null){
+            this.user.getOrders().remove(this);
+        }
         this.user = user;
+        if(!user.getOrders().contains(this)){
+            user.addOrder(this);
+        }
+    }
+    public void changeUserName(String userName) {
+        this.userName = userName;
     }
 
+    public void resetInfo(User user){
+        this.userName = user.getUserName();
+    }
+
+
     public void addOrderGoods(OrderGoods orderGoods) {
-        this.orderGoods.add(orderGoods);
+        this.orderGoodsList.add(orderGoods);
         if (orderGoods.getOrder() != this) {
             orderGoods.addOrder(this);
         }
@@ -45,6 +66,9 @@ public class Order extends BaseEntity {
         ORDER_CONFIRM(2, "주문 확정"),
         ORDER_COMPLETE(3, "주문 처리 완료"),
         ORDER_CANCEL(4, "주문 취소");
+        private static final Map<String, String> map = Collections.unmodifiableMap(
+                Stream.of(values()).collect(Collectors.toMap(OrderStatus::getStepDescription, OrderStatus::name))
+        );
 
         @Getter
         private int stepNumber;
@@ -56,6 +80,13 @@ public class Order extends BaseEntity {
             this.stepNumber = stepNumber;
             this.stepDescription = stepDescription;
         }
+        public static OrderStatus of(String stepDescription){
+            return OrderStatus.valueOf(map.get(stepDescription));
+        }
+    }
+
+    public void updateOrderStatus(OrderStatus orderStatus){
+        this.orderStatus = orderStatus;
     }
 
 }

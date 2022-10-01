@@ -47,7 +47,7 @@ public class UserService {
         user.setUserName(user.getUserName());
         user.setRole("ROLE_USER");
         user.setUserStatus(User.UserStatus.USER_EXIST);
-        user.setPoint(0);
+//        user.setPoint(0);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
 
         return userRepository.save(user);

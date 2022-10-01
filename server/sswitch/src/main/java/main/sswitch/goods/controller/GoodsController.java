@@ -26,19 +26,15 @@ public class GoodsController {
     private GoodsService goodsService;
     private GoodsMapper mapper;
 
-//    public GoodsController(GoodsService goodsService, GoodsMapper goodsMapper) {
-//        this.goodsService = goodsService;
-//        this.mapper = goodsMapper;
-//    }
 
     @PostMapping("/create")
-    public String postGoods(@Valid @RequestBody GoodsPostDto goodsPostDto) {
+    public ResponseEntity postGoods(@Valid @RequestBody GoodsPostDto goodsPostDto) {
         Goods goods = goodsService.createGoods(mapper.goodsPostDtoToGoods(goodsPostDto));
-        return "물품 등록이 완료되었습니다.";
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.goodsResponseDtoToGoods(goods)), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{goods-id}")
-    public ResponseEntity patchGoods(@PathVariable("goods-id") @Positive long goodsId,
+    public ResponseEntity patchGoods(@PathVariable("goods-id") long goodsId,
                                       @Valid @RequestBody GoodsPatchDto goodsPatchDto) {
         goodsPatchDto.setGoodsId(goodsId);
         Goods goods = goodsService.updateGoods(mapper.goodsPatchDtoToGoods(goodsPatchDto));
@@ -49,8 +45,8 @@ public class GoodsController {
     }
 
     @GetMapping("/{goods-id}")
-    public ResponseEntity getCoffee(@PathVariable("goods-id") long goodsId) {
-        Goods goods = goodsService.findGoods(goodsId);
+    public ResponseEntity getGoods(@PathVariable("goods-id") long goodsId) {
+        Goods goods = goodsService.findVerifiedGoods(goodsId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.goodsResponseDtoToGoods(goods)),
@@ -58,7 +54,7 @@ public class GoodsController {
     }
 
     @GetMapping
-    public ResponseEntity getCoffees(@Positive @RequestParam int page,
+    public ResponseEntity getGoodsList(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size) {
         Page<Goods> pageGoods = goodsService.findAllGoods(page - 1, size);
         List<Goods> goods = pageGoods.getContent();
@@ -70,7 +66,7 @@ public class GoodsController {
     }
 
     @DeleteMapping("/{goods-id}")
-    public String deleteCoffee(@PathVariable("goods-id") long goodsId) {
+    public String deleteGoods(@PathVariable("goods-id") long goodsId) {
         goodsService.deleteGoods(goodsId);
 
         return "물품이 삭제 되었습니다";
