@@ -133,6 +133,9 @@ function CommunityDetail() {
     }
   };
 
+  console.log(userInfo.accessToken)
+  console.log(data)
+
   return (
       <>
         <Main>
