@@ -152,7 +152,7 @@ function CommunityDetail() {
                   {userInfo.userName === userName && <RiDeleteBack2Fill className="delete-btn" onClick={deleteBoard}/>}
                 </div>}
             </Title>
-            
+              
             {/* 게시글 작성자 및 날짜 정보 */}
             <UserInfo>
               <img className='user-profile' src="/profile.png" alt='profile'/>
@@ -167,10 +167,10 @@ function CommunityDetail() {
                 <div className="secret">
                   <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
                 </div>}
-                {!revise && <div className="tag-container"> 
+                {revise && <div className="tag-container"> 
                   {tag.map(item => <span key={item} className="tag">{item}</span>)}
                 </div>}
-            </UserInfo>
+              </UserInfo>
           </div>
 
           {/* 게시글 제목 */}
@@ -187,17 +187,17 @@ function CommunityDetail() {
           {/* 게시글 태그 수정/삭제 */}
           { revise && <SelectedTag>
               <div className="selected-tags">
-                  {tag.map( el =>
+                  { revise && tag.map( el =>
                       <span className="tag" key={el}>{el} 
                           <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                      </span>
+                      </span> 
                       )
                   }
-              </div>                
+              </div>       
             </SelectedTag>}
           
           {/* 수정으로 인한 태그 선택 */}
-          {revise && <BoardTag>
+          { revise && <BoardTag>
             <select name="tags" onChange={ e => selectTag(e)} >
                 <option name="tags">지역 태그를 선택하세요</option>
                 {tags.map(tag => 
@@ -207,13 +207,13 @@ function CommunityDetail() {
           </BoardTag>}
           
           {/* 비밀글 수정 */}
-         { revise && <Secret>
+          { revise && <Secret>
             <input type="checkbox" name="secret" onClick={handleSecret}/>
             <label htmlFor="secret">비밀글</label>
           </Secret> }
           
           {/* 좋아요 및 수정/취소 버튼 */}
-          {revise ? 
+          { revise ? 
             <RevisedButtonWrapper>
               <button className="writer-submit" onClick={confirmRevise}> 수정하기 </button>
               <button className="writer-cancel" onClick={() => setRevise(!revise)}> 취소 </button>
@@ -229,7 +229,7 @@ function CommunityDetail() {
             </ButtonContainer>}
           
           {/* 삭제 모달창 */}
-          {remove && <RemoveModal>
+          { remove && <RemoveModal>
               <div className="delete-warning">
                 <ImWarning className="delete-warning-icon"/>
                 <div>삭제 이후 복구할 수 없습니다.</div>
