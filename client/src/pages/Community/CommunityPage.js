@@ -15,8 +15,8 @@ function CommunityPage() {
   const [tags, setTags] = useState([])
   const [data, setData] = useState([])
   const [search, setSearch] = useState({
-    select : undefined,
-    content : undefined
+    select : "제목",
+    content : ''
   })
   const [total, setTotal] = useState(null)
 
@@ -137,8 +137,12 @@ function CommunityPage() {
             <option>내용</option>
             <option>작성자</option>
           </select>
-          <input type='search' onChange={e => setSearch({select : search.select, content : e.target.value})} />
-          <span onClick={handleSearchButton}><FaSearch /></span>
+          <input type='search' value={search.content} onChange={e => setSearch({select : search.select, content : e.target.value})} />
+          <span onClick={() => {
+            handleSearchButton()
+            window.scrollTo(0, 0);
+            setSearch({select : "제목" , content : ""})
+            }}><FaSearch /></span>
         </div>
     </CommunityPageStyle>
   )
