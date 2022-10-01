@@ -18,4 +18,6 @@ public interface UserMapper {
 
     List<UserDto.ResponseDto> usersToUserResponses(List<User> users);
 
+    User passwordPostToUser(UserDto.passwordPostDto requestBody);
+
 }

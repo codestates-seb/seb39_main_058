@@ -3,6 +3,10 @@ package main.sswitch.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.boards.community.comment.service.CommentService;
+import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
 
@@ -29,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -81,12 +87,27 @@ public class UserController {
     @DeleteMapping("/users/signout")
     public ResponseEntity delete(@AuthenticationPrincipal PrincipalDetails principalDetails){
         User user = userService.findUserWithLoginId(principalDetails.getUsername());
+//        Forum forum = forumService.findForum();
+//        Comment comment = commentService.findComments()
+//        forumService.deleteForum(forum.getForumId());
+
+
         userService.delete(user.getLoginId());
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PatchMapping("/reset")
+    public String findPassword(@Valid @RequestBody UserDto.passwordPostDto requestBody) {
+        String newPassword = UUID.randomUUID().toString().replaceAll("-", "");
+        requestBody.setLoginId(requestBody.getLoginId());
+        requestBody.setPassword(newPassword);
+        User user = userService.resetPassword(userMapper.passwordPostToUser(requestBody));
+        return newPassword;
+    }
+
     @GetMapping("/users/{user_name}")
-    public ResponseEntity getUser(@PathVariable("user_name")String userName) {
+    public ResponseEntity getUser(@PathVariable("user_name") String userName) {
         User user = userService.findUserWithUserName(userName);
         UserDto.ResponseDto responseDto = userMapper.userToUserResponse(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);

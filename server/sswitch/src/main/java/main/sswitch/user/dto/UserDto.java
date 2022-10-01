@@ -83,6 +83,7 @@ public class UserDto {
         private String role;
         private int point;
 
+        private String image;
         private LocalDateTime dateCreated;
 
         private LocalDateTime dateModified;
@@ -97,14 +98,15 @@ public class UserDto {
             this.point = point;
             this.dateCreated = dateCreated;
 //            this.dateModified = dateModified;
+            this.image = image;
         }
 
 
 
-        public static ResponseDto of(User user) {
-            return new ResponseDto(user.getUserId(),user.getLoginId(),user.getPassword(),user.getUserName(),user.getEmail(),
-                    user.getUserStatus(),user.getProviders(),user.getRole(),user.getPoint(),user.getDateCreated(),user.getDateModified());
-        }
+//        public static ResponseDto of(User user) {
+//            return new ResponseDto(user.getUserId(),user.getLoginId(),user.getPassword(),user.getUserName(),user.getEmail(),
+//                    user.getUserStatus(),user.getProviders(),user.getRole(),user.getPoint(),user.getDateCreated(),user.getDateModified(), user.getPhotos());
+//        }
 
     }
     @Data
@@ -132,6 +134,17 @@ public class UserDto {
             this.role = role;
         }
     }
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class passwordPostDto {
+        private String loginId;
+
+        private String password;
+    }
+
+
 
 
 }

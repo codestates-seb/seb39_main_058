@@ -3,8 +3,9 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import main.sswitch.help.utils.SecurityUtil;
-import main.sswitch.security.oauth.PrincipalDetails;
+
+import main.sswitch.boards.community.comment.service.CommentService;
+import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.security.oauth.jwt.TokenProvider;
 
 import main.sswitch.help.exceptions.BusinessLogicException;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @Service
@@ -34,6 +36,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+
     public User createUser(User user) {
         verifyExistUser(user.getLoginId());
         verifyExistEmail(user.getEmail());
@@ -59,6 +62,7 @@ public class UserService {
         return tokenProvider.createToken(findUser, response);
     }
 
+
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public User update(User user) {
         User findUser = findUserWithId(user.getUserId());
@@ -75,6 +79,14 @@ public class UserService {
         return userRepository.save(findUser);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public User resetPassword(User user) {
+        User findUser = findUserWithLoginId(user.getLoginId());
+        Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
+        return userRepository.save(findUser);
+    }
+
+    @Transactional
     public void delete(String loginId) {
         User findUser = findUserWithLoginId(loginId);
         userRepository.delete(findUser);
@@ -132,12 +144,12 @@ public class UserService {
         return findUserName;
     }
 
-    @Transactional(readOnly = true)
-    public UserDto.ResponseDto getCurrentUser(String loginId) {
-        return userRepository.findById(SecurityUtil.getCurrentUserId())
-                .map(UserDto.ResponseDto::of)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-    }
+//    @Transactional(readOnly = true)
+//    public UserDto.ResponseDto getCurrentUser(String loginId) {
+//        return userRepository.findById(SecurityUtil.getCurrentUserId())
+//                .map(UserDto.ResponseDto::of)
+//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+//    }
 
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {
