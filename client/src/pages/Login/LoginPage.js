@@ -79,35 +79,32 @@ const tabKey2=(event)=>{
     body: JSON.stringify(loginInfo)
   }).then((res) => res.json())
   .then((data)=>{
-        // console.log(data)
-        if(data){
+    // console.log('무슨일이야',data)
+    
+        if(data.data){
         
-             dispatch({type:'USERINFO',payload:{userInfo:data.data}})
-            if(location.state?.path){
-              navigate(`${location.state.path}`)
-            }else{
+          if(location.state?.path){
+            dispatch({type:'USERINFO',payload:{userInfo:data.data}})
+            navigate(`${location.state.path}`)
+          }else{
+            dispatch({type:'USERINFO',payload:{userInfo:data.data}})
               navigate(`/`)
+             
+
               // window.location.reload()
             }
+        }if(data.status===500) {
+          dispatch({type:'LOGOUT'})
+          setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')
         }
-   // access 토큰및 유저정보를 redux로 저장함 정보를이용하고싶으면
-   //import { useSelector } from 'react-redux';를하고
-  //  const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken); *토큰정보만가져오고싶을때임
-  //  원하는변수를 설정하고useSelector를통해 그변수에 리덕스정보를 저장하는거임
-  //  리덕스에 저장된 다양한 정보를 보고싶다면
-  // const 아무거나=useSelector(state=>state.LoginPageReducer.userinfo)
-  // console.log('리덕스저장되있는정보',아무거나) *리덕스 userinfo에 어떤 정보가있는지 볼 수 있을거임
-  // 로그아웃시에 리덕스정보를 지워야해서 원래는  sessionStorage.removeItem("accessToken") 를해서 세션정보를지웠다면
-  //import { useDispatch} from 'react-redux';를한후에
-  //dispatch({type:'LOGOUT'}) 이라는 액션을 해야함
-  // 
-     
+   
     
 
 
 
   }).catch((err) => {
-      setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')
+    // setAlertId('')
+    //   setAlertPwd('아이디 또는 비밀번호를 확인해 주세요.')
         // console.log(err)
   })
 }
