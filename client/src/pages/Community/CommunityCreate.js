@@ -66,12 +66,10 @@ function CommunityCreate() {
             setClickTag(!clickTag);
             setTag([]);
         }   
-
     }
 
     // 특정 태그 선택
     const selectTag = (e) => {
-        console.log(e.target.value);
         if(!clickTag) setClickTag(!clickTag);
         if(tags.includes(e.target.value)) {
            setTag([...tag, e.target.value])
@@ -83,9 +81,8 @@ function CommunityCreate() {
 
     // 태그 삭제
     const deleteTag = (el) => {
-        console.log(el)
-        const filteredTag = tag.split(',').filter(tag => tag !== el)
-        setTag(filteredTag.join());        
+        const filteredTag = tag.filter(tag => tag !== el)
+        setTag(filteredTag);        
     }
 
     const handleSecret = (e) => {
@@ -135,14 +132,13 @@ function CommunityCreate() {
             {/* 유저가 태그를 선택한 경우, 태그 담는 상자와 선택한 태그 만들기 */}
             { clickTag && <SelectedTag>
                 <div className="selected-tags">
-                    {clickTag && tag.map( el =>
+                    { clickTag && tag.map( el =>
                         <span className="tag" key={el}>{el} 
                             <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                        </span>
-                        )
-                    }
+                        </span>)}
                 </div>                
             </SelectedTag> }
+            
            
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>
@@ -194,6 +190,7 @@ const BoardHeader = styled.div`
         margin-top: 2rem;
         font-size: 4vmin;
         font-family: 'Jua', sans-serif;
+        font-weight: lighter;
         letter-spacing: 3px;
         @media (max-width: 550px) {
             font-size: 30px;
@@ -203,6 +200,8 @@ const BoardHeader = styled.div`
     h2{
         font-size: 2vmin;
         font-family: 'Jua', sans-serif;
+        font-weight: lighter;
+        letter-spacing: 2px;
         @media (max-width: 550px) {
             font-size: 20px;
         }
@@ -211,7 +210,7 @@ const BoardHeader = styled.div`
         color: red;
         font-size: 1.5vmin;
         padding-bottom: 1vh;
-        font-family: 'Jua', sans-serif;
+        letter-spacing: .5px;
         @media (max-width: 550px) {
             font-size: 14px;
         }
@@ -225,7 +224,6 @@ const BoardWrite = styled.div`
     } 
 
     .writer-title {
-        /* width: 85vw; */
         padding: 10px 20px;
         border-bottom: 2px solid lightgray;
 
