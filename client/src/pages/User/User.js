@@ -7,6 +7,7 @@ import { AiFillGold } from 'react-icons/ai';
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
+import session from 'redux-persist/lib/storage/session';
 
 function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
@@ -58,6 +59,8 @@ function User() {
             .then(res => res.json())
             .then(data => console.log(data))
             .catch(err => console.log(err))
+        dispatch({type: "LOGOUT"})
+        setLogout(false);
         navigate("/");
         window.location.reload();
     }
