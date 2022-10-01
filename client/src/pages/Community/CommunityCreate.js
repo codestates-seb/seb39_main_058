@@ -71,7 +71,6 @@ function CommunityCreate() {
 
     // 특정 태그 선택
     const selectTag = (e) => {
-        console.log(e.target.value);
         if(!clickTag) setClickTag(!clickTag);
         if(tags.includes(e.target.value)) {
            setTag([...tag, e.target.value])
@@ -83,9 +82,8 @@ function CommunityCreate() {
 
     // 태그 삭제
     const deleteTag = (el) => {
-        console.log(el)
-        const filteredTag = tag.split(',').filter(tag => tag !== el)
-        setTag(filteredTag.join());        
+        const filteredTag = tag.filter(tag => tag !== el)
+        setTag(filteredTag);        
     }
 
     const handleSecret = (e) => {
@@ -135,12 +133,10 @@ function CommunityCreate() {
             {/* 유저가 태그를 선택한 경우, 태그 담는 상자와 선택한 태그 만들기 */}
             { clickTag && <SelectedTag>
                 <div className="selected-tags">
-                    {clickTag && tag.map( el =>
+                    { clickTag && tag.map( el =>
                         <span className="tag" key={el}>{el} 
                             <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                        </span>
-                        )
-                    }
+                        </span>)}
                 </div>                
             </SelectedTag> }
            

@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiRightArrow } from 'react-icons/bi';
 import { FcLikePlaceholder, FcLike, FcLock } from 'react-icons/fc';
-import { BsFillPencilFill } from 'react-icons/bs';
-import { RiDeleteBack2Fill } from 'react-icons/ri';
+import { BsTrashFill, BsFillPencilFill } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
 import CommunityAnswer from '../../components/CommunityAnswer/CommunityAnswer';
 
@@ -149,7 +148,7 @@ function CommunityDetail() {
                 </input> : 
                 <div className="title-container">
                   <div>{title}</div>
-                  {userInfo.userName === userName && <RiDeleteBack2Fill className="delete-btn" onClick={deleteBoard}/>}
+                  {userInfo.userName === userName && <BsTrashFill className="delete-btn" onClick={deleteBoard}/>}
                 </div>}
             </Title>
               
@@ -167,7 +166,7 @@ function CommunityDetail() {
                 <div className="secret">
                   <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
                 </div>}
-                {revise && <div className="tag-container"> 
+                { !revise && <div className="tag-container"> 
                   {tag.map(item => <span key={item} className="tag">{item}</span>)}
                 </div>}
               </UserInfo>
@@ -187,7 +186,7 @@ function CommunityDetail() {
           {/* 게시글 태그 수정/삭제 */}
           { revise && <SelectedTag>
               <div className="selected-tags">
-                  { revise && tag.map( el =>
+                  { tag.map( el =>
                       <span className="tag" key={el}>{el} 
                           <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
                       </span> 
