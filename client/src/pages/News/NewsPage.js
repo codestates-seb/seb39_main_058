@@ -55,9 +55,6 @@ const NewsPage = () => {
     }
   }
 
-  console.log(typeof(edit.noticeText) , typeof(edit.noticeTitle))
-  console.log(edit)
-
   const handleEditButton = () => {
 
     const editInfo = {
