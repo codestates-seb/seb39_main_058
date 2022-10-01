@@ -66,12 +66,32 @@ function CommunityDetail() {
     "forumTitle" : title,
     "forumText" : content,
     "tag" : tag.join(','),
-    "secret" : secret
+    "secret" : secret,
+  };
+
+  const likeBoard = {
+    "forumLike": like,
   };
 
   const backToBoard = () => navigate("/community/forum");
 
-  const addLike = () => (!like) ? setLike(like + 1) : setLike(0); 
+  // 게시글 '좋아요' 버튼
+  const addLike = () => {
+    (!like) ? setLike(like + 1) : setLike(0)
+    console.log(like)
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(likeBoard)
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      // .then(like => setLike(like))
+      .catch(err => console.log(err))
+  }
 
   // 게시글 수정 및 수정 확인 버튼
   const reviseBoard = () => setRevise(!revise);
@@ -136,7 +156,7 @@ function CommunityDetail() {
       setTag(tag);
     }
   }
-  
+
   // 비밀글 여부 선택
   const handleSecret = () => {
     if(secret === "OPEN") {
