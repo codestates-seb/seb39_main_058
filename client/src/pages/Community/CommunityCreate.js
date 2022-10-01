@@ -194,6 +194,7 @@ const BoardHeader = styled.div`
         margin-top: 2rem;
         font-size: 4vmin;
         font-family: 'Jua', sans-serif;
+        font-weight: lighter;
         letter-spacing: 3px;
         @media (max-width: 550px) {
             font-size: 30px;
@@ -203,6 +204,8 @@ const BoardHeader = styled.div`
     h2{
         font-size: 2vmin;
         font-family: 'Jua', sans-serif;
+        font-weight: lighter;
+        letter-spacing: 2px;
         @media (max-width: 550px) {
             font-size: 20px;
         }
@@ -211,7 +214,7 @@ const BoardHeader = styled.div`
         color: red;
         font-size: 1.5vmin;
         padding-bottom: 1vh;
-        font-family: 'Jua', sans-serif;
+        letter-spacing: .5px;
         @media (max-width: 550px) {
             font-size: 14px;
         }
@@ -225,7 +228,6 @@ const BoardWrite = styled.div`
     } 
 
     .writer-title {
-        /* width: 85vw; */
         padding: 10px 20px;
         border-bottom: 2px solid lightgray;
 
