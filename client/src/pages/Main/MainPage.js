@@ -100,7 +100,6 @@ function MainPage(){
                         }}
                         onMouseOver={() => setHover({boolean: true , state : ele.소재지도로명주소})}
                         onMouseOut={() => setHover({boolean : false , state : ''})}
-                        // onClick={() => window.open(`https://map.kakao.com/link/to/${ele.소재지도로명주소},${ele.위도},${ele.경도}`)}
                         onClick={() => setMarkerClick({boolean : true , 위도 : ele.위도 , 경도 : ele.경도 , 주소 : ele.소재지도로명주소})}
                     >
                     {ele.소재지도로명주소 === hover.state ? <div className="info">{hover.state}</div> : undefined}
@@ -122,9 +121,12 @@ function MainPage(){
                                 주소 : undefined
                             })}><GiCancel/></span>
                         </div>
+                        <>
                         <div className="get_directions" 
                         onClick={() => window.open(`https://map.kakao.com/link/to/${markerClick.주소},${markerClick.위도},${markerClick.경도}`)}
                         >길찾기</div>
+                        <div className="empty">비워주세요</div>
+                        </>
                     </div> :
                 undefined}
                 <MyLocationBtn onClick={() => {
@@ -156,20 +158,39 @@ const MainStyle = styled.div`
 
     .get_directions{
         cursor: pointer;
-    font-size: 3vmin;
-    position: absolute;
-    bottom: 10%;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1vh 2vw;
-    background-color: white;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
-                0 2px 2px rgba(0,0,0,0.11), 
-                0 4px 4px rgba(0,0,0,0.11), 
-                0 6px 8px rgba(0,0,0,0.11),
-                0 8px 16px rgba(0,0,0,0.11);
+        margin: 3vh 0;
+        font-size: 3vmin;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1vh 2vw;
+        background-color: white;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
+                    0 2px 2px rgba(0,0,0,0.11), 
+                    0 4px 4px rgba(0,0,0,0.11), 
+                    0 6px 8px rgba(0,0,0,0.11),
+                    0 8px 16px rgba(0,0,0,0.11);
+
+        &:hover {
+            font-weight: bold;
+        }
+    }
+
+    .empty{
+        cursor: pointer;
+        font-size: 3vmin;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1vh 2vw;
+        background-color: white;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.11), 
+                    0 2px 2px rgba(0,0,0,0.11), 
+                    0 4px 4px rgba(0,0,0,0.11), 
+                    0 6px 8px rgba(0,0,0,0.11),
+                    0 8px 16px rgba(0,0,0,0.11);
 
         &:hover {
             font-weight: bold;
@@ -182,6 +203,7 @@ const MainStyle = styled.div`
         background-color: rgba(0,0,0,0.5);
         z-index: 2;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         position: absolute;

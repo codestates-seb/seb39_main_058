@@ -12,7 +12,14 @@ const NewsPage = () => {
   const [check, setCheck] = useState([]) // 삭제할때 체크박스 다중체크할때 어떤것들이 체크되었나 담아주기위한 스테이트
   const [completion, setCompletion] = useState(false) // 체크박스를 선택하고 삭제버튼을 누를때 최종적으로 확인을 물어보는 창을 열고 닫기위한 스테이트 
   const [data, setData] = useState([]) // 겟 받아온 데이터들
+  const [edit, setEdit] = useState({
+    noticeTitle : '',
+    noticeText : '',
+    noticeId : null,
+    click : false
+  })
 
+  
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
   const handleCheckButton = (id) => { // 체크된 항목의 id가 이미 있는지 비교해주기 위한 함수
@@ -48,8 +55,32 @@ const NewsPage = () => {
     }
   }
 
+  console.log(typeof(edit.noticeText) , typeof(edit.noticeTitle))
+  console.log(edit)
+
+  const handleEditButton = () => {
+
+    const editInfo = {
+      "noticeTitle" : edit.noticeTitle,
+      "noticeText" : edit.noticeText
+    }
+    
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/${edit.noticeId}`,{
+      method : "PATCH",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(editInfo)
+    })
+    .then(() => {
+      window.location.reload()
+    })
+    .catch(err => console.log(err))
+  }
+
   return (
-    <NewsStyle>
+    <NewsStyle data={data}>
       <div className='title'>공지사항</div>
       {userInfo.role === "ROLE_ADMIN" ?
         <div className='manager'>
@@ -105,10 +136,24 @@ const NewsPage = () => {
                 {del ? <input type='checkbox' onClick={() => {
                   handleCheckButton(el.noticeId)
                 }} /> : undefined}
-                {del ? <div className='rewrite'>수정</div> : undefined}
+                {del ? <div className='rewrite' onClick={() => {
+                  setEdit({noticeTitle : el.noticeTitle, noticeText : el.noticeText, noticeId : el.noticeId, click : true})
+                }}>수정</div> : undefined}
             </div>
           )
         })}
+        {edit.click ?
+        <div className='edit_back_drop' onClick={() => setEdit({noticeTitle : '', noticeText : '', noticeId : null, click : false})}>
+          <div className='edit_view' onClick={(e) => e.stopPropagation()}>
+            <input className='edit_title' onChange={e => setEdit({noticeTitle : e.target.value, noticeText : edit.noticeText, noticeId : edit.noticeId, click : true})} value={edit.noticeTitle} />
+            <textarea className='edit_content' onChange={e => setEdit({noticeTitle : edit.noticeTitle, noticeText : e.target.value, noticeId : edit.noticeId, click : true})} value={edit.noticeText} />
+            <div className='select_btn'>
+              <span onClick={handleEditButton}>완료</span>
+              <span onClick={() => setEdit({noticeTitle : '', noticeText : '', noticeId : null, click : false})}>취소</span>
+            </div>
+          </div>
+        </div> :
+        undefined}
       <div className='etc'>
         <div>다른 궁금즘이 있으신가요?</div>
         <br/>
@@ -125,10 +170,65 @@ const NewsStyle = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100%;
+  height: ${(props) => props.data.length === 1 || 2 || 3 || 4 || 5 ? "100vh" : "100%"};
   width: 100%;
   border-radius: 30px;
   user-select: none;
+
+  .edit_view{
+    background-color: white;
+    height: 50vh;
+    width: 60vw;
+    position: relative;
+    z-index: 2;
+
+    .edit_title{
+      width: 50vw;
+      height: 5vh;
+      font-size: 3vmin;
+      margin: 3vh 2vw;
+    }
+
+    .edit_content{
+      width: 50vw;
+      height: 30vh;
+      font-size: 3vmin;
+      margin: 0vh 2vw;
+      resize: none;
+    }
+
+    .select_btn{
+      display: flex;
+      justify-content: center;
+      span{
+        border: 3px solid black;
+        margin: 0 1vw;
+        font-size: 4vmin;
+        padding: 0.5vh 2vw;
+        cursor: pointer;
+
+        :hover{
+          font-weight: bold;
+          background-color: lightgray;
+        }
+      }
+    }
+  }
+
+  .edit_back_drop{
+    background-color: rgba(0,0,0,.5);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 
   .rewrite{
     display: flex;
