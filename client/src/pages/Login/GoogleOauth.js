@@ -1,36 +1,36 @@
 import React, { useEffect } from 'react'
 import styled from "styled-components";
-import {GoogleLogin} from 'react-google-login';
-import { gapi } from 'gapi-script';
+
 
 const ClIENT_ID='719936769714-34a3ukvnh8suuphr41e8105ls08hmtei.apps.googleusercontent.com'
 
 
 const GoogleOauth = () => {
   
-  useEffect(()=>{
-    function start(){
-      gapi.client.init({
-        ClIENT_ID,
-        scope:'email'
-      })
-    }
-   gapi.load('client:auth2', start)
-  },[])
+  // useEffect(()=>{
+  //   function start(){
+  //     gapi.client.init({
+  //       ClIENT_ID,
+  //       scope:'email'
+  //     })
+  //   }
+  //  gapi.load('client:auth2', start)
+  // },[])
   
   
   
   
   
-  const responseGoogle = (response) => {
-    console.log(response);
-  }
+  // const responseGoogle = (response) => {
+  //   console.log(response);
+  // }
   
   
   
   
   return (
-    <GoogleLogin
+    <>
+    {/* <GoogleLogin
     clientId={ClIENT_ID}
     render={renderProps => (
       <GoogleLoginButton onClick={renderProps.onClick} disabled={renderProps.disabled}>
@@ -41,7 +41,8 @@ const GoogleOauth = () => {
     onSuccess={responseGoogle}
     onFailure={responseGoogle}
     cookiePolicy={'single_host_origin'}
-  />
+    /> */}
+    </>
   )
 }
 
