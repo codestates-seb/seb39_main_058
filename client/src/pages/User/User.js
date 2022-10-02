@@ -65,6 +65,8 @@ function User() {
         window.location.reload();
     }
 
+    console.log(userInfo)
+
     return (
     <Main>
         <div className='wrapper'>
