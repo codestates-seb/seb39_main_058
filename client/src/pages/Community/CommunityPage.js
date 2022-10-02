@@ -67,6 +67,12 @@ function CommunityPage() {
     setSearch({select : "제목" , content : ""})
   }
 
+  const handleEnter = (e) => {
+    if(e.key === 'Enter'){
+      handleSearchButton()
+    }
+  }
+
   return (
     <CommunityPageStyle>
       <div className='title_container'>
@@ -143,7 +149,7 @@ function CommunityPage() {
             <option>내용</option>
             <option>작성자</option>
           </select>
-          <input type='search' value={search.content} onChange={e => setSearch({select : search.select, content : e.target.value})} />
+          <input onKeyDown={handleEnter} type='search' value={search.content} onChange={e => setSearch({select : search.select, content : e.target.value})} />
           <span onClick={() => {
             handleSearchButton()
             }}><FaSearch /></span>

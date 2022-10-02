@@ -45,8 +45,8 @@ const LoadingStyle = styled.div`
         width:0%;
         height:100%;
         background:rgb(71,182,181);
-       -webkit-text-fill-color: transparent;
-      -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
         position:absolute;
         left:0px;
         top:0px;

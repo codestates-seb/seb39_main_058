@@ -191,7 +191,6 @@ const NewsStyle = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* height: ${(props) => props.data.length === 1 || 2 || 3 || 4 || 5 ? "100vh" : "100%"}; */
   height: 100%;
   width: 100%;
   border-radius: 30px;
