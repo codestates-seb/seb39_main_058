@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AiOutlineBell, AiFillGithub, AiOutlineSlack } from "react-icons/ai";
+import { AiOutlineBell, AiFillGithub } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux"
@@ -92,7 +92,6 @@ function NavBar({welcome}) {
                 <div className='etc'>
                     <div>
                         <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
-                        <a target='_black'><AiOutlineSlack className='icons'/></a>
                         <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'><SiNotion className='icons'/></a>
                     </div>
                     <p>@Copyright LCS. All right reserved.</p>
@@ -187,6 +186,10 @@ const MobileSideBar = styled.div`
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 10;
         white-space: nowrap;
+        top: 6.8vh;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
     *{
@@ -276,10 +279,10 @@ const LogoutStyle = styled.div`
     justify-content: space-around;
     align-items: center;
     background-color: white;
-    width: 35vw;
-    height: 20vh;
+    width: 70vw;
+    height: 30vh;
     border-radius: 1rem;
-    font-size: 3vmin;
+    font-size: 6vmin;
 
     .confirm{
       display: flex;
@@ -460,6 +463,9 @@ const MobileNavBar = styled.div`
     width: 103%;
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
+    position: fixed;
+    top: 0;
+    z-index: 11;
     
 
     .main_title{
