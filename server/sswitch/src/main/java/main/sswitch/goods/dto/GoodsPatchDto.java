@@ -17,7 +17,7 @@ public class GoodsPatchDto {
     private String goodsText;
     private Optional<@Range(min= 100, max = 1000000) Integer> price = Optional.empty();
     private String goodsImage;
-    private Goods.GoodsStatus goodsStatus;
+    private String goodsStatus;
 
     public void setGoodsId(long goodsId) {
         this.goodsId = goodsId;

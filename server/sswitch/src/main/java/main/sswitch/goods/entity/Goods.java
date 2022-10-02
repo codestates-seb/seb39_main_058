@@ -24,9 +24,8 @@ public class Goods {
     private String goodsText;
     @Column(length = 7, nullable = false)
     private Integer price;
-    @Enumerated(value = EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private GoodsStatus goodsStatus = GoodsStatus.GOODS_FOR_SALE;
+    @Column(nullable = false)
+    private String goodsStatus = GoodsStatus.GOODS_FOR_SALE.getKorStatus();
 
     private String goodsImage;
 
@@ -45,10 +44,10 @@ public class Goods {
         GOODS_SOLD_OUT("판매중지");
 
         @Getter
-        private String status;
+        private final String korStatus;
 
-        GoodsStatus(String status) {
-            this.status = status;
+        GoodsStatus(String korStatus) {
+            this.korStatus = korStatus;
         }
     }
 

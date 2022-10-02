@@ -69,6 +69,7 @@ public class UserService {
         User findUser = findUserWithId(user.getUserId());
         Optional.ofNullable(user.getUserName()).ifPresent(findUser::setUserName);
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(user.getEmail()).ifPresent(email -> findUser.setEmail(email));
         return userRepository.save(findUser);
     }
 
@@ -77,6 +78,7 @@ public class UserService {
         User findUser = findUserWithLoginId(loginId);
         Optional.ofNullable(user.getUserName()).ifPresent(userName -> findUser.setUserName(userName));
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(user.getEmail()).ifPresent(email -> findUser.setEmail(email));
         return userRepository.save(findUser);
     }
 
