@@ -52,8 +52,6 @@ function App() {
           <Route path='/community/create' element={<CommunityCreate/>}/>
           <Route path='/goods' element={<GoodsPage/>}/>
           <Route path='/goods/create' element={<GoodsCreate/>}/>
-        
-
         </Routes>
     </div>  
   );

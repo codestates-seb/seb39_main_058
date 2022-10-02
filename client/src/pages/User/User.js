@@ -1,14 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { AiFillGold } from 'react-icons/ai';
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
-import session from 'redux-persist/lib/storage/session';
-import RevisedUserInfo from './ReviseUser';
 
 function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
@@ -46,7 +44,7 @@ function User() {
         console.log('회원정보 수정!')
         // console.log(userInfo);
         console.log(userData);
-        
+        navigate("/users/profile/revise")
     };
 
     // 회원탈퇴
@@ -69,7 +67,7 @@ function User() {
     }
 
     // console.log(userInfo)
-    // console.log(userData)
+    console.log(userData)
 
     return (
     <Main>
@@ -133,8 +131,7 @@ function User() {
                     </div>
                 </div>
             </UserInfo>
-        </UserContainer> : 
-        <RevisedUserInfo/>
+        </UserContainer>
         </div>
 
         {/* 로그아웃 모달창 */}
@@ -169,6 +166,7 @@ function User() {
 
 export default User;
 
+
 const Main = styled.main`
     
     font-size: 2vmin;
@@ -183,13 +181,13 @@ const Main = styled.main`
     
 `;
 
-const TopBackground = styled.div`
+export const TopBackground = styled.div`
     background: linear-gradient(rgb(70,183,182), rgb(64,156,155));
     width: 100vw;
     height: 30vh;
 `
 
-const UserContainer = styled.div`
+export const UserContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
