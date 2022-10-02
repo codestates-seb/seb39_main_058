@@ -148,13 +148,6 @@ const MainStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    /* -webkit-filter: blur(5px); 
-    -moz-filter: blur(5px); 
-    -o-filter: blur(5px); 
-    -ms-filter: blur(5px); 
-    filter: blur(5px); */
-    /* opacity: ${!sessionStorage.getItem("abc") ? '0.5' : '1'}; */
-    /* opacity: ${(props) => props.guide ? 0.5 : 1}; */
 
     .my_location{
         margin-left: 45px;
@@ -217,6 +210,11 @@ const MainStyle = styled.div`
     .modal_container{
         width: 50vw;
         height: 50vh;
+
+        @media screen and (max-width: 500px){
+            width: 100%;
+            height: 50vh;
+        }
 
         .cancel{
             font-size: 500%;

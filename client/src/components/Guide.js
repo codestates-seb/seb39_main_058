@@ -18,7 +18,6 @@ function Guide({guide, setGuide}) {
         guide === 2 ?
         <div className="container">
           <img className="map" src="/map.jpeg"/>
-          <div className="pointer"></div>
           <div className="content">
             <div className="flex">
               <img className="img" src="/location.jpeg" />
@@ -109,16 +108,6 @@ const GuideStyle = styled.div`
     flex-direction: column;
   }
 
-  .pointer{
-    border: .5rem solid red;
-    width: 7vw;
-    height: 7vh;
-    border-radius: 50%;
-    position: absolute;
-    top: 8vh;
-    right: 23vw;
-  }
-
   .notice{
     position: fixed;
     bottom: 3vh;
@@ -131,6 +120,12 @@ const GuideStyle = styled.div`
     position: absolute;
     top: 5vh;
     right: 25vw;
+
+    @media screen and (max-width: 500px){
+        width: 100%;
+        position: static;
+        margin-top: -20vh;
+    }
   }
 
   .sswitch{

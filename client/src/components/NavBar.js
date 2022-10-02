@@ -1,24 +1,24 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AiOutlineBell } from "react-icons/ai";
-import { FaSearch, FaBars } from "react-icons/fa";
+import { AiOutlineBell, AiFillGithub, AiOutlineSlack } from "react-icons/ai";
+import { FaBars } from "react-icons/fa";
+import { SiNotion } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux"
 import Guide from './Guide'
 
 
 function NavBar({welcome}) {
 
-    // const [searchOn, setSearchOn] = useState(false)
     const [noticeOn, setNoticeOn] = useState(false)
     const [logout, setLogout] = useState(false)
     const [guide, setGuide] = useState(0)
+    const [menu, setMenu] = useState(false)
 
     const navigate = useNavigate();
 
     const clear = () => {
         setNoticeOn(false)
-        // setSearchOn(false)
     }
 
     const dispatch = useDispatch()
@@ -28,15 +28,78 @@ function NavBar({welcome}) {
   return (
     <>
     {welcome !== null ?
-    <MobileSearchInput>
+    <MobileNavBar>
         <div className='search_bar'>
-            <FaBars className='menu_icon'/>
-            <input type="search" placeholder='검색...'></input>
-            <div className='search_icon'><FaSearch /></div>
+            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars/></div>
+            <div className='main_title'>
+                <Link to='/' onClick={() => {
+                    setMenu(false)
+                    window.scrollTo(0, 0);
+                    }}>쓰위치</Link>
+            </div>
+        {userInfo.accessToken ?
+        <div className='login' onClick={() => {
+            setMenu(false)
+            navigate('/users/profile')
+        }}>내정보</div> :
+        <div className='login' onClick={() => {
+            setMenu(false)
+            navigate('/login')
+        }}>로그인</div> }
         </div>
-    </MobileSearchInput>:
-    undefined
-    }
+    </MobileNavBar> : undefined}
+    {menu ?
+    <MobileSideBar>
+        <div className='side_bar_back' onClick={() => setMenu(false)}>
+            <div className='side_bar_view' onClick={(e) => e.stopPropagation()}>
+                <div className='section first'>
+                    <div className='title'>커뮤니티</div>
+                    <div>
+                        <li onClick={() => {
+                            navigate('/community/forum')
+                            setMenu(false)
+                            }}>자유게시판</li>
+                    </div>
+                </div>
+                <div className='section'>
+                    <div className='title'>고객센터</div>
+                    <div>
+                        <li><a target='_black' href='http://pf.kakao.com/_puDuxj/chat'>채팅상담</a></li>
+                        <li>FAQ</li>
+                        <li>운영정책</li>
+                        <li onClick={() => {
+                            setGuide(1)
+                            setMenu(false)
+                            }}>가이드</li>
+                    </div>
+                </div>
+                <div className='section'>
+                    <div className='title'>포인트교환</div>
+                    <div>
+                        <li>포인트교환</li>
+                    </div>
+                </div>
+                <div className='section'>
+                    <div className='title'>소식</div>
+                    <div>
+                        <li onClick={() => {
+                            navigate('/news/notice')
+                            setMenu(false)
+                            }}>공지사항</li>
+                        <li>이벤트</li>
+                    </div>
+                </div>
+                <div className='etc'>
+                    <div>
+                        <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
+                        <a target='_black'><AiOutlineSlack className='icons'/></a>
+                        <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'><SiNotion className='icons'/></a>
+                    </div>
+                    <p>@Copyright LCS. All right reserved.</p>
+                </div>
+            </div>
+        </div>
+    </MobileSideBar> : undefined}
     {guide > 0 ? <Guide guide={guide} setGuide={setGuide}/> : undefined}
     <NavBarStyle>
         <div className='main_title'>
@@ -44,16 +107,13 @@ function NavBar({welcome}) {
                 clear()
             }}>쓰위치</Link>
         </div>
-            {/* <div className='search' onClick={() => {
-                setSearchOn(!searchOn)
-            }}><FaSearch/>검색</div> */}
         <div className='header'>
-            <div className='community'>커뮤니티
+            <div>커뮤니티
                 <div className='drop community'>
                     <li><Link to = '/community/forum'>자유게시판</Link></li>
                 </div>
             </div>
-            <div className='service_center'>고객센터
+            <div>고객센터
                 <div className='drop'>
                     <li><a href='http://pf.kakao.com/_puDuxj/chat' target='_black'>채팅상담</a></li>
                     <li>FAQ</li>
@@ -61,12 +121,12 @@ function NavBar({welcome}) {
                     <li onClick={() => setGuide(1)}>가이드</li>
                 </div>
             </div>
-            <div className='point'>포인트교환
+            <div>포인트교환
                 <div className='drop'>
                     <li>포인트교환</li>
                 </div>
             </div>
-            <div className='news'>소식
+            <div>소식
                 <div className='drop news'>
                     <li><Link to= '/news/notice'>공지사항</Link></li>
                     <li>이벤트</li>
@@ -77,8 +137,6 @@ function NavBar({welcome}) {
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
-                    {/* <li>정보수정</li>
-                    <li>회원탈퇴</li> */}
                     {userInfo.role === "ROLE_ADMIN" ? <li>관리자</li> : undefined}
                 </div>
             </div>}
@@ -110,22 +168,92 @@ function NavBar({welcome}) {
         </div>
     </LogoutStyle> :
     undefined}
-    {/* <SearchInput>
-        {searchOn ?
-        <div className='search_bar'>
-        <input type="search" placeholder='검색어를 입력해주세요. ex) LCS로 53번길 21'></input>
-        <div className='search_icon'><FaSearch /></div>
-        </div> :
-        undefined}
-    </SearchInput> */}
-        {noticeOn ?
-        <Notification>현재 알림이 없습니다.</Notification> :
-        undefined}
+
+    {noticeOn ?
+    <Notification>현재 알림이 없습니다.</Notification> :
+    undefined}
     </>
   )
 }
 
 export default NavBar
+
+const MobileSideBar = styled.div`
+
+    .side_bar_back{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        white-space: nowrap;
+    }
+
+    *{
+        font-size: 4.5vmin;
+        text-decoration: none;
+        color: black;
+    }
+
+    .etc{
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 75vw;
+
+        a{
+            margin: 0 3vw;
+            font-size: 10vmin;
+            padding: 0 .5vw;
+        }
+
+        .icons{
+            font-size: 10vmin;
+            margin-bottom: -1vh;
+        }
+
+        p{
+            margin-bottom: 5vh;
+            font-size: 60%;
+        }
+    }
+
+    .section{
+        display: flex;
+        padding-bottom: 3vh;
+        padding-top: 1vh;
+        border-bottom: .1rem solid black;
+    }
+
+    .title{
+        width: 30vw;
+        padding-left: 3vw;
+        margin-top: 1vh;
+    }
+
+    .first{
+        padding-top: 3vh;
+    }
+
+    .side_bar_view{
+        align-items: center;
+        background-color: white;
+        width: 75%;
+        height: 100%;
+        li{
+            list-style: none;
+            padding: 1vh 0;
+        }
+    }
+
+    @media screen and (min-width: 500px){
+        display: none;
+    }
+
+`
 
 const LogoutStyle = styled.div`
     position: fixed;
@@ -317,42 +445,6 @@ const NavBarStyle = styled.div`
     }
 `
 
-// const SearchInput = styled.div`
-
-//     position: absolute;
-//     width: 95%;
-//     z-index: 2;
-//     margin-top: .5vh;
-
-//     input{
-//         width: 90%;
-//         height: 40px;
-//         font-size: 2vmin;
-//         padding-left: 2vw;
-//     }
-
-//     .search_icon{
-//         display: flex;
-//         align-items: center;
-//         border: 0.5vmin solid black;
-//         background-color: white;
-//         padding: 1vh 2vw;
-//         cursor: pointer;
-//         border-radius: 20px;
-//     }
-
-//     .search_bar{
-//     display: flex;
-//     justify-content: space-around;
-//     align-items: center;
-//     flex-grow: 1;
-//     }
-
-//     @media screen and (max-width: 500px){
-//         display: none;
-//     }
-// `
-
 const Notification = styled.div`
     position: absolute;
     border: 1px solid black;
@@ -363,35 +455,48 @@ const Notification = styled.div`
     z-index: 2;
 `
 
-const MobileSearchInput = styled.div`
+const MobileNavBar = styled.div`
     display: none;
     width: 103%;
     background-color: white;
-    margin-left: -2.5vw;
+    border-bottom: 3px solid rgb(71,182,181);
+    
 
-    input{
-        width: 70%;
-        height: 40px;
-        font-size: 5vmin;
-        padding-left: 10px;
+    .main_title{
+        width: 80%;
+        display: flex;
+        justify-content: center;
+        font-size: 8vmin;
+        font-family: 'Gugi', cursive;
+        font-weight: bold;
+
+        a{
+            text-decoration: none;
+            color: rgb(71,182,181);
+        }
     }
 
-    .search_icon, .menu_icon{
+    .menu_icon{
         display: flex;
         align-items: center;
-        padding: 1vh 2vw;
+        justify-content: center;
+        padding: 2vh 3vw;
         cursor: pointer;
-    }
-
-    .search_icon{
-        padding-right: 30px;
     }
 
     .search_bar{
     display: flex;
-    justify-content: space-around;
     align-items: center;
     flex-grow: 1;
+    }
+
+    .login{
+        font-size: 4vmin;
+        white-space: nowrap;
+        margin-right: 6vw;
+        padding: .5vh 1vw;
+        color: white;
+        background-color: #3F4E4F;
     }
 
     @media screen and (max-width: 500px){
