@@ -3,11 +3,13 @@ package main.sswitch.order.entity;
 import lombok.*;
 import main.sswitch.goods.entity.Goods;
 import main.sswitch.help.audit.BaseEntity;
+import main.sswitch.user.entity.User;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,26 +20,17 @@ public class OrderGoods extends BaseEntity {
 
     @Column(nullable = false)
     private int quantity;
-
-//    @Column(nullable = false)
-//    private Long goodsId;
-
-//    @Column(nullable = false)
-//    private int price;
-
-//    @Column(nullable = false)
-//    private String goodsName;
-//
-//    @Column(nullable = false)
-//    private String goodsText;
-
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
-
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "GOODS_ID")
     private Goods goods;
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
 
     public void addOrder(Order order) {
         this.order = order;

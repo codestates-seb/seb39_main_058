@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity(name = "ORDERS")
 public class Order extends BaseEntity {
     @Id

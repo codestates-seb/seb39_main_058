@@ -20,6 +20,8 @@ public class OrderResponseDto {
 
     private int price;
 
+    private int totalPrice;
+
     private String orderStatus;
 
     private LocalDateTime createdAt;
@@ -27,5 +29,6 @@ public class OrderResponseDto {
     private LocalDateTime modifiedAt;
 
     private List<OrderGoodsDto.Response> orderGoodsList;
+
 }
 

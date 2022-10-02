@@ -85,14 +85,9 @@ public class UserController {
     @DeleteMapping("/users/signout")
     public ResponseEntity delete(@AuthenticationPrincipal PrincipalDetails principalDetails){
         User user = userService.findUserWithLoginId(principalDetails.getUsername());
-//        Forum forum = forumService.findForum();
-//        Comment comment = commentService.findComments()
-//        forumService.deleteForum(forum.getForumId());
-
-
         userService.delete(user.getLoginId());
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new SingleResponseDto<>("회원 정보가 모두 삭제되었습니다."), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/reset")
@@ -113,26 +108,47 @@ public class UserController {
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
     }
 
+    @GetMapping("/users")
+    public ResponseEntity getUsers(@PageableDefault(size = 10, sort = "userName", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<User> users = userService.userList(pageable);
+        List<User> userList = users.getContent();
+        return new ResponseEntity<>(new MultiResponseDto<>(userMapper.usersToUserResponses(userList), users), HttpStatus.OK);
+    }
+
     @PatchMapping("/admin/users/{user_id}")
-    public ResponseEntity updateUser(@PathVariable("user_id") @Positive long userId, @Valid @RequestBody UserDto.Patch requestBody) {
+    public ResponseEntity updateUserAsAdmin(@PathVariable("user_id") @Positive long userId, @Valid @RequestBody UserDto.Patch requestBody) {
         requestBody.setUserId(userId);
         User user = userService.update(userMapper.userPatchToUser(requestBody));
         return new ResponseEntity<>(new SingleResponseDto<>(userMapper.userToAdminResponse(user)), HttpStatus.OK);
     }
 
     @GetMapping("/admin/users")
-    public ResponseEntity getUsers(@PageableDefault(size = 10, sort = "userName", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity getUsersAsAdmin(@PageableDefault(size = 10, sort = "userId", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<User> users = userService.userList(pageable);
         List<User> userList = users.getContent();
 
         return new ResponseEntity<>(new MultiResponseDto<>(userMapper.usersToAdminResponses(userList), users), HttpStatus.OK);
     }
 
-    @GetMapping("/users/findusers/{email}")
-    public ResponseEntity findUser(@PathVariable("email") String email) {
-        User user = userService.findUserWithEmail(email);
-        UserClassifiedResponseDto responseDto = userMapper.userToUserResponseDto(user);
+    @GetMapping("/admin/users/{user_id}")
+    public ResponseEntity getUsers(@PathVariable("user_id")@Positive long userId) {
+        User user = userService.findUserWithId(userId);
+        UserDto.ResponseDto responseDto = userMapper.userToAdminResponse(user);
         return new ResponseEntity<>(new SingleResponseDto<>(responseDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/users/signout/{user_id}")
+    public String delete(@PathVariable("user_id")@Positive long userId){
+        User user = userService.findUserWithId(userId);
+        userService.delete(user.getLoginId());
+        return "회원 정보가 모두 삭제되었습니다.";
+    }
+
+    @PostMapping("/finduser")
+    public ResponseEntity findUser(@Valid @RequestBody UserDto.passwordPostDto requestBody) {
+        User user = userService.findUserWithEmail(requestBody.getEmail());
+        String loginId = user.getLoginId();
+        return new ResponseEntity<>("회원님의 ID는 "+ loginId + " 입니다.", HttpStatus.OK);
     }
 
     @GetMapping("/login-id/{loginId}/verification")

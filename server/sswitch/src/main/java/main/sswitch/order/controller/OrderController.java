@@ -8,6 +8,7 @@ import main.sswitch.order.dto.OrderResponseDto;
 import main.sswitch.order.entity.Order;
 import main.sswitch.order.mapper.OrderMapper;
 import main.sswitch.order.service.OrderService;
+import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.util.List;
 public class OrderController {
     private final OrderMapper mapper;
     private final OrderService orderService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity createOrder(@RequestBody OrderPostDto requestBody) {

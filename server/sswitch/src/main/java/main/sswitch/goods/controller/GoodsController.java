@@ -27,13 +27,13 @@ public class GoodsController {
     private GoodsMapper mapper;
 
 
-    @PostMapping("/create")
+    @PostMapping("/admin/create")
     public ResponseEntity postGoods(@Valid @RequestBody GoodsPostDto goodsPostDto) {
         Goods goods = goodsService.createGoods(mapper.goodsPostDtoToGoods(goodsPostDto));
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.goodsResponseDtoToGoods(goods)), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{goods-id}")
+    @PatchMapping("/admin/{goods-id}")
     public ResponseEntity patchGoods(@PathVariable("goods-id") long goodsId,
                                       @Valid @RequestBody GoodsPatchDto goodsPatchDto) {
         goodsPatchDto.setGoodsId(goodsId);
@@ -65,7 +65,7 @@ public class GoodsController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping("/{goods-id}")
+    @DeleteMapping("/admin/{goods-id}")
     public String deleteGoods(@PathVariable("goods-id") long goodsId) {
         goodsService.deleteGoods(goodsId);
 

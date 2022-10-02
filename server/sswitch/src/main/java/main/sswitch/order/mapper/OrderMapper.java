@@ -1,11 +1,15 @@
 package main.sswitch.order.mapper;
 
+import lombok.RequiredArgsConstructor;
 import main.sswitch.goods.entity.Goods;
 import main.sswitch.order.dto.*;
 import main.sswitch.order.entity.Order;
 import main.sswitch.order.entity.OrderGoods;
+import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
+import main.sswitch.user.service.UserService;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +17,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class OrderMapper {
+    private final UserService userService;
     public OrderResponseDto orderToOrderResponseDto(Order order){
         int orderPrice = 0;
 
@@ -30,11 +36,14 @@ public class OrderMapper {
                 orderGoods -> orderGoods.getTotalPrice()).mapToInt(p -> p).sum();
         response.setPrice(orderPrice);
 
+        int currentPoints = order.getUser().getCurrentPoints();
+        userService.updatePoints(order.getUser(), currentPoints, orderPrice);
+
         return response;
     }
 
     public List<OrderGoodsDto.Response> orderGoodsListToOrderGoodsResponseDto(List<OrderGoods> orderGoodsList){
-        return orderGoodsList
+        List<OrderGoodsDto.Response> result = orderGoodsList
                 .stream()
                 .map(orderGoods -> OrderGoodsDto.Response
                         .builder()
@@ -42,11 +51,14 @@ public class OrderMapper {
                         .quantity(orderGoods.getQuantity())
                         .price(orderGoods.getGoods().getPrice())
                         .totalPrice(orderGoods.getQuantity() * orderGoods.getGoods().getPrice())
+                        .currentPoints(orderGoods.getUser().getCurrentPoints() - (orderGoods.getQuantity() * orderGoods.getGoods().getPrice()))
                         .goodsId(orderGoods.getGoods().getGoodsId())
                         .goodsName(orderGoods.getGoods().getGoodsName())
                         .goodsText(orderGoods.getGoods().getGoodsText())
                         .build())
                 .collect(Collectors.toList());
+
+         return result;
     }
 
     public List<OrderResponseDto> ordersToOrderResponseDto(List<Order> orders){

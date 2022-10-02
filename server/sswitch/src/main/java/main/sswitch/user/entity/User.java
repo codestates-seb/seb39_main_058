@@ -12,6 +12,7 @@ import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.order.entity.Order;
+import main.sswitch.order.entity.OrderGoods;
 
 
 import javax.persistence.*;
@@ -43,6 +44,12 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
+    @Column(nullable = false)
+    private int currentPoints;
+
+    @Column(nullable = false)
+    private int totalPoints;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "STATUS")
     private UserStatus userStatus = UserStatus.USER_EXIST;
@@ -54,31 +61,22 @@ public class User extends BaseEntity {
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<OrderGoods> orderGoodsList = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Forum> forums = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<Notice> notices = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Forum> forums = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notice> notices = new ArrayList<>();
 
     boolean enabled = false;
-    @Builder
-    public User(Long userId, String loginId, String password, String userName, String email, UserStatus userStatus, String role, Providers providers) {
-        this.userId = userId;
-        this.loginId = loginId;
-        this.password = password;
-        this.userName = userName;
-        this.email = email;
-        this.userStatus = userStatus;
-        this.role = role;
-        this.providers = providers;
-    }
 
 
     public enum UserStatus {

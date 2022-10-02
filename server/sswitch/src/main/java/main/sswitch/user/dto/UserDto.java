@@ -75,38 +75,18 @@ public class UserDto {
         private long userId;
         private String loginId;
 
-//        private String password;
+        private String password;
         private String userName;
         private String email;
         private User.UserStatus userStatus;
         private User.Providers providers;
         private String role;
-//        private int point;
-
+        private int currentPoints;
+        private int totalPoints;
         private String image;
         private LocalDateTime dateCreated;
 
         private LocalDateTime dateModified;
-        public ResponseDto(User user) {
-//            this.userId = userId;
-            this.loginId = loginId;
-            this.userName = userName;
-            this.email = email;
-            this.userStatus = userStatus;
-//            this.providers = providers;
-            this.role = role;
-//            this.point = point;
-            this.dateCreated = dateCreated;
-//            this.dateModified = dateModified;
-            this.image = image;
-        }
-
-
-
-//        public static ResponseDto of(User user) {
-//            return new ResponseDto(user.getUserId(),user.getLoginId(),user.getPassword(),user.getUserName(),user.getEmail(),
-//                    user.getUserStatus(),user.getProviders(),user.getRole(),user.getPoint(),user.getDateCreated(),user.getDateModified(), user.getPhotos());
-//        }
 
     }
     @Data
@@ -124,15 +104,6 @@ public class UserDto {
         private String userName;
         private String role;
 
-        public TokenDetailsDto(User user) {
-            this.grantType = grantType;
-            this.accessToken = accessToken;
-            this.accessTokenExpiredAt = accessTokenExpiredAt;
-            this.dateCreated = dateCreated;
-            this.userId=userId;
-            this.userName = userName;
-            this.role = role;
-        }
     }
     @AllArgsConstructor
     @Getter

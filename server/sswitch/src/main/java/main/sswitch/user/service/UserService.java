@@ -3,9 +3,6 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-
-import main.sswitch.boards.community.comment.service.CommentService;
-import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.security.oauth.jwt.TokenProvider;
 
 import main.sswitch.help.exceptions.BusinessLogicException;
@@ -13,6 +10,7 @@ import main.sswitch.help.exceptions.ExceptionCode;
 
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
+import main.sswitch.user.mapper.UserMapper;
 import main.sswitch.user.repository.UserRepository;
 
 import org.springframework.data.domain.Page;
@@ -26,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Transactional
 @Service
@@ -36,6 +34,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+
+    private final UserMapper userMapper;
 
     public User createUser(User user) {
         verifyExistUser(user.getLoginId());
@@ -47,7 +47,8 @@ public class UserService {
         user.setUserName(user.getUserName());
         user.setRole("ROLE_USER");
         user.setUserStatus(User.UserStatus.USER_EXIST);
-//        user.setPoint(0);
+        user.setCurrentPoints(10000);
+        user.setTotalPoints(10000);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
 
         return userRepository.save(user);
@@ -91,13 +92,6 @@ public class UserService {
         User findUser = findUserWithLoginId(loginId);
         userRepository.delete(findUser);
     }
-
-//    private void verifyUserRole(long userId) {
-//        String role = findUserWithId(userId).getRole();
-//        if (role != "ROLE_ADMIN") {
-//            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
-//        }
-//    }
 
     private void verifyExistUser(String loginId) {
         Optional<User> user = userRepository.findByLoginId(loginId);
@@ -144,13 +138,6 @@ public class UserService {
         return findUserName;
     }
 
-//    @Transactional(readOnly = true)
-//    public UserDto.ResponseDto getCurrentUser(String loginId) {
-//        return userRepository.findById(SecurityUtil.getCurrentUserId())
-//                .map(UserDto.ResponseDto::of)
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
-//    }
-
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {
         return findVerifiedUser(userId);
@@ -186,6 +173,17 @@ public class UserService {
 
     public boolean checkUsername(String userName) {
         return userRepository.existsByUserName(userName);
+    }
+
+    @Transactional
+    public User updatePoints(User user, int currentPoints, int usedPoints) {
+        User findUser = findVerifiedUser(user.getUserId());
+        if(currentPoints < usedPoints )
+        {
+            throw  new BusinessLogicException(ExceptionCode.valueOf("NOT_ENOUGH_POINTS"));
+        }
+        findUser.setCurrentPoints(currentPoints-usedPoints);
+        return userRepository.save(findUser);
     }
 
 
