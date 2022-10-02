@@ -16,6 +16,9 @@ function ReviseUser() {
   const [ userData, setUserData ] = useState({});
 
   const [ cancel, setCancel ] = useState(false);
+  const [ email, setEmail ] = useState("");
+  const [ userName, setUserName ] = useState("");
+  const [ password, setPassword ] = useState("");
 
   useEffect(() => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`,{
@@ -28,25 +31,29 @@ function ReviseUser() {
       .then(res => res.json())
       .then(data => setUserData(data.data))
       .catch(err => console.log(err))
-  }, [])
+  }, []);
 
-  const reviseEmail = (e) => {
-    console.log(e.target.value);
-  };
+  const reviseUserInfo = {
+    "userName" : userName,
+    "password" : password,
+    "email": email,
+  }
 
-  const reviseUserName = (e) => {
-    console.log(e.target.value);
-  };
-
-  const revisePassword = (e) => {
-    console.log(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    // e.preventDefault();
-    // patch 요청!
-    // navigate("/user/profile")
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reviseUserInfo)
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err))
+    navigate("/users/profile");
+    window.location.reload();
   };
 
   return (
@@ -65,29 +72,32 @@ function ReviseUser() {
           <ReviseForm id="revise_confirm" onSubmit={handleSubmit}>
             <div className="email_wrapper">
               <label htmlFor="email">이메일</label>
-              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." onChange={reviseEmail}/>
+              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." onChange={ e => setEmail(e.target.value)}/>
             </div>
             <div className="user_name_wrapper">
               <label htmlFor="user_name">닉네임</label>
-              <input type="text" id="user_name" name="user_name" placeholder="닉네임을 입력하세요." onChange={reviseUserName}/>
+              <input type="text" id="user_name" name="user_name" placeholder="닉네임을 입력하세요." onChange={ e => setUserName(e.target.value)}/>
             </div>
             <div className="password_wrapper">
               <label htmlFor="password">비밀번호</label>
-              <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={revisePassword}/>
+              <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword(e.target.value)}/>
             </div>
           </ReviseForm>
-        <ButtonWrapper>
-          <button className="revise_confirm" form="revise_confirm">확인</button>
-          <button className="revise_cancel" onClick={() => setCancel(!cancel)} >취소</button>
-        </ButtonWrapper>
+          <ButtonWrapper>
+            <button className="revise_confirm" form="revise_confirm">확인</button>
+            <button className="revise_cancel" onClick={() => setCancel(!cancel)} >취소</button>
+          </ButtonWrapper>
+          {/* <div className='etc'>
+            <div>
+              <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'>
+                <AiFillGithub className='icons' style={{padding: "0 3vmin", color: "black", fontSize: "3rem"}}/></a>
+              <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'>
+                <SiNotion className='icons' style={{padding: "0 3vmin", color: "black", fontSize: "3rem"}}/></a>
+            </div>
+            <p>@Copyright LCS. All right reserved.</p>
+          </div> */}
         </ReviseInfo>
-        <div className='etc'>
-          <div>
-            <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
-            <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'><SiNotion className='icons'/></a>
-          </div>
-          <p>@Copyright LCS. All right reserved.</p>
-        </div>
+       
 
         {/* 삭제 모달창 */}
         { cancel && <RemoveModal>
@@ -101,7 +111,7 @@ function ReviseUser() {
               </div>
             </div>
         </RemoveModal>}
-      
+       
       </UserContainer>
     </Main>
   )
@@ -123,7 +133,7 @@ const ReviseInfo = styled.div`
   border: 1px solid lightgray;
   padding: 10px;
   width: 60vw;
-  height: 50vh;
+  height: 80vh;
   @media (max-width: 800px) {
     height: 70vh;
   }
@@ -141,6 +151,10 @@ const ReviseInfo = styled.div`
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.5vmin;
     margin: 5px 0;
+  }
+
+  .etc {
+    margin-top: 5rem;
   }
 `;
 
@@ -187,6 +201,10 @@ const ReviseForm = styled.form`
       justify-content: center;
       align-items: center;
     }
+  }
+
+  .icons {
+    color: black;
   }
 `;
 
