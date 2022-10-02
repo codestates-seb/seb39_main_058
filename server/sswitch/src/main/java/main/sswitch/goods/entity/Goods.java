@@ -24,6 +24,7 @@ public class Goods {
     private String goodsText;
     @Column(length = 7, nullable = false)
     private Integer price;
+
     @Column(nullable = false)
     private String goodsStatus = GoodsStatus.GOODS_FOR_SALE.getKorStatus();
 
