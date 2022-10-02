@@ -18,6 +18,8 @@ public class CommentResponseDto {
 
     private String commentText;
 
+    private long userId;
+
     private String userName;
     private long forumId;
 
@@ -28,7 +30,8 @@ public class CommentResponseDto {
     }
 
     public void setUser(User user) {
-        this.userName = userName;
+        this.userId = user.getUserId();
+        this.userName = user.getUserName();
     }
 
     public void setForum(Forum forum) {

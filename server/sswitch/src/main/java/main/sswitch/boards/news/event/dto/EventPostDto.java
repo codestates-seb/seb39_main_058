@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class EventPostDto {
 
-    private long userId;
+    private String loginId;
 
     @NotBlank
     private String eventTitle;
@@ -20,7 +20,7 @@ public class EventPostDto {
 
     public User getUser() {
         User user = new User();
-        user.setUserId(userId);
+        user.setLoginId(loginId);
         return user;
     }
 }

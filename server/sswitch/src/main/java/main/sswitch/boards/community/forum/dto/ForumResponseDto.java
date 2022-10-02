@@ -5,60 +5,71 @@ import main.sswitch.boards.community.comment.dto.CommentResponseDto;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.user.entity.User;
+import main.sswitch.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-
 public class ForumResponseDto {
+    @Getter
+    @Setter
+    public static class GetResponse {
 
-    private Long forumId;
+        private Long forumId;
 
-    private String tag;
-//    private Forum.Tag tag;
+        private String forumTitle;
 
-    private Forum.Secret secret;
+        private String forumText;
 
-    private String forumTitle;
+        private String tag;
+        private Forum.Secret secret;
 
-    private String forumText;
+        private long forumLike;
+        private long userId;
 
-    private long forumLike;
+        private String userName;
 
-    private LocalDateTime dateCreated;
+        private LocalDateTime dateCreated;
 
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
+        private LocalDateTime dateModified;
+
+        public List<CommentResponseDto> commentResponses;
+
+        public void setDateCreated(LocalDateTime dateCreated) {
+            this.dateCreated = dateCreated;
+        }
+
+        public void setDateModified(LocalDateTime dateModified) {
+            this.dateModified = dateModified;
+        }
+
+        public void setUser(User user) {
+            this.userId = user.getUserId();
+            this.userName = user.getUserName();
+        }
+
+
+    }
+    @Getter
+    @Builder
+    @Setter
+    @AllArgsConstructor
+    public static class ResponseList {
+        private Long forumId;
+
+        private String forumTitle;
+
+        private String tag;
+
+        private Forum.Secret secret;
+
+        private long userId;
+
+        private String userName;
+
+        private long forumLike;
+
+        private LocalDateTime dateModified;
     }
 
-    public void setDateModified(LocalDateTime dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    private LocalDateTime dateModified;
-
-    private String userName;
-
-    public List<CommentResponseDto> commentResponses;
-
-    public void getUser(User user) {
-        this.userName = user.getUserName();
-    }
-    public void getDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public void getDateModified(LocalDateTime dateModified) {
-        this.dateModified = dateModified;
-    }
-
-//    public String getForumTag(){
-//        return tag.getTag();
-//    }
-
-    public String getForumSecret(){
-        return secret.getSecret();
-    }
 }

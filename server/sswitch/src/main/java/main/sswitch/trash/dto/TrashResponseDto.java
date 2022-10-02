@@ -1,8 +1,8 @@
-package main.sswitch.boards.trash.dto;
+package main.sswitch.trash.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import main.sswitch.boards.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCan;
 
 import java.time.LocalDateTime;
 

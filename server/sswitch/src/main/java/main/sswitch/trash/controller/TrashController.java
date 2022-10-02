@@ -1,14 +1,14 @@
-package main.sswitch.boards.trash.controller;
+package main.sswitch.trash.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import main.sswitch.boards.trash.dto.TrashStatusDto;
-import main.sswitch.boards.trash.entity.TrashCan;
-import main.sswitch.boards.trash.mapper.TrashMapper;
-import main.sswitch.boards.trash.service.TrashService;
+import main.sswitch.trash.dto.TrashStatusDto;
+import main.sswitch.trash.entity.TrashCan;
+import main.sswitch.trash.mapper.TrashMapper;
+import main.sswitch.trash.service.TrashService;
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
-import main.sswitch.boards.trash.dto.TrashPatchDto;
-import main.sswitch.boards.trash.dto.TrashPostDto;
+import main.sswitch.trash.dto.TrashPatchDto;
+import main.sswitch.trash.dto.TrashPostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

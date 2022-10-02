@@ -1,7 +1,7 @@
-package main.sswitch.boards.trash.dto;
+package main.sswitch.trash.dto;
 
 import lombok.Getter;
-import main.sswitch.boards.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCan;
 
 import javax.validation.constraints.NotBlank;
 
