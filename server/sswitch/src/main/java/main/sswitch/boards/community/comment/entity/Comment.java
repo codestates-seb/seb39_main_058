@@ -24,7 +24,7 @@ public class Comment extends BaseEntity {
     private String commentText;
 
     //User Table Mapping
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 

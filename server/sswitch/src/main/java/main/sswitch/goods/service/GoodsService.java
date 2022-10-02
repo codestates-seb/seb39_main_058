@@ -43,8 +43,7 @@ public class GoodsService {
         Optional.ofNullable(goods.getPrice())
                 .ifPresent(price -> findGoods.setPrice(price));
         Optional.ofNullable(goods.getGoodsStatus())
-                .ifPresent(goodsStatus -> findGoods.setGoodsStatus(goodsStatus));
-
+                .ifPresent(goodsStatus -> findGoods.setGoodsStatus(goods.getGoodsStatus()));
         return goodsRepository.save(findGoods);
     }
 

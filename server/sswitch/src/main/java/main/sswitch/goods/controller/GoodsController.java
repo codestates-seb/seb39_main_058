@@ -38,6 +38,9 @@ public class GoodsController {
                                       @Valid @RequestBody GoodsPatchDto goodsPatchDto) {
         goodsPatchDto.setGoodsId(goodsId);
         Goods goods = goodsService.updateGoods(mapper.goodsPatchDtoToGoods(goodsPatchDto));
+        if(goodsPatchDto.getGoodsStatus().equals("판매중")){
+
+        }
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.goodsResponseDtoToGoods(goods)),
