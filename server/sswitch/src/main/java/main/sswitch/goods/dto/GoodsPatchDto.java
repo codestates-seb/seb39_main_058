@@ -15,15 +15,18 @@ public class GoodsPatchDto {
     @NotBlank( message= "굿즈 이름은 공백이 아니어야 합니다.")
     private String goodsName;
     private String goodsText;
-    private Optional<@Range(min= 100, max = 1000000) Integer> goodsPoint = Optional.empty();
+    private Optional<@Range(min= 100, max = 1000000) Integer> price = Optional.empty();
     private String goodsImage;
     private Goods.GoodsStatus goodsStatus;
 
     public void setGoodsId(long goodsId) {
         this.goodsId = goodsId;
     }
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
 
-    public int getGoodsPoint() {
-        return goodsPoint.orElse(0);
+    public int getPrice() {
+        return price.orElse(0);
     }
 }

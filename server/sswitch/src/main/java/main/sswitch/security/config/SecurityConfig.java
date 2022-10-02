@@ -11,6 +11,7 @@ import main.sswitch.security.oauth.PrincipalDetailService;
 //>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450:server/sswitch/src/main/java/main/sswitch/security/config/SecurityConfig.java
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,11 +40,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.userDetailsService(principalDetailService).passwordEncoder(passwordEncoder());
-//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
         http.csrf().disable();
         http.cors();
         http.headers().frameOptions().disable();
@@ -54,11 +50,23 @@ public class SecurityConfig {
                 .apply(new CustomDsl())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup","/login","/")
+                .antMatchers(HttpMethod.GET,"/goods/**")
                 .permitAll()
-                .antMatchers("/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**")
+                .antMatchers(HttpMethod.GET,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**","/news/event/**","/news/notice/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/admin/**","/news/notice/take/**","/news/event/take/**")
+                .antMatchers(HttpMethod.POST,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PATCH,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST, "/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE,"/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PATCH,"/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET,"/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
                 .anyRequest()
                 .permitAll();

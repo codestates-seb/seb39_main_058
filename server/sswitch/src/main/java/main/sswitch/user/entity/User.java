@@ -1,8 +1,8 @@
 package main.sswitch.user.entity;
 
-//<<<<<<< HEAD
+
 import lombok.*;
-//=======
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +11,9 @@ import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.audit.BaseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-//>>>>>>> f45e06a21bed2814f3f8f00d852d215ec47bb450
+import main.sswitch.order.entity.Order;
+import main.sswitch.order.entity.OrderGoods;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,6 +27,7 @@ import java.util.List;
 @Setter
 @Table(name = "USER")
 @AllArgsConstructor
+@Builder
 public class User extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +46,10 @@ public class User extends BaseEntity implements Serializable {
     private String email;
 
     @Column(nullable = false)
-    private Integer point;
+    private int currentPoints;
+
+    @Column(nullable = false)
+    private int totalPoints;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "STATUS")
@@ -57,28 +62,23 @@ public class User extends BaseEntity implements Serializable {
     @Column(nullable = false, name = "PROVIDERS")
     private Providers providers;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
-    private List<Forum> forums = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<OrderGoods> orderGoodsList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Forum> forums = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notice> notices = new ArrayList<>();
 
     boolean enabled = false;
-    @Builder
-    public User(Long userId, String loginId, String password, String userName, String email, Integer point, UserStatus userStatus, String role, Providers providers) {
-        this.userId = userId;
-        this.loginId = loginId;
-        this.password = password;
-        this.userName = userName;
-        this.email = email;
-        this.point = point;
-        this.userStatus = userStatus;
-        this.role = role;
-        this.providers = providers;
-    }
 
 
     public enum UserStatus {
@@ -110,6 +110,13 @@ public class User extends BaseEntity implements Serializable {
 
         Providers(String providers) {
             this.providers = providers;
+        }
+    }
+
+    public void addOrder(Order order){
+        orders.add(order);
+        if(order.getUser() != this){
+            order.changeUser(this);
         }
     }
 

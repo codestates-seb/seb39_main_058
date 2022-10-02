@@ -1,4 +1,5 @@
 package main.sswitch.user.mapper;
+import main.sswitch.user.dto.UserClassifiedResponseDto;
 import main.sswitch.user.dto.UserDto;
 import main.sswitch.user.entity.User;
 import org.mapstruct.Mapper;
@@ -14,8 +15,14 @@ public interface UserMapper {
 
     User userPatchToUser(UserDto.Patch requestBody);
 
-    UserDto.ResponseDto userToUserResponse(User user);
+    UserDto.ResponseDto userToAdminResponse(User user);
 
-    List<UserDto.ResponseDto> usersToUserResponses(List<User> users);
+    UserClassifiedResponseDto userToUserResponseDto(User user);
+
+    List<UserDto.ResponseDto> usersToAdminResponses(List<User> users);
+
+    List<UserClassifiedResponseDto> usersToUserResponses(List<User> users);
+
+    User passwordPostToUser(UserDto.passwordPostDto requestBody);
 
 }

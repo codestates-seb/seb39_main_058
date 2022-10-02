@@ -36,10 +36,10 @@ public class Forum extends BaseEntity {
     @Column
     private Secret secret = Secret.OPEN;
 
-    @OneToMany(mappedBy = "forum")
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "forum")
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.REMOVE)
     private List<LikeForum> likeForums = new ArrayList<>();
 
     //유저와 게시글을 매핑

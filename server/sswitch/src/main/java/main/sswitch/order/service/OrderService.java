@@ -1,12 +1,19 @@
 package main.sswitch.order.service;
 
 import lombok.AllArgsConstructor;
+import main.sswitch.goods.entity.Goods;
 import main.sswitch.goods.service.GoodsService;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
+import main.sswitch.order.dto.OrderGoodsDto;
+import main.sswitch.order.dto.OrderPostDto;
+import main.sswitch.order.dto.OrderResponseDto;
 import main.sswitch.order.entity.Order;
+import main.sswitch.order.entity.OrderGoods;
+import main.sswitch.order.repository.OrderGoodsRepository;
 import main.sswitch.order.repository.OrderRepository;
 import main.sswitch.user.entity.User;
+import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -21,87 +29,76 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OrderService {
     private final UserService userService;
+
     private final OrderRepository orderRepository;
+
+    private final OrderGoodsRepository orderGoodsRepository;
     private final GoodsService goodsService;
 
 
-//    public Order createOrder(Order order) {
-//        verifyOrder(order);
-//        Order savedOrder = saveOrder(order);
-//        updateStamp(savedOrder);
-//
-//        return savedOrder;
-//    }
+    public Order createOrder(OrderPostDto requestBody, String userName){
+        User user = userService.findUserWithUserName(userName);
+        List<OrderGoodsDto> orderGoodsList = requestBody.getOrderGoodsList();
+        Order order = new Order();  // Order 생성
+        order.changeUser(user); // Order-User 연관관계 설정
 
-    public Order updateOrder(Order order) {
-        Order findOrder = findVerifiedOrder(order.getOrderId());
+        orderInformation(requestBody, user, order); // 주문 정보 설정
 
-        Optional.ofNullable(order.getOrderStatus())
-                .ifPresent(orderStatus -> findOrder.setOrderStatus(orderStatus));
-        return orderRepository.save(findOrder);
+        for (OrderGoodsDto orderGoodsDto : orderGoodsList) {
+            Goods goods = goodsService.findVerifiedGoodsName(orderGoodsDto.getGoodsName()); // 상품 검증
+            OrderGoods orderGoods = OrderGoods // OrderGoods 생성
+                    .builder()
+                    .user(user)
+                    .goods(goods)
+                    .quantity(orderGoodsDto.getQuantity())
+                    .build();
+            orderGoods.addOrder(order);
+            orderGoodsRepository.save(orderGoods);
+        }
+
+        order.updateOrderStatus(Order.OrderStatus.ORDER_REQUEST);
+        return orderRepository.save(order);
+
     }
 
-    public Order findOrder(long orderId) {
+    public Order findOrder(Long orderId){
         return findVerifiedOrder(orderId);
     }
 
-    public Page<Order> findOrders(int page, int size) {
-        return orderRepository.findAll(PageRequest.of(page, size,
+    public Page<Order> findOrders(long userId, int page, int size){
+        User User = userService.findUserWithId(userId);
+        return orderRepository.findAllByUser(User, PageRequest.of(page, size,
                 Sort.by("orderId").descending()));
     }
 
-    public void cancelOrder(long orderId) {
+    public Order updateOrder(Long orderId, String orderStatus){
+        Order order = findVerifiedOrder(orderId);
+        order.updateOrderStatus(Order.OrderStatus.of(orderStatus));
+        return order;
+    }
+
+    public void cancelOrder(Long orderId){
         Order findOrder = findVerifiedOrder(orderId);
         int step = findOrder.getOrderStatus().getStepNumber();
-
-        // OrderStatus의 step이 2 이상일 경우(ORDER_CONFIRM)에는 주문 취소가 되지 않도록한다.
-        if (step >= 2) {
+        if(step > 2){
             throw new BusinessLogicException(ExceptionCode.valueOf("CANNOT_CHANGE_ORDER"));
         }
-        findOrder.setOrderStatus(Order.OrderStatus.ORDER_CANCEL);
-        orderRepository.save(findOrder);
+        findOrder.updateOrderStatus(Order.OrderStatus.ORDER_CANCEL);
     }
 
-    private Order findVerifiedOrder(long orderId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        Order findOrder =
-                optionalOrder.orElseThrow(() ->
-                        new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
-        return findOrder;
+    public Order findVerifiedOrder(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
     }
 
-    private void verifyOrder(Order order) {
-        // 회원이 존재하는지 확인
-        userService.findUserWithLoginId(order.getUser().getLoginId());
-
-        // 커피가 존재하는지 확인
-        order.getOrderGoods().stream()
-                .forEach(orderGoods -> goodsService.
-                        findVerifiedGoods(orderGoods.getGoods().getGoodsId()));
-    }
-
-//    private void updatePoint(Order order) {
-//        User user = userService.findUserWithLoginId(order.getUser().getLoginId());
-//        int leftPoint = StampCalculator.calculateEarnedStampCount(order);
-//
-//        Stamp stamp = member.getStamp();
-//        stamp.setStampCount(
-//                StampCalculator.calculatePoints(stamp.getStampCount(),
-//                        earnedStampCount));
-//        member.setStamp(stamp);
-//
-//        memberService.updateMember(member);
-//    }
-
-    private int calculatePoints(Order order) {
-        return order.getOrderGoods().stream()
-                .map(orderGoods -> orderGoods.getQuantity())
-                .mapToInt(quantity -> quantity)
-                .sum();
-    }
-
-    private Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public void orderInformation(OrderPostDto requestBody, User User, Order order) {
+        String userName = requestBody.getUserName();
+        User findUser = userService.findUserWithUserName(userName);
+        if(userName != null){
+            order.changeUserName(userName);
+        } else {
+            order.resetInfo(User);
+        }
     }
 
 }

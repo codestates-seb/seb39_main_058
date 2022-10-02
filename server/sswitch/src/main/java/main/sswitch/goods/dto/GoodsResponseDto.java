@@ -14,7 +14,7 @@ public class GoodsResponseDto {
     private long goodsId;
     private String goodsName;
     private String goodsText;
-    private int goodsPoint;
+    private int price;
     private String goodsImage;
     private Goods.GoodsStatus goodsStatus;
 }
