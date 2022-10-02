@@ -344,33 +344,33 @@ const LogoutStyle = styled.div`
     white-space: nowrap;
 
     .view{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    background-color: white;
-    width: 35vw;
-    height: 20vh;
-    border-radius: 1rem;
-    font-size: 3vmin;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        background-color: white;
+        width: 70vw;
+        height: 30vh;
+        border-radius: 1rem;
+        font-size: 6.5vmin;
 
-    .confirm{
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-      div{
-        border: 3px solid black;
-        padding: 0.5vh 1vw;
-        border-radius: 10px;
-        cursor: pointer;
+        .confirm{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        div{
+            border: 3px solid black;
+            padding: 0.5vh 1vw;
+            border-radius: 10px;
+            cursor: pointer;
 
-        :hover{
-          background-color: gray;
-          color: white;
-          font-weight: bold;
+            :hover{
+            background-color: gray;
+            color: white;
+            font-weight: bold;
+            }
         }
-      }
-    }
+        }
   }
 `;
 

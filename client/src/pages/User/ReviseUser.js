@@ -5,6 +5,8 @@ import styled from "styled-components"
 import { TopBackground, UserContainer } from "./User"
 import { RemoveModal } from "../Community/CommunityDetail"
 import { ImWarning } from 'react-icons/im';
+import { AiFillGithub } from "react-icons/ai";
+import { SiNotion } from "react-icons/si";
 
 function ReviseUser() {
   
@@ -79,6 +81,13 @@ function ReviseUser() {
           <button className="revise_cancel" onClick={() => setCancel(!cancel)} >취소</button>
         </ButtonWrapper>
         </ReviseInfo>
+        <div className='etc'>
+          <div>
+            <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
+            <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'><SiNotion className='icons'/></a>
+          </div>
+          <p>@Copyright LCS. All right reserved.</p>
+        </div>
 
         {/* 삭제 모달창 */}
         { cancel && <RemoveModal>
