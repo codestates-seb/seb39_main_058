@@ -19,8 +19,9 @@ public interface CommentMapper {
     default CommentReturnDto commentToCommentReturnDto(Comment comment) {
         CommentReturnDto commentReturnDto = new CommentReturnDto();
 
-        commentReturnDto.setUserName(comment.getUser().getUserName());
+        commentReturnDto.setUserId(comment.getUser().getUserId());
         commentReturnDto.setForumId(comment.getForum().getForumId());
+        commentReturnDto.setUserName(comment.getUser().getUserName());
         commentReturnDto.setCommnetId(comment.getCommentId());
         commentReturnDto.setCommentText(comment.getCommentText());
         commentReturnDto.setDateCreated(comment.getDateCreated());

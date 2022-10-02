@@ -1,4 +1,4 @@
-package main.sswitch.boards.trash.entity;
+package main.sswitch.trash.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

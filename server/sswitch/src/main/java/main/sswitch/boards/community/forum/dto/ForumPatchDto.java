@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class ForumPatchDto {
+    @NotNull
+    private long userId;
 
     private long forumId;
 

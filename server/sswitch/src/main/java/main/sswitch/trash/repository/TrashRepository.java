@@ -1,6 +1,6 @@
-package main.sswitch.boards.trash.repository;
+package main.sswitch.trash.repository;
 
-import main.sswitch.boards.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

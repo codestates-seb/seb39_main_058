@@ -17,6 +17,6 @@ public class NoticePostDto {
     @NotBlank
     private String noticeText;
 
-    private long userId;
+    private String loginId;
 
 }
