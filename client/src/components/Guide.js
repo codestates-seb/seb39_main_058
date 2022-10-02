@@ -151,7 +151,7 @@ const GuideStyle = styled.div`
     bottom: 0;
     background-color: rgba(0, 0, 0, .7);
     z-index: 10;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(5px);
   }
 
 `

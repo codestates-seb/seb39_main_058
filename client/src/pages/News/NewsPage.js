@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import {Link} from "react-router-dom"
 import { useSelector } from "react-redux"
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const NewsPage = () => {
 
@@ -18,6 +19,8 @@ const NewsPage = () => {
     noticeId : null,
     click : false
   })
+  const [page, setPage] = useState(1)
+  const [totalElements, setTotalElements] = useState(0)
 
   
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
@@ -38,6 +41,7 @@ const NewsPage = () => {
     .then((res) => res.json())
     .then((res) => {
       setData(res.data)
+      setTotalElements(res.pageInfo.totalElements)
     })
   },[])
 
@@ -74,6 +78,20 @@ const NewsPage = () => {
       window.location.reload()
     })
     .catch(err => console.log(err))
+  }
+
+  const scrollChange = () => {
+
+    setTimeout(() => {
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice?page=${page+1}&size=10`)
+      .then(res => res.json())
+      .then(res => {
+        setData(data.concat(res.data))
+      })
+      .catch(err => console.log(err))
+    }, 1000)
+
+    setPage(page+1)
   }
 
   return (
@@ -114,6 +132,11 @@ const NewsPage = () => {
         </div>
       </div> :
       undefined}
+      <InfiniteScroll
+      dataLength={totalElements}
+      next = {scrollChange}
+      hasMore = {true}
+      >
         {data.map(el => {
           return(
             <div className='container' key={el.noticeId}>
@@ -151,6 +174,7 @@ const NewsPage = () => {
           </div>
         </div> :
         undefined}
+      </InfiniteScroll>
       <div className='etc'>
         <div>다른 궁금즘이 있으신가요?</div>
         <br/>
@@ -167,7 +191,8 @@ const NewsStyle = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: ${(props) => props.data.length === 1 || 2 || 3 || 4 || 5 ? "100vh" : "100%"};
+  /* height: ${(props) => props.data.length === 1 || 2 || 3 || 4 || 5 ? "100vh" : "100%"}; */
+  height: 100%;
   width: 100%;
   border-radius: 30px;
   user-select: none;
