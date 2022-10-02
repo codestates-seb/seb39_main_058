@@ -2,8 +2,7 @@ import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import KakaoOauth from './KakaoOauth';
-import GoogleOauth from './GoogleOauth';
+import OauthLogin from './OauthLogin';
 
 const LoginPage = () => {
   const navigate=useNavigate();
@@ -133,9 +132,7 @@ const tabKey2=(event)=>{
           
         </LoginForm>
        
-          <KakaoOauth/>
-          <GoogleOauth/>
-          
+         <OauthLogin/>
     </Container>
   )
 }

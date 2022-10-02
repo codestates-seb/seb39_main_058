@@ -63,6 +63,8 @@ function CommunityPage() {
         setTotal(res.pageInfo.totalElements)
       })
     }
+    window.scrollTo(0, 0);
+    setSearch({select : "제목" , content : ""})
   }
 
   return (
@@ -119,7 +121,11 @@ function CommunityPage() {
                 <span className='title pointer' onClick={() => {
                   navigate(`/community/${el.forumId}`)
                 }}>{el.forumTitle}</span> :
-                <span className='title pointer'><AiFillLock/> 비밀글입니다.</span>}
+                <span className='title pointer' onClick={() => {
+                  userInfo.role === "ROLE_ADMIN" || (el.userName === userInfo.userName) ?
+                  navigate(`/community/${el.forumId}`) :
+                  alert("비밀글은 본인과 관리자 이외엔 확인할 수 없습니다.")
+                }}><AiFillLock/> 비밀글입니다.</span>}
                 <span className='user'>{el.userName}</span>
                 <span className='updateAT'>{el.dateModified.slice(5,10)}</span>
                 <span className='tags'>{el.tag.split(",")[0]} { el.tag.split(",").length > 1 ? `외${el.tag.split(",").length-1}` : undefined}</span>
@@ -140,8 +146,6 @@ function CommunityPage() {
           <input type='search' value={search.content} onChange={e => setSearch({select : search.select, content : e.target.value})} />
           <span onClick={() => {
             handleSearchButton()
-            window.scrollTo(0, 0);
-            setSearch({select : "제목" , content : ""})
             }}><FaSearch /></span>
         </div>
     </CommunityPageStyle>

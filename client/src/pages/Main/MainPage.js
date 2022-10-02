@@ -4,7 +4,6 @@ import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk
 import { BiCurrentLocation } from "react-icons/bi";
 import { GiCancel } from "react-icons/gi";
 import Loading from "../../components/Loading";
-import Guide from "../../components/Guide";
 
 function MainPage(){
 
@@ -37,8 +36,6 @@ function MainPage(){
         경도 : undefined ,
         주소 : undefined
     })
-
-    const [guide, setGuide] = useState(1)
     
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -67,12 +64,9 @@ function MainPage(){
         })
     };
 
-    // console.log(guide)
-
     return (
         <MainStyle guide>
         {click && !loading ? <Loading /> : undefined }
-        {/* <Guide setGuide={setGuide} guide={guide} /> */}
         <Map
             center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}
             style={{ width: "100%", height: "100vh" }}
@@ -82,10 +76,16 @@ function MainPage(){
                     { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
                     { lat: myLocation.center.lat, lng: myLocation.center.lng }
                     }>
-                    {myLocation.center.lat ?
+                    {/* {myLocation.center.lat ?
                     <CustomInfoWindow>
                         <div className="my_location">{myLocation.center.lat ? "현재 위치" : undefined}</div>
-                    </CustomInfoWindow> : undefined}
+                    </CustomInfoWindow> : undefined} */}
+                    {myLocation.center.lat ?
+                    <MapMarker position={myLocation.center}>
+                    <div className="my_location">
+                      현재 위치
+                    </div>
+                    </MapMarker> : undefined}
                 </CustomOverlayMap>
                 {guro.map((ele, idx) => (
                     <div key={idx}>
@@ -155,6 +155,11 @@ const MainStyle = styled.div`
     filter: blur(5px); */
     /* opacity: ${!sessionStorage.getItem("abc") ? '0.5' : '1'}; */
     /* opacity: ${(props) => props.guide ? 0.5 : 1}; */
+
+    .my_location{
+        margin-left: 45px;
+        margin-top: 5px;
+    }
 
     .get_directions{
         cursor: pointer;

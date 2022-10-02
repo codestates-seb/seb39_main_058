@@ -4,19 +4,21 @@ import styled from "styled-components";
 import { AiOutlineBell } from "react-icons/ai";
 import { FaSearch, FaBars } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux"
+import Guide from './Guide'
 
 
 function NavBar({welcome}) {
 
-    const [searchOn, setSearchOn] = useState(false)
+    // const [searchOn, setSearchOn] = useState(false)
     const [noticeOn, setNoticeOn] = useState(false)
     const [logout, setLogout] = useState(false)
+    const [guide, setGuide] = useState(0)
 
     const navigate = useNavigate();
 
     const clear = () => {
         setNoticeOn(false)
-        setSearchOn(false)
+        // setSearchOn(false)
     }
 
     const dispatch = useDispatch()
@@ -35,15 +37,16 @@ function NavBar({welcome}) {
     </MobileSearchInput>:
     undefined
     }
+    {guide > 0 ? <Guide guide={guide} setGuide={setGuide}/> : undefined}
     <NavBarStyle>
         <div className='main_title'>
             <Link to='/' onClick={() => {
                 clear()
             }}>쓰위치</Link>
         </div>
-            <div className='search' onClick={() => {
+            {/* <div className='search' onClick={() => {
                 setSearchOn(!searchOn)
-            }}><FaSearch/>검색</div>
+            }}><FaSearch/>검색</div> */}
         <div className='header'>
             <div className='community'>커뮤니티
                 <div className='drop community'>
@@ -52,9 +55,10 @@ function NavBar({welcome}) {
             </div>
             <div className='service_center'>고객센터
                 <div className='drop'>
-                    <li>채팅상담</li>
+                    <li><a href='http://pf.kakao.com/_puDuxj/chat' target='_black'>채팅상담</a></li>
                     <li>FAQ</li>
                     <li>운영정책</li>
+                    <li onClick={() => setGuide(1)}>가이드</li>
                 </div>
             </div>
             <div className='point'>포인트교환
@@ -73,8 +77,8 @@ function NavBar({welcome}) {
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
-                    <li>회원수정</li>
-                    <li>회원삭제</li>
+                    {/* <li>정보수정</li>
+                    <li>회원탈퇴</li> */}
                     {userInfo.role === "ROLE_ADMIN" ? <li>관리자</li> : undefined}
                 </div>
             </div>}
@@ -106,14 +110,14 @@ function NavBar({welcome}) {
         </div>
     </LogoutStyle> :
     undefined}
-    <SearchInput>
+    {/* <SearchInput>
         {searchOn ?
         <div className='search_bar'>
         <input type="search" placeholder='검색어를 입력해주세요. ex) LCS로 53번길 21'></input>
         <div className='search_icon'><FaSearch /></div>
         </div> :
         undefined}
-    </SearchInput>
+    </SearchInput> */}
         {noticeOn ?
         <Notification>현재 알림이 없습니다.</Notification> :
         undefined}
@@ -245,7 +249,7 @@ const NavBarStyle = styled.div`
         background-color: #F2F2F2;
         border-left: 3px solid rgb(71,182,181);
         border-bottom: 3px solid rgb(71,182,181);
-        width: 79%;
+        width: 86%;
         height: 20vh;
         z-index: 3;
         display: none;
@@ -313,41 +317,41 @@ const NavBarStyle = styled.div`
     }
 `
 
-const SearchInput = styled.div`
+// const SearchInput = styled.div`
 
-    position: absolute;
-    width: 95%;
-    z-index: 2;
-    margin-top: .5vh;
+//     position: absolute;
+//     width: 95%;
+//     z-index: 2;
+//     margin-top: .5vh;
 
-    input{
-        width: 90%;
-        height: 40px;
-        font-size: 2vmin;
-        padding-left: 2vw;
-    }
+//     input{
+//         width: 90%;
+//         height: 40px;
+//         font-size: 2vmin;
+//         padding-left: 2vw;
+//     }
 
-    .search_icon{
-        display: flex;
-        align-items: center;
-        border: 0.5vmin solid black;
-        background-color: white;
-        padding: 1vh 2vw;
-        cursor: pointer;
-        border-radius: 20px;
-    }
+//     .search_icon{
+//         display: flex;
+//         align-items: center;
+//         border: 0.5vmin solid black;
+//         background-color: white;
+//         padding: 1vh 2vw;
+//         cursor: pointer;
+//         border-radius: 20px;
+//     }
 
-    .search_bar{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-grow: 1;
-    }
+//     .search_bar{
+//     display: flex;
+//     justify-content: space-around;
+//     align-items: center;
+//     flex-grow: 1;
+//     }
 
-    @media screen and (max-width: 500px){
-        display: none;
-    }
-`
+//     @media screen and (max-width: 500px){
+//         display: none;
+//     }
+// `
 
 const Notification = styled.div`
     position: absolute;
