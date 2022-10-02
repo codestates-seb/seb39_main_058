@@ -75,7 +75,7 @@ function CommunityDetail() {
 
   const backToBoard = () => navigate("/community/forum");
 
-  // 게시글 '좋아요' 버튼
+  // 게시글 '좋아요' 버튼 -> 2022.10.01 현재 서버에서 작업중
   const addLike = () => {
     (!like) ? setLike(like + 1) : setLike(0)
     console.log(like)
@@ -167,7 +167,7 @@ function CommunityDetail() {
   };
 
   // console.log(userInfo)
-  // console.log(data)
+  console.log(data)
 
   return (
       <>
@@ -274,7 +274,6 @@ function CommunityDetail() {
               </div>
           </RemoveModal>}
         </Main>
-        
         <CommunityAnswer data={data}/>
       </>
   )
@@ -566,7 +565,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const RemoveModal = styled.div`
+export const RemoveModal = styled.div`
   position: fixed;
   display: flex;
   justify-content: center;

@@ -1,13 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { AiFillGold } from 'react-icons/ai';
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
-import session from 'redux-persist/lib/storage/session';
 
 function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
@@ -17,6 +16,7 @@ function User() {
     const navigate = useNavigate();
 
     const [ logout, setLogout ] = useState(false);
+    const [ revisedInfo, setRevisedInfo ] = useState(false);
     const [ withdrawal, setWithdrawal ] = useState(false);
 
     useEffect(() => {
@@ -42,8 +42,9 @@ function User() {
     // 회원정보 수정
     const userRevise = () => {
         console.log('회원정보 수정!')
-        console.log(userInfo.accessToken);
-        // console.log(userData);
+        // console.log(userInfo);
+        console.log(userData);
+        navigate("/users/profile/revise")
     };
 
     // 회원탈퇴
@@ -65,25 +66,28 @@ function User() {
         window.location.reload();
     }
 
+    // console.log(userInfo)
+    // console.log(userData)
+
     return (
     <Main>
         <div className='wrapper'>
         <TopBackground/>
         <UserContainer>
-            
-                <UserPrivate>
-                    <img className='user-profile' src="/profile.png" alt='profile'/>
-                    <div className='user-name'><b>{userData.userName}</b>님</div>
-                    <div className='user-level'>현재 등급: 실버</div>
-                    <div className='user-email'>이메일: {userData.email}</div>
-                    <div className='user-point'>보유 포인트: {userData.point}p</div>
-                    <div className='user-point'>누적 포인트: 12345p</div>
-                    <div className='button-wrapper'>
-                        <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
-                        <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
-                        <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
-                    </div>
-                </UserPrivate>
+            <UserPrivate>
+                <img className='user-profile' src="/profile.png" alt='profile'/>
+                <div className='user-name'><b>{userData.userName}</b>님</div>
+                <div className='user-level'>현재 등급: 실버</div>
+                <div className='user-id'>아이디: {userData.loginId}</div>
+                <div className='user-email'>이메일: {userData.email}</div>
+                <div className='user-point'>보유 포인트: {userData.currentPoints}p</div>
+                <div className='user-point'>누적 포인트: {userData.totalPoints}p</div>
+                <div className='button-wrapper'>
+                    <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
+                    <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
+                    <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
+                </div>
+            </UserPrivate>
             
             <UserInfo>
                 <div className='user-status'>
@@ -162,6 +166,7 @@ function User() {
 
 export default User;
 
+
 const Main = styled.main`
     
     font-size: 2vmin;
@@ -176,13 +181,13 @@ const Main = styled.main`
     
 `;
 
-const TopBackground = styled.div`
+export const TopBackground = styled.div`
     background: linear-gradient(rgb(70,183,182), rgb(64,156,155));
     width: 100vw;
     height: 30vh;
 `
 
-const UserContainer = styled.div`
+export const UserContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

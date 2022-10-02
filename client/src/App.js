@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import LoginPage from './pages/Login/LoginPage'
 import SignupPage from './pages/Signup/SignupPage';
 import User from './pages/User/User';
+import ReviseUser from './pages/User/ReviseUser';
+import AdminUser from './pages/User/AdminUser';
+import ReviseAdminUser from './pages/User/ReviseAdminUser';
 import KakaoMap from './pages/Main/MainPage';
 import Welcome from './components/Welcome';
 import NavBar from './components/NavBar';
@@ -39,6 +42,9 @@ function App() {
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/signup' element={<SignupPage/>}/>
           <Route path='/users/profile' element={<User/>}/>
+          <Route path='/users/profile/revise' element={<ReviseUser/>}/>
+          <Route path='/admin-users/profile' element={<AdminUser/>}/>
+          <Route path='/admin-users/profile/revise' element={<ReviseAdminUser/>}/>
           <Route path='/news/notice' element={<NewsPage/>}/>
           <Route path='/news/notice/create' element={<NewsCreate/>}/>
           <Route path='/community/forum' element={<CommunityPage/>}/>
@@ -46,8 +52,6 @@ function App() {
           <Route path='/community/create' element={<CommunityCreate/>}/>
           <Route path='/goods' element={<GoodsPage/>}/>
           <Route path='/goods/create' element={<GoodsCreate/>}/>
-        
-
         </Routes>
     </div>  
   );
