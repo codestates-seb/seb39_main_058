@@ -274,7 +274,6 @@ function CommunityDetail() {
               </div>
           </RemoveModal>}
         </Main>
-        
         <CommunityAnswer data={data}/>
       </>
   )
@@ -566,7 +565,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const RemoveModal = styled.div`
+export const RemoveModal = styled.div`
   position: fixed;
   display: flex;
   justify-content: center;

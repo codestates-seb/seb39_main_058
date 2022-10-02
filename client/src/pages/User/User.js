@@ -67,7 +67,7 @@ function User() {
     }
 
     // console.log(userInfo)
-    console.log(userData)
+    // console.log(userData)
 
     return (
     <Main>
