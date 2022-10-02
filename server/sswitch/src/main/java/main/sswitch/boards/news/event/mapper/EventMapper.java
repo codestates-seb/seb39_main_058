@@ -23,13 +23,13 @@ public interface EventMapper {
     default EventResponseDto EventToEventResponseDto(Event event) {
         EventResponseDto eventResponseDto = new EventResponseDto();
 
+        eventResponseDto.setUserId(event.getUser().getUserId());
         eventResponseDto.setUserName(event.getUser().getUserName());
         eventResponseDto.setEventId(event.getEventId());
         eventResponseDto.setEventTitle(event.getEventTitle());
         eventResponseDto.setEventText(event.getEventText());
-
+//        eventResponseDto.setDateCreated(event.getDateCreated());
         eventResponseDto.setDateCreated(event.getDateCreated());
-        eventResponseDto.setDateModified(event.getDateModified());
 
         return eventResponseDto;
     }

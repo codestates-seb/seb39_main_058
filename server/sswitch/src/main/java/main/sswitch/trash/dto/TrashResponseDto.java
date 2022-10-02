@@ -2,12 +2,14 @@ package main.sswitch.trash.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import main.sswitch.trash.entity.TrashCan;
 
 import java.time.LocalDateTime;
 
-@Builder
+//@Builder
 @Getter
+@Setter
 public class TrashResponseDto {
     private long trashId;
 
@@ -20,6 +22,8 @@ public class TrashResponseDto {
     private LocalDateTime dateModified;
 
     private TrashCan.TrashStatus trashStatus;
+
+    private long userId;
 
 
     public void getDateCreated(LocalDateTime dateCreated) {

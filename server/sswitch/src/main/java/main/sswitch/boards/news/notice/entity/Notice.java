@@ -21,16 +21,15 @@ public class Notice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long noticeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    public User user;
-
-
     @Column(length = 255, nullable = false)
     public String noticeTitle;
 
     @Column(columnDefinition = "text", nullable = false)
     public String noticeText;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    public User user;
 
     public void setUser(User user) {
         this.user = user;

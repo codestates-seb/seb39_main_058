@@ -26,7 +26,7 @@ public class EventService {
         this.userService = userService;
     }
 
-    public Event createEvent(Event event,long userId) {
+    public Event createEvent(Event event) {
         verifyExistEvent(event.getEventId());
 
 //        verifyUserRole(userId);
@@ -36,8 +36,9 @@ public class EventService {
         return saveEvent;
     }
 
-    public Event updateEvent(Event event, long userId) {
+    public Event updateEvent(Event event) {
         Event findEvent = findVerifiedEvent(event.getEventId());
+
 
 //        verifyUserRole(userId);
 
@@ -58,7 +59,7 @@ public class EventService {
                 Sort.by("eventId").descending()));
     }
 
-    public void deleteEvent(long eventId,long userId) {
+    public void deleteEvent(long eventId) {
         Event findEvent = findVerifiedEvent(eventId);
 //        verifyUserRole(userId);
 

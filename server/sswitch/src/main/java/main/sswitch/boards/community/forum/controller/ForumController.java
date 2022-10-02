@@ -43,17 +43,17 @@ public class ForumController {
     }
 
     //게시글 따봉
-    @PatchMapping("/take/like/{forum-id}")
-    public ResponseEntity likeForum(@Positive @PathVariable("{forum-id}") long forumId,
-                                    @Valid @RequestBody ForumPatchDto forumPatchDto) {
-        forumPatchDto.setForumId(forumId);
-        Forum forum =
-                forumService.likeForum(mapper.ForumPatchDtoToForum(forumPatchDto));
-
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
-                HttpStatus.OK);
-    }
+//    @PatchMapping("/take/like/{forum-id}")
+//    public ResponseEntity likeForum(@Positive @PathVariable("{forum-id}") long forumId,
+//                                    @Valid @RequestBody ForumPatchDto forumPatchDto) {
+//        forumPatchDto.setForumId(forumId);
+//        Forum forum =
+//                forumService.likeForum(mapper.ForumPatchDtoToForum(forumPatchDto));
+//
+//        return new ResponseEntity<>(
+//                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
+//                HttpStatus.OK);
+//    }
 
     //게시글 수정
     @PatchMapping("/take/{forum_id}")
@@ -92,11 +92,51 @@ public class ForumController {
     }
 
     //게시글 검색
-    @GetMapping("/search")
-    public ResponseEntity searchForum(@Positive @RequestParam int page,
+    @GetMapping("/search/title")
+    public ResponseEntity searchForumtitle(@Positive @RequestParam int page,
                                       @Positive @RequestParam int size,
-                                      @PathVariable("/search") @RequestParam String keyword) {
-        Page<Forum> pageForums = forumService.searchForums(keyword, page - 1, size);
+                                      @PathVariable("/search/title") @RequestParam String title) {
+        Page<Forum> pageForums = forumService.findForumTitle(title, page - 1, size);
+        List<Forum> forums = pageForums.getContent();
+
+        return new ResponseEntity(
+                new MultiResponseDto<>(mapper.ForumsToForumsResponseDto(forums),pageForums),
+                HttpStatus.OK);
+    }
+
+    //태그 검색
+    @GetMapping("/search/tag")
+    public ResponseEntity searchForumTag(@Positive @RequestParam int page,
+                                      @Positive @RequestParam int size,
+                                      @PathVariable("/search/tag") @RequestParam String tag) {
+        Page<Forum> pageForums = forumService.findForumTag(tag, page - 1, size);
+        List<Forum> forums = pageForums.getContent();
+
+        return new ResponseEntity(
+                new MultiResponseDto<>(mapper.ForumsToForumsResponseDto(forums),pageForums),
+                HttpStatus.OK);
+    }
+
+    //작성자 검색
+    @GetMapping("/search/username")
+    public ResponseEntity searchUsername(@Positive @RequestParam int page,
+                                         @Positive @RequestParam int size,
+                                         @PathVariable("/search/username") @RequestParam String username) {
+        Page<Forum> pageForums = forumService.findUsername(username, page - 1, size);
+        List<Forum> forums = pageForums.getContent();
+
+        return new ResponseEntity(
+                new MultiResponseDto<>(mapper.ForumsToForumsResponseDto(forums),pageForums),
+                HttpStatus.OK);
+    }
+
+
+    //내용 검색
+    @GetMapping("/search/text")
+    public ResponseEntity searchForumText(@Positive @RequestParam int page,
+                                         @Positive @RequestParam int size,
+                                         @PathVariable("/search/text") @RequestParam String text) {
+        Page<Forum> pageForums = forumService.findForumText(text, page - 1, size);
         List<Forum> forums = pageForums.getContent();
 
         return new ResponseEntity(

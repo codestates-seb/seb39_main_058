@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class EventResponseDto {
 
+    private long userId;
     private String userName;
 
     private long eventId;
@@ -19,17 +20,15 @@ public class EventResponseDto {
 
     private LocalDateTime dateCreated;
 
-    private LocalDateTime dateModified;
-
     public void getDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public void getDateModified(LocalDateTime dateModified) {
-        this.dateModified = dateModified;
+    public void getUserId(User user) {
+        this.userId = user.getUserId();
     }
 
-    public void getUsername(User user) {
+    public void getUserName(User user) {
         this.userName = user.getUserName();
     }
 }

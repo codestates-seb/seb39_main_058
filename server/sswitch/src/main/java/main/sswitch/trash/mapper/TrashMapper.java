@@ -17,7 +17,19 @@ public interface TrashMapper {
 
     TrashCan trashStatusChangeDtoToTrash(TrashStatusDto trashStatusDto);
 
-    TrashResponseDto trashToTrashResponseDto(TrashCan trashCan);
+    default TrashResponseDto trashToTrashResponseDto(TrashCan trashCan) {
+
+        TrashResponseDto trashResponseDto = new TrashResponseDto();
+        trashResponseDto.setTrashId(trashCan.getTrashId());
+        trashResponseDto.setLongitude(trashCan.getLongitude());
+        trashResponseDto.setLatitude(trashCan.getLatitude());
+        trashResponseDto.setUserId(trashCan.getUser().getUserId());
+        trashResponseDto.setTrashStatus(trashCan.getTrashStatus());
+        trashResponseDto.setDateCreated(trashCan.getDateCreated());
+        trashResponseDto.setDateModified(trashCan.getDateModified());
+
+        return trashResponseDto;
+    }
 
     List<TrashResponseDto> trashesToTrashResponseDto(List<TrashCan> trashCans);
 }

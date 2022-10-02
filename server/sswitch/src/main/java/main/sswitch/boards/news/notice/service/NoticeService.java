@@ -25,7 +25,7 @@ public class NoticeService {
         this.userService = userService;
     }
 
-    public Notice createNotice(Notice notice,long userId) {
+    public Notice createNotice(Notice notice) {
         //이미 등록된 공지사항인지 확인
         verifyExistNotice(notice.getNoticeId());
         //관리자인지 확인
@@ -34,7 +34,7 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public Notice updateNotice(Notice notice,long userId) {
+    public Notice updateNotice(Notice notice) {
         //조회하려는 공지사항이 존재하는지 확인
         Notice findNotice = findVerifiedNotice(notice.getNoticeId());
         //관리자인지 확인
@@ -50,7 +50,7 @@ public class NoticeService {
 
     //이거 쿼리 안태우고 바로 검색하도록 수정
     public Notice findNotice(long noticeId) {
-        return findVerifiedNoticeByQuery(noticeId);
+        return findVerifiedNotice(noticeId);
     }
 
     public Page<Notice> findNotices(int page, int size) {
@@ -58,7 +58,7 @@ public class NoticeService {
                 Sort.by("noticeId").descending()));
     }
 
-    public void deleteNotice(long noticeId,long userId) {
+    public void deleteNotice(long noticeId) {
         Notice findNotice = findVerifiedNotice(noticeId);
         //관리자인지 확인
 //        verifyUserRole(userId);

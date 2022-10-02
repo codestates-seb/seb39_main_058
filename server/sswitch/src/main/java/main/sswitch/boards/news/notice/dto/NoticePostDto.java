@@ -11,12 +11,18 @@ import javax.validation.constraints.Positive;
 @Getter
 @Setter
 public class NoticePostDto {
+    private long userId;
+
     @NotBlank
     private String noticeTitle;
 
     @NotBlank
     private String noticeText;
 
-    private String loginId;
+    public User getUser() {
+        User user = new User();
+        user.setUserId(userId);
+        return user;
+    }
 
 }

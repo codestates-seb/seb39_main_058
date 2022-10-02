@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class NoticePatchDto {
+
+    private long userId;
     private long noticeId;
 
     @NotBlank
@@ -17,7 +19,6 @@ public class NoticePatchDto {
     @NotBlank
     private String noticeText;
 
-    private String loginId;
 
     public void setNoticeId(long noticeId) {
         this.noticeId = noticeId;

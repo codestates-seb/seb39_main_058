@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.sswitch.help.audit.BaseEntity;
+import main.sswitch.user.entity.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "TRASHCAN")
-public class TrashCan {
+public class TrashCan extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trashId;
@@ -24,9 +27,13 @@ public class TrashCan {
     @Column(length = 255, nullable = false)
     private String latitude;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
     @Enumerated(value = EnumType.STRING)
     @Column(length = 255, nullable = false)
-    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_EMPTY;
+    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_FULL;
 
 
 //    @ManyToOne(fetch = FetchType.LAZY)
