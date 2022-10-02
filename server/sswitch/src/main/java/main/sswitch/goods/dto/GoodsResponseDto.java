@@ -16,5 +16,5 @@ public class GoodsResponseDto {
     private String goodsText;
     private int price;
     private String goodsImage;
-    private Goods.GoodsStatus goodsStatus;
+    private String goodsStatus;
 }
