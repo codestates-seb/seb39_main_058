@@ -8,6 +8,7 @@ import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
 import session from 'redux-persist/lib/storage/session';
+import RevisedUserInfo from './ReviseUser';
 
 function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
@@ -17,6 +18,7 @@ function User() {
     const navigate = useNavigate();
 
     const [ logout, setLogout ] = useState(false);
+    const [ revisedInfo, setRevisedInfo ] = useState(false);
     const [ withdrawal, setWithdrawal ] = useState(false);
 
     useEffect(() => {
@@ -42,8 +44,9 @@ function User() {
     // 회원정보 수정
     const userRevise = () => {
         console.log('회원정보 수정!')
-        console.log(userInfo.accessToken);
-        // console.log(userData);
+        // console.log(userInfo);
+        console.log(userData);
+        
     };
 
     // 회원탈퇴
@@ -65,27 +68,28 @@ function User() {
         window.location.reload();
     }
 
-    console.log(userInfo)
+    // console.log(userInfo)
+    // console.log(userData)
 
     return (
     <Main>
         <div className='wrapper'>
         <TopBackground/>
         <UserContainer>
-            
-                <UserPrivate>
-                    <img className='user-profile' src="/profile.png" alt='profile'/>
-                    <div className='user-name'><b>{userData.userName}</b>님</div>
-                    <div className='user-level'>현재 등급: 실버</div>
-                    <div className='user-email'>이메일: {userData.email}</div>
-                    <div className='user-point'>보유 포인트: {userData.point}p</div>
-                    <div className='user-point'>누적 포인트: 12345p</div>
-                    <div className='button-wrapper'>
-                        <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
-                        <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
-                        <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
-                    </div>
-                </UserPrivate>
+            <UserPrivate>
+                <img className='user-profile' src="/profile.png" alt='profile'/>
+                <div className='user-name'><b>{userData.userName}</b>님</div>
+                <div className='user-level'>현재 등급: 실버</div>
+                <div className='user-id'>아이디: {userData.loginId}</div>
+                <div className='user-email'>이메일: {userData.email}</div>
+                <div className='user-point'>보유 포인트: {userData.currentPoints}p</div>
+                <div className='user-point'>누적 포인트: {userData.totalPoints}p</div>
+                <div className='button-wrapper'>
+                    <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
+                    <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
+                    <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
+                </div>
+            </UserPrivate>
             
             <UserInfo>
                 <div className='user-status'>
@@ -129,7 +133,8 @@ function User() {
                     </div>
                 </div>
             </UserInfo>
-        </UserContainer>
+        </UserContainer> : 
+        <RevisedUserInfo/>
         </div>
 
         {/* 로그아웃 모달창 */}
