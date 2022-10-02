@@ -16,25 +16,37 @@ public interface NoticeMapper {
 
     Notice noticePatchDtoToNotice(NoticePatchDto noticePatchDto);
 
-    NoticeResponseDto noticeToNoticeResponseDto(Notice notice);
+    List<NoticeResponseDto> noticesToNoticesResponseDto(List<Notice> notices);
+
+    default NoticeResponseDto noticeToNoticeResponseDto(Notice notice) {
+        NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
+
+        noticeResponseDto.setUserName(notice.getUser().getUserName());
+        noticeResponseDto.setUserId(notice.getUser().getUserId());
+        noticeResponseDto.setNoticeId(notice.getNoticeId());
+        noticeResponseDto.setNoticeTitle(notice.getNoticeTitle());
+        noticeResponseDto.setNoticeText(notice.getNoticeText());
+        noticeResponseDto.setDateCreated(notice.getDateCreated());
+
+        return noticeResponseDto;
+    }
 
 //    List<NoticeResponseDto> noticesToNoticesResponseDto(List<Notice> notices);
 
-    default List<NoticeResponseDto> noticesToNoticesResponseDto(List<Notice> notices) {
-        return notices
-                .stream()
-                .map(notice -> NoticeResponseDto
-                        .builder()
-                        .noticeId(notice.getNoticeId())
-                        .loginId(notice.getUser().getLoginId())
-                        .noticeTitle(notice.getNoticeTitle())
-                        .noticeText(notice.getNoticeText())
-                        .userName(notice.getUser().getUserName())
-                        .dateCreated(notice.getDateCreated())
-                        .dateModified(notice.getDateModified())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
+//    default List<NoticeResponseDto> noticesToNoticesResponseDto(List<Notice> notices) {
+//        return notices
+//                .stream()
+//                .map(notice -> NoticeResponseDto
+//                        .builder()
+//                        .noticeId(notice.getNoticeId())
+//                        .noticeTitle(notice.getNoticeTitle())
+//                        .noticeText(notice.getNoticeText())
+//                        .userId(notice.getUser().getUserId())
+//                        .userName(notice.getUser().getUserName())
+//                        .dateCreated(notice.getDateCreated())
+//                        .dateModified(notice.getDateModified())
+//                        .build())
+//                .collect(Collectors.toList());
+//    }
 }
 

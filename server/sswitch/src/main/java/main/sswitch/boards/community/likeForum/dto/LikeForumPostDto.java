@@ -1,30 +1,26 @@
-package main.sswitch.trash.dto;
+package main.sswitch.boards.community.likeForum.dto;
 
 import lombok.Getter;
-import main.sswitch.trash.entity.TrashCan;
+import lombok.Setter;
 import main.sswitch.user.entity.User;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Getter
-public class TrashPostDto {
-
+@Setter
+public class LikeForumPostDto {
+    @Positive
     @NotBlank
-    private String longitude;
+    private long forumId;
 
+    @Positive
     @NotBlank
-    private String latitude;
-
-    @NotNull
     private long userId;
-
-    private TrashCan.TrashStatus trashStatus;
 
     public User setUser() {
         User user = new User();
         user.setUserId(userId);
         return user;
     }
-
 }

@@ -1,17 +1,16 @@
 package main.sswitch.boards.community.forum.service;
 
-import main.sswitch.boards.community.forum.dto.ForumResponseDto;
 import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.boards.community.forum.repository.ForumRepository;
+import main.sswitch.boards.community.likeForum.repository.LikeForumRepository;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
 import main.sswitch.user.entity.User;
-import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,10 +20,13 @@ public class ForumService {
     private final ForumRepository forumRepository;
     private final UserService userService;
 
+    private final LikeForumRepository likeForumRepository;
+
     public ForumService(ForumRepository forumRepository,
-                        UserService userService) {
+                        UserService userService,LikeForumRepository likeForumRepository) {
         this.forumRepository = forumRepository;
         this.userService = userService;
+        this.likeForumRepository = likeForumRepository;
     }
 
     public Forum createForum(Forum forum) {
@@ -53,14 +55,15 @@ public class ForumService {
     //게시글 좋아요 버튼 구현
     //우선 해당글 따봉누른 유저 목록을 불러옴
     //없으면 넣어줌 있으면 빼줌
-    public Forum likeForum(Forum forum) {
-        Forum findForum = findVerifiedForum(forum.getForumId());
+    public LikeForum likeForum(LikeForum likeForum) {
+        Forum findForum = findVerifiedForum(likeForum.getForum().getForumId());
+        LikeForum saveLikeForum = likeForumRepository.save(likeForum);
 
-        long findForumLike = forum.getForumLike();
+        long findForumLike = likeForum.getForum().getForumLike();
         findForumLike++;
         findForum.setForumLike(findForumLike);
 
-        return forumRepository.save(findForum);
+        return saveLikeForum;
     }
 
     public Forum findForum(long forumId) {
@@ -72,9 +75,30 @@ public class ForumService {
                 Sort.by("forumId").descending()));
     }
 
-    //게시글 검색기능 구현
-    public Page<Forum> searchForums(String keyword, int page, int size) {
-        return forumRepository.findByForumTitleContaining(keyword,PageRequest.of(page, size,
+    //제목 검색기능 구현
+    public Page<Forum> findForumTitle(String title, int page, int size) {
+        return forumRepository.findByForumTitleContaining(title,PageRequest.of(page, size,
+                Sort.by("forumId").descending()));
+
+    }
+
+    //태그 검색기능 구현
+    public Page<Forum> findForumTag(String tag, int page, int size) {
+        return forumRepository.findByTagContaining(tag,PageRequest.of(page, size,
+                Sort.by("forumId").descending()));
+
+    }
+
+    //작성자 검색기능 구현
+    public Page<Forum> findUsername(String username, int page, int size) {
+        User user = userService.findUserWithUserName(username);
+        long userId = user.getUserId();
+        return forumRepository.findByForumUserId(userId,PageRequest.of(page, size));
+    }
+
+    //내용 검색기능 구현
+    public Page<Forum> findForumText(String text, int page, int size) {
+        return forumRepository.findByForumTextContains(text,PageRequest.of(page, size,
                 Sort.by("forumId").descending()));
 
     }
@@ -84,6 +108,7 @@ public class ForumService {
 
         forumRepository.delete(findForum);
     }
+
 
     public Forum findVerifiedForum(long forumId) {
         Optional<Forum> optionalForum =

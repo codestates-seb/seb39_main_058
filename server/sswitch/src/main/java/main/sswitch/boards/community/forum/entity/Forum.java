@@ -2,6 +2,7 @@ package main.sswitch.boards.community.forum.entity;
 
 import lombok.*;
 import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 

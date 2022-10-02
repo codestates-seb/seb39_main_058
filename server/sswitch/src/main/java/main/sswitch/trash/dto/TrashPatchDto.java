@@ -19,6 +19,8 @@ public class TrashPatchDto {
     @NotNull
     private TrashCan.TrashStatus trashStatus;
 
+    private long userId;
+
     public void setTrashId(long trashId) {
         this.trashId = trashId;
     }

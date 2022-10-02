@@ -1,8 +1,9 @@
-package main.sswitch.boards.community.forum.entity;
+package main.sswitch.boards.community.likeForum.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 

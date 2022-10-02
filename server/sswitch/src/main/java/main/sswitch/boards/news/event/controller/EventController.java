@@ -34,23 +34,21 @@ public class EventController {
     }
 
     @PostMapping("/take/create")
-    public ResponseEntity postEvent(@Valid @RequestBody EventPostDto eventPostDto,
-                                    @Positive @RequestHeader long userId) {
-        Event event = eventService.createEvent(mapper.EventPostDtoToEvent(eventPostDto),userId);
+    public ResponseEntity postEvent(@Valid @RequestBody EventPostDto eventPostDto) {
+        Event event = eventService.createEvent(mapper.EventPostDtoToEvent(eventPostDto));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.EventToEventResponseDto(event)),
-                HttpStatus.CREATED
-        );
+                HttpStatus.CREATED);
     }
 
     @PatchMapping("/take/{event-id}")
-    public ResponseEntity patchEvent(@PathVariable("event-id") long eventId,
-                                     @Valid @RequestBody EventPatchDto eventPatchDto,
-                                     @Positive @RequestHeader long userId) {
+    public ResponseEntity patchEvent(@Positive @PathVariable("event-id") long eventId,
+                                     @Valid @RequestBody EventPatchDto eventPatchDto) {
 
         eventPatchDto.setEventId(eventId);
-        Event event = eventService.updateEvent(mapper.EventPatchDtoToEvent(eventPatchDto),userId);
+
+        Event event = eventService.updateEvent(mapper.EventPatchDtoToEvent(eventPatchDto));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.EventToEventResponseDto(event)),
@@ -78,9 +76,8 @@ public class EventController {
     }
 
     @DeleteMapping("/take/{event-id}")
-    public ResponseEntity deleteEvent( @PathVariable("event-id") long eventId,
-                                       @Positive @RequestHeader long userId) {
-        eventService.deleteEvent(eventId,userId);
+    public ResponseEntity deleteEvent( @PathVariable("event-id") long eventId) {
+        eventService.deleteEvent(eventId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

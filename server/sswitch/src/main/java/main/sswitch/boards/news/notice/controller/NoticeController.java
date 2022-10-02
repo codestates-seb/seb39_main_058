@@ -12,11 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/news/notice")
 @Slf4j
@@ -31,9 +34,8 @@ public class NoticeController {
     }
 
     @PostMapping("/take/create")
-    public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto,
-                                     @Positive @RequestHeader long userId) {
-        Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto),userId);
+    public ResponseEntity postNotice(@RequestBody NoticePostDto noticePostDto) {
+        Notice notice = noticeService.createNotice(mapper.noticePostDtoToNotice(noticePostDto));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.noticeToNoticeResponseDto(notice)),
@@ -41,11 +43,11 @@ public class NoticeController {
     }
 
     @PatchMapping("/take/{notice-id}")
-    public ResponseEntity patchNotice(@Positive @PathVariable("notice-id") long noticeId,
-                                      @RequestBody NoticePatchDto noticePatchDto,
-                                      @Positive @RequestHeader long userId) {
+    public ResponseEntity patchNotice(@PathVariable("notice-id") @Positive long noticeId,
+                                      @Valid @RequestBody NoticePatchDto noticePatchDto) {
         noticePatchDto.setNoticeId(noticeId);
-        Notice notice = noticeService.updateNotice(mapper.noticePatchDtoToNotice(noticePatchDto),userId);
+
+        Notice notice = noticeService.updateNotice(mapper.noticePatchDtoToNotice(noticePatchDto));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.noticeToNoticeResponseDto(notice)),
@@ -72,9 +74,8 @@ public class NoticeController {
     }
 
     @DeleteMapping("/take/{notice-id}")
-    public ResponseEntity deleteNotice(@Positive @PathVariable("notice-id") long noticeId,
-                                       @Positive @RequestHeader long userId) {
-        noticeService.deleteNotice(noticeId,userId);
+    public ResponseEntity deleteNotice(@Positive @PathVariable("notice-id") long noticeId) {
+        noticeService.deleteNotice(noticeId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
