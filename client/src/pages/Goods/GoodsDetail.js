@@ -9,14 +9,18 @@ import AnswerModal from '../../components/CommunityAnswer/AnswerModal';
 
 
 const GoodsDetail = ({item}) => {
-const [deleteGoods,SetDeleteGoods]=useState('')
+const [deleteGoods,setDeleteGoods]=useState('')
+const [buyGoods,SetBuyGoods]=useState('')
+
 const [modalOn, setModalOn] = useState(false);
+const [modalOn2, setModalOn2] = useState(false);
+
 const location = useLocation();
 const navigate=useNavigate();
 const dispatch=useDispatch();
   const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
-
+ const usersName=useSelector(state=>state.LoginPageReducer.userinfo.userName)
 
 
 
@@ -61,18 +65,62 @@ const goodsDeleteFetch=async()=>{
 
 }
 
-//장바구니 등록함수
-const selectGoods=(e)=>{
- console.log('디스패치어케보내',e.target)
- dispatch({type:'SELECT',payload:{goodsName:e.target.name,price:e.target.value,quantity:1 }})
+//상품구매 함수
+const goodsBuy=()=>{
+  if (!accesstoken){
+    alert('로그인 후 이용 가능 합니다')
+    navigate('/login',{state: {path:location.pathname}})
+  }else if(accesstoken){
+ 
+    goodsBuyFetch()
+
+  }
 }
 
+const goodsBuyFetch=async()=>{
+  if(buyGoods!==''){
+    const buyInfo={
+      
+        'userName' : usersName,
+        'orderGoodsList':
+        [
+            {
+                "goodsName":buyGoods,
+                "quantity":1
+            }
+        ]
+    
+    }
+    
+    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders`, {
+      method: "POST",
+      headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`},
+      body: JSON.stringify(buyInfo)
+
+    })
+    .then((res) => res.json())
+    .then((data)=>{
+   
+      
+            if(data.error==='Unauthorized'){
+              alert('세션이 만료되었습니다.')
+              navigate('/login',{state: {path:location.pathname}})
+            }
+            
+            
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+                  window.location.reload()
+  }
+}
 
 
 
   return (
     <Container>
-    {console.log('디테일',item)}
+    {/* {console.log('디테일',userName)} */}
     <GoodsImg>
 
         <img src={item.goodsImage} alt={item.goodsName}/>
@@ -85,20 +133,22 @@ const selectGoods=(e)=>{
       <div className='smallButton'>
         <div>상태:{item.goodsStatus}</div>
         {role==="ROLE_ADMIN" ?<button onClick={(e) => {
-        SetDeleteGoods(e.target.name)
+        setDeleteGoods(e.target.name)
         setModalOn(!modalOn)
 
         }}  name={item.goodsId}
         >삭제</button> :''}
-         {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{selectGoods(e)}} name ={item.goodsName} value={item.price}>장바구니 담기</button>:''} 
+         {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{SetBuyGoods(e.target.name)
+        setModalOn2(!modalOn2)}} name ={item.goodsName}>교환하기</button>:''} 
       </div>
     </GoodsInfo>
     <GoodsSelect>
 
       <div>상태:{item.goodsStatus}</div>
-      {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{selectGoods(e)}}   name ={item.goodsName} value={item.price}>장바구니 담기</button>:''} 
+      {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{SetBuyGoods(e.target.name)
+         setModalOn2(!modalOn2) }}   name ={item.goodsName} >교환하기</button>:''} 
       {role==="ROLE_ADMIN" ?<button onClick={(e) => {
-        SetDeleteGoods(e.target.name)
+        setDeleteGoods(e.target.name)
         setModalOn(!modalOn)
 
         }}  name={item.goodsId}
@@ -116,6 +166,21 @@ const selectGoods=(e)=>{
               <div className="confirm-wrapper">
                 <div className="confirm" onClick={()=>{goodsDelete()}}>확인</div>
                 <div className="cancel" onClick={() => setModalOn(!modalOn)}>취소</div>
+              </div>
+
+          </ModalItem>
+        </AnswerModal>
+        )}
+        {/* 구매 모달창 */}
+        {modalOn2 && (
+        <AnswerModal closeModal={() => setModalOn2(!modalOn2)}>
+          <ModalItem>
+             
+              <div>{buyGoods}</div>
+              <div>상품을 구매하시겠습니까?</div>
+              <div className="confirm-wrapper">
+                <div className="confirm" onClick={()=>{goodsBuy()}}>확인</div>
+                <div className="cancel" onClick={() => setModalOn2(!modalOn2)}>취소</div>
               </div>
 
           </ModalItem>

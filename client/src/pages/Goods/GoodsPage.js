@@ -47,7 +47,7 @@ const getGoodsList=async()=>{
 await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
 .then(res => res.json())
 .then((data)=>{
- console.log('상품리스트',data)
+//  console.log('상품리스트',data)
  setGoodsList(data.data)
 
 })
