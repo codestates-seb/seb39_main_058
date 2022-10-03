@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { AiOutlineBell, AiFillGithub, AiOutlineSlack } from "react-icons/ai";
+import { AiOutlineBell, AiFillGithub } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux"
@@ -76,7 +76,10 @@ function NavBar({welcome}) {
                 <div className='section'>
                     <div className='title'>포인트교환</div>
                     <div>
-                        <li>포인트교환</li>
+                        <li onClick={() => {
+                            navigate('/goods')
+                            setMenu(false)
+                            }}>포인트교환</li>
                     </div>
                 </div>
                 <div className='section'>
@@ -89,10 +92,17 @@ function NavBar({welcome}) {
                         <li>이벤트</li>
                     </div>
                 </div>
+
+                {userInfo.accessToken ?
+                <div className='logout' onClick={() => {
+                    setLogout(true)
+                }}>
+                    로그아웃
+                </div> : undefined}
+
                 <div className='etc'>
                     <div>
                         <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
-                        <a target='_black'><AiOutlineSlack className='icons'/></a>
                         <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'><SiNotion className='icons'/></a>
                     </div>
                     <p>@Copyright LCS. All right reserved.</p>
@@ -123,7 +133,7 @@ function NavBar({welcome}) {
             </div>
             <div>포인트교환
                 <div className='drop'>
-                    <li>포인트교환</li>
+                    <li><Link to='/goods'>포인트교환</Link></li>
                 </div>
             </div>
             <div>소식
@@ -137,7 +147,7 @@ function NavBar({welcome}) {
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
-                    {userInfo.role === "ROLE_ADMIN" ? <li>관리자</li> : undefined}
+                    {userInfo.role === "ROLE_ADMIN" ? <li><Link to='/admin-users/profile'>관리자</Link></li> : undefined}
                 </div>
             </div>}
             {!userInfo.accessToken ?
@@ -160,6 +170,7 @@ function NavBar({welcome}) {
                 dispatch({type:'LOGOUT'})
                 navigate('/')
                 setLogout(false)
+                setMenu(false)
             }}>확인</div>
             <div onClick={() => {
                 setLogout(false)
@@ -180,6 +191,15 @@ export default NavBar
 
 const MobileSideBar = styled.div`
 
+    .logout{
+        border: 1px solid black;
+        text-align: center;
+        font-size: 6vmin;
+        margin: 3vh 10vw;
+        padding: 1vh 2vw;
+        background-color: lightgray;
+    }
+
     .side_bar_back{
         position: fixed;
         width: 100%;
@@ -187,6 +207,10 @@ const MobileSideBar = styled.div`
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 10;
         white-space: nowrap;
+        top: 6.8vh;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
     *{
@@ -276,10 +300,10 @@ const LogoutStyle = styled.div`
     justify-content: space-around;
     align-items: center;
     background-color: white;
-    width: 35vw;
-    height: 20vh;
+    width: 70vw;
+    height: 30vh;
     border-radius: 1rem;
-    font-size: 3vmin;
+    font-size: 6vmin;
 
     .confirm{
       display: flex;
@@ -457,9 +481,12 @@ const Notification = styled.div`
 
 const MobileNavBar = styled.div`
     display: none;
-    width: 103%;
+    width: 100%;
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
+    position: fixed;
+    top: 0;
+    z-index: 11;
     
 
     .main_title{

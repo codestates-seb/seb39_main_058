@@ -6,15 +6,17 @@ import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GoodsDetail from './GoodsDetail';
 
+
 const GoodsPage = () => {
 const [userInfo,setUserInfo]=useState({
   userName:'',
   point:'',
 });
+const [goodsList,setGoodsList]=useState([])
 const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken);
 const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
-
+//유저정보 불러오기
   const getUserInfo=async()=>{
     if(accesstoken){
 
@@ -27,18 +29,40 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
       .then(data => {
         
         // console.log('data',data)
-        setUserInfo({userName: data.data.userName,point: data.data.point}) 
+        setUserInfo({userName: data.data.userName,point: data.data.currentPoints}) 
       }
       
       )
       
     }
+  
+  
+    
 
   }
 
 
-  useEffect(()=>{
-    getUserInfo()
+//상품정보 불러오기 
+const getGoodsList=async()=>{
+await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
+.then(res => res.json())
+.then((data)=>{
+ console.log('상품리스트',data)
+ setGoodsList(data.data)
+
+})
+
+}
+
+
+
+
+
+
+useEffect(()=>{
+    getGoodsList();
+    getUserInfo();
+   
   },[])
 
 
@@ -62,27 +86,16 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
   
 
-  <GoodsCart>
-    쇼핑카트
-    <GooodsCartHeader>
-      <div className='goodsName'>상품명
-        
-      </div>
+ 
+<GoodsList>
+상품리스트
 
-      <div className='goodsPrice'>가격
-       
-
-      </div>
-
-      <div>수량</div>
-      <div>합계</div>
-      <div>삭제</div>
-    </GooodsCartHeader>
-  </GoodsCart>  
-
-  <GoodsList>
-    <GoodsDetail/>
-  </GoodsList>
+    
+    {goodsList.map((item)=>{
+      return <GoodsDetail key={item.goodsId} item={item}/>
+    })}
+</GoodsList>
+  
 </Container>
 
 
@@ -92,13 +105,21 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 export default GoodsPage
 const Container=styled.div`
 display: flex;
-height: 90vh;
+height: 100%;
 /* justify-content: center; */
-width: 100vw;
-
+width: 100%;
 align-items: center;
 flex-direction: column;
 white-space: nowrap;
+/* margin-top: 50px; */
+
+@media (max-width: 550px) {
+          margin-top: 50px;
+           
+          
+
+          
+      }
 `
 const UserInfoContainer=styled.div`
 width: 80%;
@@ -107,7 +128,7 @@ text-align : center;
 
 
 @media (max-width: 550px) {
-            
+          /* margin-top: 50px; */
            width: 90%;
           
 
@@ -142,27 +163,19 @@ justify-content: space-between;
 
 `
 
-const GoodsCart=styled.div`
-  width: 80%;
 
 
-`
-const GooodsCartHeader=styled.div`
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  width: 100%;
-  .goodsName{
-    width: 50%;
-  }
-  .goodsPrice{
-    width: 20%;
-  }
-
-
-  
-`
 
 
 const GoodsList=styled.div`
+width: 80%;
+/* padding-bottom: 30px; */
+margin-bottom: 30px;
+@media (max-width: 550px) {
+            
+            width: 90%;
+           
+ 
+           
+       }
 `
