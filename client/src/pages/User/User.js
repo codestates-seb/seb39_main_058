@@ -340,6 +340,9 @@ const Main = styled.main`
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        img{
+            margin-bottom: -3vh;
+        }
     }
 
     .icons{
