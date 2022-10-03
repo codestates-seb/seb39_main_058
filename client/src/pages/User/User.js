@@ -177,7 +177,7 @@ function User() {
                         </div>
                         {dummy.map(el => {
                             return(
-                                <div className='bords_list' key={el.id}>
+                                <div className='bords_list select' key={el.id}>
                                     <span className='his'>{el.his}</span>
                                     <span className='date'>{el.date}</span>
                                     <span className={el.point[0] === '-' ? "point minus" : "point plus"}>{el.point}</span>
@@ -190,19 +190,6 @@ function User() {
 
         </div>
         </div>
-
-        {/* 로그아웃 모달창 */}
-        {logout && <LogoutStyle>
-            <div className='view'>
-            <div>로그아웃 하시겠습니까?</div>
-            <div className='confirm'>
-                <div onClick={confirmLogout}>확인</div>
-                <div onClick={() => {
-                    setLogout(false);
-                }}>취소</div>
-            </div>
-            </div>
-        </LogoutStyle>}
 
         {/* 회원탈퇴 모달창 */}
         { withdrawal && <RemoveModal>
@@ -229,6 +216,7 @@ const Main = styled.main`
     font-size: 3vmin;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 122vh;
+    width: 100%;
 
     .back{
         position: fixed;
@@ -278,7 +266,7 @@ const Main = styled.main`
         position: absolute;
         font-size: 2vmin;
         top: 2vh;
-        right: 2vw;
+        right: 4vw;
         background-color: #002B5B;
         color: white;
         padding: .5vh 1vw;
@@ -424,11 +412,15 @@ const Main = styled.main`
         flex-direction: column;
         background-color: white;
         position: absolute;
-        width: 85%;
+        width: 80%;
         top: 10vh;
         border-radius: 2%;
         padding: 2rem;
         border: .3rem solid rgb(64,156,155);
+
+        @media screen and (max-width: 500px){
+            border: none;
+        }
     }
 
     .wrapper {
@@ -469,13 +461,24 @@ const Main = styled.main`
         align-items: center;
         cursor: default;
     }
+
+    .select:hover{
+        background-color: lightgray;
+    }
     
 `;
 
 export const TopBackground = styled.div`
     background: linear-gradient(rgb(70,183,182), rgb(64,156,155));
-    width: 100vw;
+    width: 100%;
     height: 30vh;
+    position: fixed;
+    top: 0;
+    z-index: -1;
+
+    @media screen and (max-width: 500px){
+        display: none;
+    }
 `
 
 export const UserContainer = styled.div`
@@ -489,55 +492,6 @@ export const UserContainer = styled.div`
     top: 10vh;
     border-radius: 2%;
     padding: 2rem;
-`;
-
-
-
-// 로그아웃 모달창
-const LogoutStyle = styled.div`
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    white-space: nowrap;
-
-    .view{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-        background-color: white;
-        width: 70vw;
-        height: 30vh;
-        border-radius: 1rem;
-        font-size: 6.5vmin;
-
-        .confirm{
-        display: flex;
-        justify-content: space-around;
-        width: 100%;
-        div{
-            border: 3px solid black;
-            padding: 0.5vh 1vw;
-            border-radius: 10px;
-            cursor: pointer;
-
-            :hover{
-            background-color: gray;
-            color: white;
-            font-weight: bold;
-            }
-        }
-        }
-  }
 `;
 
 // 회원탈퇴 모달창

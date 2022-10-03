@@ -92,6 +92,14 @@ function NavBar({welcome}) {
                         <li>이벤트</li>
                     </div>
                 </div>
+
+                {userInfo.accessToken ?
+                <div className='logout' onClick={() => {
+                    setLogout(true)
+                }}>
+                    로그아웃
+                </div> : undefined}
+
                 <div className='etc'>
                     <div>
                         <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'><AiFillGithub className='icons'/></a>
@@ -162,6 +170,7 @@ function NavBar({welcome}) {
                 dispatch({type:'LOGOUT'})
                 navigate('/')
                 setLogout(false)
+                setMenu(false)
             }}>확인</div>
             <div onClick={() => {
                 setLogout(false)
@@ -181,6 +190,15 @@ function NavBar({welcome}) {
 export default NavBar
 
 const MobileSideBar = styled.div`
+
+    .logout{
+        border: 1px solid black;
+        text-align: center;
+        font-size: 6vmin;
+        margin: 3vh 10vw;
+        padding: 1vh 2vw;
+        background-color: lightgray;
+    }
 
     .side_bar_back{
         position: fixed;
@@ -463,7 +481,7 @@ const Notification = styled.div`
 
 const MobileNavBar = styled.div`
     display: none;
-    width: 103%;
+    width: 100%;
     background-color: white;
     border-bottom: 3px solid rgb(71,182,181);
     position: fixed;
