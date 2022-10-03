@@ -14,7 +14,9 @@ const [buyGoods,SetBuyGoods]=useState('')
 
 const [modalOn, setModalOn] = useState(false);
 const [modalOn2, setModalOn2] = useState(false);
+const [modalOn3, setModalOn3] = useState(false);
 
+const [alertMsg,setAlertMsg]=useState('');
 const location = useLocation();
 const navigate=useNavigate();
 const dispatch=useDispatch();
@@ -101,18 +103,26 @@ const goodsBuyFetch=async()=>{
     .then((res) => res.json())
     .then((data)=>{
    
-      
+      // console.log('상품구매 콘솔',data)
+            if(data.data?.userName){
+                window.location.reload()
+            }
             if(data.error==='Unauthorized'){
               alert('세션이 만료되었습니다.')
               navigate('/login',{state: {path:location.pathname}})
+            }else if(data.error==='Internal Server Error'){
+              setAlertMsg('포인트가 부족합니다')
+              setModalOn2(!modalOn2)
+              setModalOn3(!modalOn3)
             }
+
             
             
     })
     .catch((err)=>{
       console.log(err)
     })
-                  window.location.reload()
+                 
   }
 }
 
@@ -186,6 +196,23 @@ const goodsBuyFetch=async()=>{
           </ModalItem>
         </AnswerModal>
         )}
+
+  {/* 정보알림 모달창 */}
+  {modalOn3 && (
+        <AnswerModal closeModal={() => setModalOn3(!modalOn3)}>
+          <ModalItem>
+             
+              <div>{alertMsg}</div>
+              <div className="confirm-wrapper">
+                
+                <div className="cancel" onClick={() => setModalOn3(!modalOn3)}>확인</div>
+              </div>
+
+          </ModalItem>
+        </AnswerModal>
+        )}
+
+
     </Container>
     
   )
