@@ -5,7 +5,7 @@ import SignupPage from './pages/Signup/SignupPage';
 import User from './pages/User/User';
 import ReviseUser from './pages/User/ReviseUser';
 import AdminUser from './pages/User/AdminUser';
-import ReviseAdminUser from './pages/User/ReviseAdminUser';
+import AllUsersPage from './pages/User/AllUsersPage';
 import KakaoMap from './pages/Main/MainPage';
 import Welcome from './components/Welcome';
 import NavBar from './components/NavBar';
