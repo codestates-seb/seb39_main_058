@@ -67,11 +67,29 @@ function ReviseUser() {
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.log(err))
-    navigate("/users/profile");
+      
+    if(userInfo.role === "ROLE_ADMIN") {
+      navigate("/admin-users/profile")
+    } 
+
+    if(userInfo.role === "ROLE_USER") {
+      navigate("/users/profile")
+    }
     window.location.reload();
   };
   
   console.log(userInfo)
+
+  // 회원정보 수정 취소
+  const confirmCancel = () => { 
+    if(userInfo.role === "ROLE_ADMIN") {
+      navigate("/admin-users/profile")
+    } 
+
+    if(userInfo.role === "ROLE_USER") {
+      navigate("/users/profile")
+    }
+  }
 
   // 회원탈퇴
   const userWithdraw = () => setWithdrawal(!withdrawal);
@@ -91,7 +109,7 @@ function ReviseUser() {
       navigate("/");
       window.location.reload();
   }
-  console.log(userInfo)
+  
   return (
     <Main>
       <TopBackground/>
@@ -107,7 +125,7 @@ function ReviseUser() {
           </div>
           <ReviseForm id="revise_confirm" onSubmit={handleSubmit}>
             <div className="img_wrapper">
-              <img src={userData.profileImage}/>
+              <img src={ !userData.profileImage ? "/profile.png" : userData.profileImage}/>
               <input type="text" id="image" name="image" placeholder="이미지 링크를 붙여넣으세요." onChange={ e => setProfileImg({ state: true, value: e.target.value })}/>
             </div>
             <div className="email_wrapper">
@@ -158,7 +176,7 @@ function ReviseUser() {
               <div>변경된 내용을 복구할 수 없습니다.</div>
               <div>해당 작업을 취소하시겠습니까?</div>
               <div className="confirm-wrapper">
-                <div className="confirm" onClick={() => navigate("/users/profile")}>확인</div>
+                <div className="confirm" onClick={confirmCancel}>확인</div>
                 <div className="cancel" onClick={() => setCancel(!cancel)}>취소</div>
               </div>
             </div>

@@ -44,7 +44,7 @@ function App() {
           <Route path='/users/profile' element={<User/>}/>
           <Route path='/users/profile/revise' element={<ReviseUser/>}/>
           <Route path='/admin-users/profile' element={<AdminUser/>}/>
-          <Route path='/admin-users/profile/revise' element={<ReviseAdminUser/>}/>
+          <Route path='/admin-users/all-users' element={<AllUsersPage/>}/>
           <Route path='/news/notice' element={<NewsPage/>}/>
           <Route path='/news/notice/create' element={<NewsCreate/>}/>
           <Route path='/community/forum' element={<CommunityPage/>}/>

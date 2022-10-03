@@ -1,9 +1,9 @@
 import React from 'react'
 
-function AllUsersInfo() {
+function AllUsersPage() {
   return (
     <div>AllUsersInfo</div>
   )
 }
 
-export default AllUsersInfo
+export default AllUsersPage
