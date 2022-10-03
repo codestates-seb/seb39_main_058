@@ -46,6 +46,7 @@ public class UserService {
         user.setEmail(user.getEmail());
         user.setUserName(user.getUserName());
         user.setRole("ROLE_USER");
+        user.setProfileImage("https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg");
         user.setUserStatus(User.UserStatus.USER_EXIST);
         user.setCurrentPoints(10000);
         user.setTotalPoints(10000);
@@ -70,6 +71,7 @@ public class UserService {
         Optional.ofNullable(user.getUserName()).ifPresent(findUser::setUserName);
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
         Optional.ofNullable(user.getEmail()).ifPresent(email -> findUser.setEmail(email));
+        Optional.ofNullable(user.getProfileImage()).ifPresent(profileImage -> findUser.setProfileImage(profileImage));
         return userRepository.save(findUser);
     }
 
@@ -79,6 +81,7 @@ public class UserService {
         Optional.ofNullable(user.getUserName()).ifPresent(userName -> findUser.setUserName(userName));
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
         Optional.ofNullable(user.getEmail()).ifPresent(email -> findUser.setEmail(email));
+        Optional.ofNullable(user.getProfileImage()).ifPresent(profileImage -> findUser.setProfileImage(profileImage));
         return userRepository.save(findUser);
     }
 
@@ -180,9 +183,9 @@ public class UserService {
     @Transactional
     public User updatePoints(User user, int currentPoints, int usedPoints) {
         User findUser = findVerifiedUser(user.getUserId());
-        if(currentPoints < usedPoints )
+        if(currentPoints < usedPoints)
         {
-            throw  new BusinessLogicException(ExceptionCode.valueOf("NOT_ENOUGH_POINTS"));
+            throw  new BusinessLogicException(ExceptionCode.NOT_ENOUGH_POINTS);
         }
         findUser.setCurrentPoints(currentPoints-usedPoints);
         return userRepository.save(findUser);

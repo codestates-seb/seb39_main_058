@@ -31,6 +31,7 @@ public class UserDto {
         @Email
         private String email;
 
+
     }
 
     @Data
@@ -65,6 +66,8 @@ public class UserDto {
 
         private String email;
 
+        private String profileImage;
+
     }
 
     @AllArgsConstructor
@@ -83,7 +86,7 @@ public class UserDto {
         private String role;
         private int currentPoints;
         private int totalPoints;
-        private String image;
+        private String profileImage;
         private LocalDateTime dateCreated;
 
         private LocalDateTime dateModified;
