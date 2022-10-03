@@ -15,7 +15,7 @@ function CommunityPage() {
   const [tags, setTags] = useState([])
   const [data, setData] = useState([])
   const [search, setSearch] = useState({
-    select : "제목",
+    select : "title",
     content : ''
   })
   const [total, setTotal] = useState(null)
@@ -56,7 +56,7 @@ function CommunityPage() {
 
   const handleSearchButton = () => {
     if(search.content !== undefined){
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search?page=1&size=20&keyword=${search.content}`)
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search/${search.select}?page=1&size=20&${search.select}=${search.content}`)
       .then(res => res.json())
       .then(res => {
         setData(res.data)
@@ -64,7 +64,7 @@ function CommunityPage() {
       })
     }
     window.scrollTo(0, 0);
-    setSearch({select : "제목" , content : ""})
+    setSearch({select : "title" , content : ""})
   }
 
   const handleEnter = (e) => {
@@ -144,12 +144,12 @@ function CommunityPage() {
           <PageNation data={data} total={total}/>
         </div>
         <div className='search_container'>
-          <select onChange={e => setSearch({select : e.target.value, content : search.select})}>
-            <option>제목</option>
-            <option>내용</option>
-            <option>작성자</option>
+          <select onChange={e => setSearch({select : e.target.value, content : search.content})}>
+            <option>title</option>
+            <option>text</option>
+            <option>username</option>
           </select>
-          <input onKeyDown={handleEnter} type='search' value={search.content} onChange={e => setSearch({select : search.select, content : e.target.value})} />
+          <input onKeyDown={handleEnter} type='search' onChange={e => setSearch({select : search.select, content : e.target.value})} />
           <span onClick={() => {
             handleSearchButton()
             }}><FaSearch /></span>
