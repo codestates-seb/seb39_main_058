@@ -15,10 +15,11 @@ function ReviseUser() {
 
   const [ userData, setUserData ] = useState({});
 
+  const [ email, setEmail ] = useState({ state: false, value: ""});
+  const [ userName, setUserName ] = useState({ state: false, value: ""});
+  const [ password, setPassword ] = useState({ state: false, value: ""});
+  const [ fillout, setFillout ] = useState(false);
   const [ cancel, setCancel ] = useState(false);
-  const [ email, setEmail ] = useState("");
-  const [ userName, setUserName ] = useState("");
-  const [ password, setPassword ] = useState("");
 
   useEffect(() => {
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`,{
@@ -34,12 +35,19 @@ function ReviseUser() {
   }, []);
 
   const reviseUserInfo = {
-    "userName" : userName,
-    "password" : password,
-    "email": email,
+    "userName" : userName.value,
+    "password" : password.value,
+    "email": email.value,
   }
 
+  // 회원정보 수정 '확인'버튼
   const handleSubmit = (e) => {
+    if(!email.state || !userName.state || !password.state) {
+      setFillout(!fillout);
+      e.preventDefault();
+      return
+    }
+
     e.preventDefault();
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
       method: "PATCH",
@@ -55,7 +63,7 @@ function ReviseUser() {
     navigate("/users/profile");
     window.location.reload();
   };
-
+  console.log(userData)
   return (
     <Main>
       <TopBackground/>
@@ -72,38 +80,49 @@ function ReviseUser() {
           <ReviseForm id="revise_confirm" onSubmit={handleSubmit}>
             <div className="email_wrapper">
               <label htmlFor="email">이메일</label>
-              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." onChange={ e => setEmail(e.target.value)}/>
+              <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." onChange={ e => setEmail({ state: true, value: e.target.value })}/>
             </div>
             <div className="user_name_wrapper">
               <label htmlFor="user_name">닉네임</label>
-              <input type="text" id="user_name" name="user_name" placeholder="닉네임을 입력하세요." onChange={ e => setUserName(e.target.value)}/>
+              <input type="text" id="user_name" name="user_name" placeholder="닉네임을 입력하세요." onChange={ e => setUserName({ state: true, value: e.target.value })}/>
             </div>
             <div className="password_wrapper">
               <label htmlFor="password">비밀번호</label>
-              <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword(e.target.value)}/>
+              <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword({ state: true, value: e.target.value })}/>
             </div>
           </ReviseForm>
           <ButtonWrapper>
             <button className="revise_confirm" form="revise_confirm">확인</button>
             <button className="revise_cancel" onClick={() => setCancel(!cancel)} >취소</button>
           </ButtonWrapper>
-          {/* <div className='etc'>
+          <div className='etc'>
             <div>
               <a target='_black' href='https://github.com/codestates-seb/seb39_main_058'>
-                <AiFillGithub className='icons' style={{padding: "0 3vmin", color: "black", fontSize: "3rem"}}/></a>
+                <AiFillGithub className='icons' /></a>
               <a target='_black' href='https://www.notion.so/Team-Home-9761d432bafc478d929cef24b4878bfa'>
-                <SiNotion className='icons' style={{padding: "0 3vmin", color: "black", fontSize: "3rem"}}/></a>
+                <SiNotion className='icons' /></a>
             </div>
             <p>@Copyright LCS. All right reserved.</p>
-          </div> */}
+          </div>
         </ReviseInfo>
-       
+        
+        {/* 빈 칸 경고 모달창 */}
+        { fillout && <RemoveModal>
+            <div className="delete-warning">
+              <ImWarning className="delete-warning-icon"/>
+              <div>빈 칸은 수정이 불가합니다.</div>
+              <div>모든 칸을 채워주세요.</div>
+              <div className="confirm-wrapper">
+                <div className="cancel" onClick={() => setFillout(!fillout)}>확인</div>
+              </div>
+            </div>
+        </RemoveModal>}
 
         {/* 삭제 모달창 */}
         { cancel && <RemoveModal>
             <div className="delete-warning">
               <ImWarning className="delete-warning-icon"/>
-              <div>삭제 이후 복구할 수 없습니다.</div>
+              <div>변경된 내용을 복구할 수 없습니다.</div>
               <div>해당 작업을 취소하시겠습니까?</div>
               <div className="confirm-wrapper">
                 <div className="confirm" onClick={() => navigate("/users/profile")}>확인</div>
@@ -135,7 +154,8 @@ const ReviseInfo = styled.div`
   width: 60vw;
   height: 80vh;
   @media (max-width: 800px) {
-    height: 70vh;
+    width: 70vw;
+    height: 75vh;
   }
 
   .revise_title {
@@ -155,6 +175,15 @@ const ReviseInfo = styled.div`
 
   .etc {
     margin-top: 5rem;
+    .icons {
+      padding: 0 3vmin;
+      color: black;
+      font-size: 6vmin;
+    }
+
+    p {
+      font-size: 2vmin;
+    }
   }
 `;
 
