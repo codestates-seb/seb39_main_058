@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom'
 import styled from "styled-components";
 
-
+const googleback='http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google'
 const REDIRECT_URI='http://localhost:3000/login/'
 ///////////카카오
   const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
@@ -105,7 +105,7 @@ const getGoogleAccess=()=>{
 
 useEffect(()=>{
   kakaoOauth();
-  getGoogleAccess()
+  // getGoogleAccess()
 },[kakaoCode])
 
 
@@ -124,7 +124,7 @@ useEffect(()=>{
     </LinkStyle>
 
 
-   <LinkStyle href={GoogleLogin}>
+   <LinkStyle href={googleback}>
 
     <KakaoLoginButton >
         <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>

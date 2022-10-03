@@ -5,16 +5,16 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GoodsDetail from './GoodsDetail';
-
 const GoodsPage = () => {
 const [userInfo,setUserInfo]=useState({
   userName:'',
   point:'',
 });
+const [goodsList,setGoodsList]=useState([])
 const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken);
 const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
-
+//유저정보 불러오기
   const getUserInfo=async()=>{
     if(accesstoken){
 
@@ -27,18 +27,45 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
       .then(data => {
         
         // console.log('data',data)
-        setUserInfo({userName: data.data.userName,point: data.data.point}) 
+        setUserInfo({userName: data.data.userName,point: data.data.currentPoints}) 
       }
       
       )
       
     }
+  
+    //     await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
+    // .then(res => res.json())
+    // .then((data)=>{
+    // console.log('상품리스트',data)
+    // setGoodsList(data.data)
+    // })
+    
 
   }
 
 
-  useEffect(()=>{
-    getUserInfo()
+//상품정보 불러오기 
+const getGoodsList=async()=>{
+await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
+.then(res => res.json())
+.then((data)=>{
+ console.log('상품리스트',data)
+ setGoodsList(data.data)
+
+})
+
+}
+
+
+
+
+
+
+useEffect(()=>{
+    getGoodsList();
+    getUserInfo();
+   
   },[])
 
 
@@ -63,26 +90,35 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   
 
   <GoodsCart>
-    쇼핑카트
+    장바구니
     <GooodsCartHeader>
       <div className='goodsName'>상품명
         
       </div>
-
       <div className='goodsPrice'>가격
        
 
       </div>
+      <div className='goodsQuantity'>수량
 
-      <div>수량</div>
-      <div>합계</div>
-      <div>삭제</div>
+      </div>
+      <div className='goodsTotalPrice'>합계
+
+      </div>
+      <div className='goodsDelete'>삭제
+
+      </div>
     </GooodsCartHeader>
   </GoodsCart>  
+<GoodsList>
+상품리스트
 
-  <GoodsList>
-    <GoodsDetail/>
-  </GoodsList>
+    {console.log('렌더상품리스트',goodsList)}
+    {goodsList.map((item)=>{
+      return <GoodsDetail key={item.goodsId} item={item}/>
+    })}
+</GoodsList>
+  
 </Container>
 
 
@@ -92,10 +128,9 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 export default GoodsPage
 const Container=styled.div`
 display: flex;
-height: 90vh;
+height: 100%;
 /* justify-content: center; */
-width: 100vw;
-
+width: 100%;
 align-items: center;
 flex-direction: column;
 white-space: nowrap;
@@ -107,7 +142,7 @@ text-align : center;
 
 
 @media (max-width: 550px) {
-            
+          margin-top: 50px;
            width: 90%;
           
 
@@ -144,7 +179,15 @@ justify-content: space-between;
 
 const GoodsCart=styled.div`
   width: 80%;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  border: 1px solid;
+  @media (max-width: 550px) {          
+           width: 90%;
+          
 
+          
+      }
 
 `
 const GooodsCartHeader=styled.div`
@@ -156,13 +199,30 @@ const GooodsCartHeader=styled.div`
     width: 50%;
   }
   .goodsPrice{
-    width: 20%;
+    width: 15%;
   }
-
-
+  .goodsQuantity{
+    width: 10%;
+  }
+  .goodsTotalPrice{
+    width: 15%;
+  }
+  .goodsDelete{
+    width: 10%;
+  }
   
 `
 
 
 const GoodsList=styled.div`
+width: 80%;
+/* padding-bottom: 30px; */
+margin-bottom: 30px;
+@media (max-width: 550px) {
+            
+            width: 90%;
+           
+ 
+           
+       }
 `
