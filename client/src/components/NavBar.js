@@ -203,11 +203,10 @@ const MobileSideBar = styled.div`
     .side_bar_back{
         position: fixed;
         width: 100%;
-        height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 10;
         white-space: nowrap;
-        top: 6.8vh;
+        top: 6vh;
         bottom: 0;
         left: 0;
         right: 0;

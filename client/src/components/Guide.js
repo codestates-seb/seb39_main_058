@@ -69,6 +69,10 @@ const GuideStyle = styled.div`
   color: white;
   font-size: 5vmin;
 
+  *{
+    white-space: pre-line;
+  }
+
   .fast{
     margin-left: 20vw;
     color: red;
@@ -88,7 +92,7 @@ const GuideStyle = styled.div`
   .content{
     position: absolute;
     bottom: 12vh;
-    left: 20vw;
+    left: 13vw;
   }
 
   .content2{
