@@ -93,6 +93,10 @@ public class ForumService {
     public Page<Forum> findUsername(String username, int page, int size) {
         User user = userService.findUserWithUserName(username);
         long userId = user.getUserId();
+        if (userId == 0) {
+            return null;
+        }
+        userService.findUserWithId(userId);     //이러면 null값 반환이 안될듯??
         return forumRepository.findByForumUserId(userId,PageRequest.of(page, size));
     }
 

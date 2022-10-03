@@ -43,6 +43,7 @@ public class Forum extends BaseEntity {
     @OneToMany(mappedBy = "forum", cascade = CascadeType.REMOVE)
     private List<LikeForum> likeForums = new ArrayList<>();
 
+
     //유저와 게시글을 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")

@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/goods/**")
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**","/news/event/**","/news/notice/**")
+                .antMatchers(HttpMethod.GET,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/take/**","/orders/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")

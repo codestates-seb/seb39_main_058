@@ -30,7 +30,7 @@ public class Comment extends BaseEntity {
 
 
     //Forum Table Mapping
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "FORUM_ID")
     private Forum forum;
 

@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/community/forum/like")
+@RequestMapping("/community/forum")
 public class likeForumController {
     private LikeForumService likeForumService;
     private LikeForumMapper mapper;
@@ -32,8 +32,8 @@ public class likeForumController {
     }
 
 
-    @PostMapping
-    public ResponseEntity createLikeForum(@Valid LikeForumPostDto likeForumPostDto) {
+    @PostMapping("/take/like")
+    public ResponseEntity createLikeForum(@Valid @RequestBody LikeForumPostDto likeForumPostDto) {
         LikeForum likeForum = likeForumService.createLike(mapper.LikeForumPostDtoToLikeForum(likeForumPostDto));
 
         return new ResponseEntity<>(
@@ -52,7 +52,7 @@ public class likeForumController {
 //        );
 //    }
 
-    @DeleteMapping("/{user-id}")
+    @DeleteMapping("/take/like/{user-id}")
     public ResponseEntity deleteLikeForum(@PathVariable("user-id") @Positive long userId) {
         likeForumService.deleteLike(userId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
