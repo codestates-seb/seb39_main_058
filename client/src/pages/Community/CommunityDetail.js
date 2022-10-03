@@ -591,11 +591,11 @@ export const RemoveModal = styled.div`
     justify-content: space-evenly;
     align-items: center;
     background-color: white;
-    width: 40vw;
-    height: 25vh;
+    width: 70vw;
+    height: 45vh;
     border-radius: 10px;
     font-family: Jua, serif;
-    font-size: 3vmin;
+    font-size: 4vmin;
   }
 
   .confirm-wrapper {

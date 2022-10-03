@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components"
 import { TopBackground, UserContainer } from "./User"
@@ -12,12 +12,18 @@ function ReviseUser() {
   
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [ userData, setUserData ] = useState({});
 
   const [ email, setEmail ] = useState({ state: false, value: ""});
   const [ userName, setUserName ] = useState({ state: false, value: ""});
   const [ password, setPassword ] = useState({ state: false, value: ""});
+  const [ profileImg, setProfileImg ] = useState({ state: false, value: ""})
+
+  const [ withdrawal, setWithdrawal ] = useState(false);
+  const [ logout, setLogout ] = useState(false);
+
   const [ fillout, setFillout ] = useState(false);
   const [ cancel, setCancel ] = useState(false);
 
@@ -38,11 +44,12 @@ function ReviseUser() {
     "userName" : userName.value,
     "password" : password.value,
     "email": email.value,
+    "profileImage": profileImg.value
   }
 
-  // 회원정보 수정 '확인'버튼
+  // 회원정보 수정
   const handleSubmit = (e) => {
-    if(!email.state || !userName.state || !password.state) {
+    if(!profileImg.state || !email.state || !userName.state || !password.state) {
       setFillout(!fillout);
       e.preventDefault();
       return
@@ -63,7 +70,28 @@ function ReviseUser() {
     navigate("/users/profile");
     window.location.reload();
   };
-  console.log(userData)
+  
+  console.log(userInfo)
+
+  // 회원탈퇴
+  const userWithdraw = () => setWithdrawal(!withdrawal);
+  const confirmWithdrawal = () => {
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/signout/`, {
+          method: "DELETE",
+          headers: {
+          "Authorization": `Bearer ${userInfo.accessToken}`,
+          "Content-Type": "application/json"
+          }
+      })
+          .then(res => res.json())
+          .then(data => console.log(data))
+          .catch(err => console.log(err))
+      dispatch({type: "LOGOUT"})
+      setLogout(false);
+      navigate("/");
+      window.location.reload();
+  }
+  console.log(userInfo)
   return (
     <Main>
       <TopBackground/>
@@ -72,12 +100,16 @@ function ReviseUser() {
           <div className="revise_title">
             <span>회원정보 수정</span>
           </div>
-          <ul>
-            <li>개인정보 변경을 통해 내정보를 안전하게 보호하세요.</li>
-            <li><span style={{color: "#ff4500"}}>다른 사이트에서 사용한 적 없는 이메일/비밀번호</span>가 안전합니다.</li>
-            <li><span style={{color: "#ff4500"}}>이전에 사용한 적 없는 비밀번호</span>가 안전합니다.</li>
-          </ul>
+          <div className="revise_info">
+            <div>개인정보 변경을 통해 내정보를 안전하게 보호하세요.</div>
+            <div><span style={{color: "#ff4500"}}>다른 사이트에서 사용한 적 없는 이메일/비밀번호</span>가 안전합니다.</div>
+            <div><span style={{color: "#ff4500"}}>이전에 사용한 적 없는 비밀번호</span>가 안전합니다.</div>
+          </div>
           <ReviseForm id="revise_confirm" onSubmit={handleSubmit}>
+            <div className="img_wrapper">
+              <img src={userData.profileImage}/>
+              <input type="text" id="image" name="image" placeholder="이미지 링크를 붙여넣으세요." onChange={ e => setProfileImg({ state: true, value: e.target.value })}/>
+            </div>
             <div className="email_wrapper">
               <label htmlFor="email">이메일</label>
               <input type="text" id="email" name="email" placeholder="이메일을 입력하세요." onChange={ e => setEmail({ state: true, value: e.target.value })}/>
@@ -91,6 +123,7 @@ function ReviseUser() {
               <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword({ state: true, value: e.target.value })}/>
             </div>
           </ReviseForm>
+            <div className="withdrawal_btn" onClick={() => setWithdrawal(!withdrawal)}>회원탈퇴</div>
           <ButtonWrapper>
             <button className="revise_confirm" form="revise_confirm">확인</button>
             <button className="revise_cancel" onClick={() => setCancel(!cancel)} >취소</button>
@@ -111,7 +144,7 @@ function ReviseUser() {
             <div className="delete-warning">
               <ImWarning className="delete-warning-icon"/>
               <div>빈 칸은 수정이 불가합니다.</div>
-              <div>모든 칸을 채워주세요.</div>
+              <div>모든 정보를 채워주세요.</div>
               <div className="confirm-wrapper">
                 <div className="cancel" onClick={() => setFillout(!fillout)}>확인</div>
               </div>
@@ -127,6 +160,20 @@ function ReviseUser() {
               <div className="confirm-wrapper">
                 <div className="confirm" onClick={() => navigate("/users/profile")}>확인</div>
                 <div className="cancel" onClick={() => setCancel(!cancel)}>취소</div>
+              </div>
+            </div>
+        </RemoveModal>}
+
+        {/* 회원탈퇴 모달창 */}
+        { withdrawal && <RemoveModal>
+            <div className="delete-warning">
+              <ImWarning className="delete-warning-icon"/>
+              <div>회원탈퇴 시, 회원님의 모든 정보가 삭제되며,</div>
+              <div>삭제된 정보는 복구가 불가합니다.</div>
+              <div>정말 회원탈퇴를 하시겠습니까?</div>
+              <div className="confirm-wrapper">
+                <div className="confirm" onClick={confirmWithdrawal}>확인</div>
+                <div className="cancel" onClick={() => setWithdrawal(!withdrawal)}>취소</div>
               </div>
             </div>
         </RemoveModal>}
@@ -152,10 +199,10 @@ const ReviseInfo = styled.div`
   border: 1px solid lightgray;
   padding: 10px;
   width: 60vw;
-  height: 80vh;
+  height: 100vh;
   @media (max-width: 800px) {
     width: 70vw;
-    height: 75vh;
+    /* height: 75vh; */
   }
 
   .revise_title {
@@ -167,7 +214,7 @@ const ReviseInfo = styled.div`
     margin: 10px;
   }
 
-  ul > li {
+  .revise_info > div {
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.5vmin;
     margin: 5px 0;
@@ -185,19 +232,48 @@ const ReviseInfo = styled.div`
       font-size: 2vmin;
     }
   }
+
+  .withdrawal_btn {
+    margin: 1rem;
+    padding: 1vmin 4vmin;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    &:hover {
+        color: black;
+        background-color: lightgray;
+        border: 1px solid lightgray;
+    }
+  }
 `;
 
 const ReviseForm = styled.form`
   padding: 2rem;
   font-family: 'Courier New', Courier, monospace;
 
-  .email_wrapper, .user_name_wrapper, .password_wrapper {
+  .img_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 8vw;
+      height: 8vh;
+      border: 2px solid rgb(71, 182, 181);
+      border-radius: 50%;
+      margin: 15px;
+    }
+  }
+
+  .img_wrapper, .email_wrapper, .user_name_wrapper, .password_wrapper {
     padding: 10px 0;
-        
+    
     label {
       font-size: 2vmin;
       margin: 30px;
       @media (max-width: 800px) {
+        font-size: 3vmin;
         margin: 10px;
       }
     }
@@ -239,33 +315,33 @@ const ReviseForm = styled.form`
 
 const ButtonWrapper = styled.div`
   .revise_confirm {
-        margin: 1rem;
-        padding: 1vmin 4vmin;
-        border-radius: 1rem;
-        border: 1px solid gray;
-        background-color: #38d9a9;
+    margin: 1rem;
+    padding: 1vmin 4vmin;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    background-color: #38d9a9;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
         color: white;
-        font-size: 15px;
-        cursor: pointer;
-        &:hover {
-            color: white;
-            background-color: rgb(71,182,181);
-            border: 1px solid rgb(71,182,181);
-        }
+        background-color: rgb(71,182,181);
+        border: 1px solid rgb(71,182,181);
     }
+  }
 
-    .revise_cancel {
-        margin: 1rem;
-        padding: 1vmin 4vmin;
-        border-radius: 1rem;
-        border: 1px solid gray;
-        font-size: 15px;
-        cursor: pointer;
-        &:hover {
-            color: black;
-            background-color: lightgray;
-            border: 1px solid lightgray;
-        }
+  .revise_cancel {
+    margin: 1rem;
+    padding: 1vmin 4vmin;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+        color: black;
+        background-color: lightgray;
+        border: 1px solid lightgray;
     }
+  }
 
 `;
