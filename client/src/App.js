@@ -5,7 +5,7 @@ import SignupPage from './pages/Signup/SignupPage';
 import User from './pages/User/User';
 import ReviseUser from './pages/User/ReviseUser';
 import AdminUser from './pages/User/AdminUser';
-import ReviseAdminUser from './pages/User/ReviseAdminUser';
+import AllUsersPage from './pages/User/AllUsersPage';
 import KakaoMap from './pages/Main/MainPage';
 import Welcome from './components/Welcome';
 import NavBar from './components/NavBar';
@@ -44,7 +44,7 @@ function App() {
           <Route path='/users/profile' element={<User/>}/>
           <Route path='/users/profile/revise' element={<ReviseUser/>}/>
           <Route path='/admin-users/profile' element={<AdminUser/>}/>
-          <Route path='/admin-users/profile/revise' element={<ReviseAdminUser/>}/>
+          <Route path='/admin-users/all-users' element={<AllUsersPage/>}/>
           <Route path='/news/notice' element={<NewsPage/>}/>
           <Route path='/news/notice/create' element={<NewsCreate/>}/>
           <Route path='/community/forum' element={<CommunityPage/>}/>
