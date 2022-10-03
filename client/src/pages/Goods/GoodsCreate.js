@@ -13,7 +13,7 @@ const GoodsCreate = () => {
  
   const goodsPost=(e)=>{
     e.preventDefault();
-    console.log(`상품등록되냐`,e.target.goodsName.value)
+    
     if(role==="ROLE_ADMIN"&&spaceCheck(e.target.goodsName.value)&&spaceCheck(e.target.goodsText.value)&&spaceCheck(e.target.price.value)&&spaceCheck(e.target.goodsImage.value)&&spaceCheck(e.target.goodsStatus.value)===true){
       const goodsInfo={
         "goodsName" : e.target.goodsName.value,
@@ -30,7 +30,7 @@ const GoodsCreate = () => {
     })
   .then((res) => res.json())
     .then((data)=>{
-      console.log('전송완료데이타',data)
+      // console.log('전송완료데이타',data)
             if(data.error==='Unauthorized'){
               alert('세션이 만료되었습니다.')
               navigate('/login',{state: {path:location.pathname}})
