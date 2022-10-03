@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GoodsDetail from './GoodsDetail';
+
+
 const GoodsPage = () => {
 const [userInfo,setUserInfo]=useState({
   userName:'',
@@ -34,12 +36,7 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
       
     }
   
-    //     await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
-    // .then(res => res.json())
-    // .then((data)=>{
-    // console.log('상품리스트',data)
-    // setGoodsList(data.data)
-    // })
+  
     
 
   }
@@ -89,31 +86,11 @@ useEffect(()=>{
 
   
 
-  <GoodsCart>
-    장바구니
-    <GooodsCartHeader>
-      <div className='goodsName'>상품명
-        
-      </div>
-      <div className='goodsPrice'>가격
-       
-
-      </div>
-      <div className='goodsQuantity'>수량
-
-      </div>
-      <div className='goodsTotalPrice'>합계
-
-      </div>
-      <div className='goodsDelete'>삭제
-
-      </div>
-    </GooodsCartHeader>
-  </GoodsCart>  
+ 
 <GoodsList>
 상품리스트
 
-    {console.log('렌더상품리스트',goodsList)}
+    
     {goodsList.map((item)=>{
       return <GoodsDetail key={item.goodsId} item={item}/>
     })}
@@ -134,6 +111,15 @@ width: 100%;
 align-items: center;
 flex-direction: column;
 white-space: nowrap;
+/* margin-top: 50px; */
+
+@media (max-width: 550px) {
+          margin-top: 50px;
+           
+          
+
+          
+      }
 `
 const UserInfoContainer=styled.div`
 width: 80%;
@@ -142,7 +128,7 @@ text-align : center;
 
 
 @media (max-width: 550px) {
-          margin-top: 50px;
+          /* margin-top: 50px; */
            width: 90%;
           
 
@@ -177,41 +163,8 @@ justify-content: space-between;
 
 `
 
-const GoodsCart=styled.div`
-  width: 80%;
-  margin-top: 30px;
-  margin-bottom: 20px;
-  border: 1px solid;
-  @media (max-width: 550px) {          
-           width: 90%;
-          
 
-          
-      }
 
-`
-const GooodsCartHeader=styled.div`
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  width: 100%;
-  .goodsName{
-    width: 50%;
-  }
-  .goodsPrice{
-    width: 15%;
-  }
-  .goodsQuantity{
-    width: 10%;
-  }
-  .goodsTotalPrice{
-    width: 15%;
-  }
-  .goodsDelete{
-    width: 10%;
-  }
-  
-`
 
 
 const GoodsList=styled.div`

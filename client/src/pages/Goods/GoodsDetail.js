@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import AnswerModal from '../../components/CommunityAnswer/AnswerModal';
@@ -13,6 +13,7 @@ const [deleteGoods,SetDeleteGoods]=useState('')
 const [modalOn, setModalOn] = useState(false);
 const location = useLocation();
 const navigate=useNavigate();
+const dispatch=useDispatch();
   const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
 
@@ -60,6 +61,11 @@ const goodsDeleteFetch=async()=>{
 
 }
 
+//장바구니 등록함수
+const selectGoods=(e)=>{
+ console.log('디스패치어케보내',e.target)
+ dispatch({type:'SELECT',payload:{goodsName:e.target.name,price:e.target.value,quantity:1 }})
+}
 
 
 
@@ -84,13 +90,13 @@ const goodsDeleteFetch=async()=>{
 
         }}  name={item.goodsId}
         >삭제</button> :''}
-         {accesstoken&&item.goodsStatus==='판매중' ?<button>장바구니 담기</button>:''} 
+         {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{selectGoods(e)}} name ={item.goodsName} value={item.price}>장바구니 담기</button>:''} 
       </div>
     </GoodsInfo>
     <GoodsSelect>
 
       <div>상태:{item.goodsStatus}</div>
-      {accesstoken&&item.goodsStatus==='판매중' ?<button>장바구니 담기</button>:''} 
+      {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{selectGoods(e)}}   name ={item.goodsName} value={item.price}>장바구니 담기</button>:''} 
       {role==="ROLE_ADMIN" ?<button onClick={(e) => {
         SetDeleteGoods(e.target.name)
         setModalOn(!modalOn)
