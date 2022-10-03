@@ -26,7 +26,7 @@ public class Goods {
     private Integer price;
 
     @Column(nullable = false)
-    private String goodsStatus = GoodsStatus.GOODS_FOR_SALE.getKorStatus();
+    private String goodsStatus;
 
     private String goodsImage;
 
