@@ -3,10 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { AiFillGold } from 'react-icons/ai';
+import { FaQuestionCircle } from "react-icons/fa";
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
+import { HiPencil } from "react-icons/hi";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
+
 
 function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
@@ -18,6 +22,7 @@ function User() {
     const [ logout, setLogout ] = useState(false);
     const [ revisedInfo, setRevisedInfo ] = useState(false);
     const [ withdrawal, setWithdrawal ] = useState(false);
+    const [rank, setRank] = useState(false)
 
     useEffect(() => {
         fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
@@ -69,69 +74,121 @@ function User() {
     // console.log(userInfo)
     // console.log(userData)
 
+    const dummy = [
+        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 0},
+        {his : "치킨", date : "2022-09-13", point : "-3000", id : 1},
+        {his : "커피", date : "2022-09-12", point : "-3000", id : 2},
+        {his : "적립", date : "2022-09-11", point : "+7000", id : 3},
+        {his : "여기는", date : "2022-09-11", point : "-3000", id : 4},
+        {his : "무한스크롤", date : "2022-09-11", point : "-3000", id : 5},
+        {his : "하려구요", date : "2022-09-11", point : "+3000", id : 6},
+        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 7},
+        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 8},
+        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 9},
+        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 10}
+    ]
+
     return (
     <Main>
         <div className='wrapper'>
         <TopBackground/>
-        <UserContainer>
-            <UserPrivate>
-                <img className='user-profile' src="/profile.png" alt='profile'/>
-                <div className='user-name'><b>{userData.userName}</b>님</div>
-                <div className='user-level'>현재 등급: 실버</div>
-                <div className='user-id'>아이디: {userData.loginId}</div>
-                <div className='user-email'>이메일: {userData.email}</div>
-                <div className='user-point'>보유 포인트: {userData.currentPoints}p</div>
-                <div className='user-point'>누적 포인트: {userData.totalPoints}p</div>
-                <div className='button-wrapper'>
-                    <button className='user-logout' onClick={userLogout} > 로그아웃 </button>
-                    <button className='user-revise' onClick={userRevise}> 회원정보 수정 </button>
-                    <button className='user-withdraw' onClick={userWithdraw}> 회원탈퇴 </button>
-                </div>
-            </UserPrivate>
-            
-            <UserInfo>
-                <div className='user-status'>
-                    <h3 className='user-level'><AiFillGold className='status-icon'/>현재 등급: 실버</h3>
-                    <h3 className='user-writing'><BsPencilSquare className='status-icon'/>작성글 횟수: 3회</h3>
-                    <h3 className='user-received-likes'><FcLike className='status-icon'/>받은 추천수: 2회</h3>
-                </div>
-                <div className='user-point-history'>
-                    <div className='user-point-content'>
-                        <h3>사용내역</h3>
-                        <span>1. 쉰전 떡볶이 기프티콘 </span>
-                        <span>2. 베베큐 황금올리브 반반 기프티콘 </span>
-                        <span>3. 쓰리스타 벅스 아메리카노 기프티콘 </span>
-                        <span>4. 뚜렛주르 케이크 기프티콘 </span>
-                        <span>5. 쓰레기통 위치 오류제보</span>
+        <div className='user_info'>
+            <div className='user'>
+                <div>
+                    <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
+                        <img src={ userData.profileImage === null ? '/profile.png' : userData.profileImage}/>
+                        <HiPencil className='edit'/>
                     </div>
-                    <div className='user-point-content'>
-                        <h3>사용일자</h3>
-                        <span>2022-09-14</span>
-                        <span>2022-09-13</span>
-                        <span>2022-09-13</span>
-                        <span>2022-09-09</span>
-                        <span>2022-09-06</span>
-                    </div>
-                    <div className='user-point-content'>
-                        <h3 className='used-point'>포인트 사용</h3>
-                        <span className='used-point'>-3000p</span>
-                        <span className='used-point'>-20000p</span>
-                        <span className='used-point'>-4800p</span>
-                        <span className='used-point'>-18000p</span>
-                        <span className='used-point'>+3000p</span>
-                    </div>
-                    <div className='user-point-content'>
-                        <h3>남은 포인트</h3>
-                        <span>7777p</span>
-                        <span>10777p</span>
-                        <span>30777p</span>
-                        <span>35577p</span>
-                        <span>53577p</span>
-                        
+                    <div className='flex'>
+                        <div className='nickName'>{userInfo.userName}</div>
                     </div>
                 </div>
-            </UserInfo>
-        </UserContainer>
+                <div className='detail'>
+                    <span className='view_more'>상세보기</span>
+                    <div className='detail_content'>
+                        <p>이메일 : {userData.email}</p>
+                        <p>현재 포인트 : {userData.currentPoints}</p>
+                        <p>누적 포인트 : {userData.totalPoints}</p>
+                        <p>가입일 : {userData.dateCreated}</p>
+                    </div>
+                </div>
+            </div>
+            <div className='rank_container'>
+                <div className='flex_box icons'>
+                    <span>글 쓴 횟수</span>
+                    <BsPencilSquare className='icon'/>
+                    <span>3회</span>
+                </div>
+                <div className='flex_box'>
+                    <img src={
+                        userData.totalPoints < 10000 ? "/bronze.png" : 
+                        userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "/silver.png" :
+                        userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "/gold.png" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "/platinum.png" :
+                        userData.totalPoints <= 100000 ? "/diamond.png" : undefined} />
+                    <span>
+                        {userData.totalPoints < 10000 ? "브론즈" :
+                        userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "실버" :
+                        userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "골드" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "플래티넘" :
+                        userData.totalPoints <= 100000 ? "다이아몬드" : undefined}
+                    </span>
+                    <span className='more' onClick={() => setRank(true)}><FaQuestionCircle/></span>
+                    {rank ?
+                    <div className='back' onClick={() => setRank(false)}>
+                        <div className='view'>
+                            <li>
+                                <img src='/bronze.png' />
+                                <p>브론즈 : 누적 포인트 10,000 포인트 미만</p>
+                            </li>
+                            <li>
+                                <img src='/silver.png' />
+                                <p>실버 : 누적 포인트 10,000 포인트 이상</p>
+                            </li>
+                            <li>
+                                <img src='/gold.png' />
+                                <p>골드 : 누적 포인틑 25,000 포인트 이상</p>
+                            </li>
+                            <li>
+                                <img src='/platinum.png' />
+                                <p>플래티넘 : 누적 포인트 50,000 포인트 이상</p>
+                            </li>
+                            <li>
+                                <img src='/diamond.png' />
+                                <p>다이아몬드 : 누적 포인트 100,000 포인트 이상</p>
+                            </li>
+                        </div>
+                    </div> :
+                    undefined}
+                </div>
+                <div className='flex_box icons'>
+                    <span>누적 좋아요 수</span>
+                    <FcLike className='icon' />
+                    <span>3회</span>
+                </div>
+            </div>
+            <div className='etc'>
+                <div className='history'>
+                    <div className='bords_container'>
+                        <div className='bords_list header'>
+                            <span className='his'>내역</span>
+                            <span className='date'>날짜</span>
+                            <span className='point'>포인트</span>
+                        </div>
+                        {dummy.map(el => {
+                            return(
+                                <div className='bords_list' key={el.id}>
+                                    <span className='his'>{el.his}</span>
+                                    <span className='date'>{el.date}</span>
+                                    <span className={el.point[0] === '-' ? "point minus" : "point plus"}>{el.point}</span>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            </div>
+
+        </div>
         </div>
 
         {/* 로그아웃 모달창 */}
@@ -169,15 +226,249 @@ export default User;
 
 const Main = styled.main`
     
-    font-size: 2vmin;
+    font-size: 3vmin;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 122vh;
 
-    .wrapper {
+    .back{
+        position: fixed;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 10;
+        white-space: nowrap;
+        .view{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 10vw;
+            img{
+                width: 20vw;
+                height: 20vh;
+            }
+
+            li{
+                list-style: none;
+                display: flex;
+                align-items: center;
+                p{
+                    color: white;
+                    margin-left: 5vw;
+                    white-space: pre;
+                }
+            }
+        }
+    }
+
+    .rank_img{
+        width: 30vw;
+        height: 20vh;
+    }
+
+    .view_more{
+        position: absolute;
+        font-size: 2vmin;
+        top: 2vh;
+        right: 2vw;
+        background-color: #002B5B;
+        color: white;
+        padding: .5vh 1vw;
+        border: 0.2rem solid #395B64;
+    }
+
+    .more{
+        cursor: pointer;
+    }
+
+    .edit{
+        position: absolute;
+        top: 13%;
+        font-size: 200%;
+        display: none;
+    }
+
+    .detail_content{
+        display: none;
+        margin-top: -5vh;
+    }
+
+    .detail:hover{
+        .detail_content{
+            display: block;
+            position: relative;
+            animation: identifier 3s forwards;
+            margin-left: -20vw;
+            font-size: 2vmin;
+            white-space: nowrap;
+        }
+    }
+
+    @keyframes identifier {
+        0%{
+            padding: 0;
+            opacity: 0;
+        }
+
+        20% {
+            padding-left: 20vw;
+            padding-right: 20vw;
+        }
+
+        100%{
+            padding-left: 20vw;
+            padding-right: 20vw;
+            opacity: 1;
+        }
+    }
+
+    .rank_container{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 40vh;
+        
+        img{
+            width: 35vw;
+            height: 30vh;
+        }
+
+        .icon{
+            font-size: 7vmin;
+            padding: 3vh 0;
+        }
+    }
+
+    .flex_box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icons{
+        margin-top: 10vh;
+    }
+
+    .bords_container{
+        width: 100%;
+        overflow-y: scroll;
+        font-size: 80%;
+        margin-bottom: 5vh;
+        border: 0.1rem solid black;
+        height: 30vh
+    }
+
+    .bords_list{
+        display: flex;
+        border: 1px solid black;
+        padding: .3vh .5vw;
+        white-space: nowrap;
+    }
+
+    .header{
+        background-color: lightgray;
+        font-weight: bold;
+    }
+
+    .his{
+        width: 40%;
+    }
+
+    .minus{
+        color: red;
+    }
+
+    .plus{
+        color: blue;
+    }
+
+    .date, .point{
+        width: 30%;
+        text-align: center;
+    }
+
+    .user{
+        height: 30vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: .3rem solid rgb(64,156,155);
+
+        img{
+            width: 18vw;
+            height: 15vh;
+            border-radius: 50%;
+            margin: 0 3vw;
+            padding: 3vh 0;
+        }
+
+        .history{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+    }
+
+    .user_info{
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        position: absolute;
+        width: 85%;
+        top: 10vh;
+        border-radius: 2%;
+        padding: 2rem;
+        border: .3rem solid rgb(64,156,155);
+    }
+
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }    
+
+    .img_container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 30vw;
+        height: 20vh;
+        cursor: pointer;
+
+        :hover{
+            img{
+                opacity: 0.5;
+            }
+            .edit{
+                display: block;
+            }
+        }
+    }
+
+    .nickName{
+        font-size: 3vmin;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+    }
+
+    .flex{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: default;
+    }
     
 `;
 
@@ -191,141 +482,16 @@ export const UserContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    /* align-items: center; */
     background-color: white;
     position: absolute;
-    width: 90vw;
+    width: 88vw;
     height: 120vh;
     top: 10vh;
     border-radius: 2%;
     padding: 2rem;
 `;
 
-const UserPrivate = styled.div`
 
-    .user-profile {
-        margin: 5px 2rem;
-        border-radius: 50%;
-        width: 5em;
-        height: 5em;
-    }
-
-    > div {
-        margin: 1rem;
-        @media (max-width: 500px) {
-            margin: 0.5rem;
-        }
-    }
-
-    .user-name {
-        display: block;
-        font-size: 3vmin;
-        margin: 0.5rem;
-        cursor: pointer;
-    }
-
-    .button-wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border-top: 1px solid gray;
-        
-        .user-logout, .user-revise, .user-withdraw {
-            margin: 0.5rem;
-            padding: 1vmin 4vmin;
-            border-radius: 1rem;
-            border: 1px solid gray;
-            background-color: white;
-            font-size: 1.5vmin;
-            cursor: pointer;
-            &:hover {
-                color: white;
-                background-color: rgb(71,182,181);
-                border: 1px solid rgb(71,182,181);
-            }
-            @media (max-width: 500px) {
-                margin: 0.2rem;
-                padding: 0.5vmin 2vmin;
-                
-            }
-        }
-    }
-`;
-
-const UserInfo = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 70vw;  
-    font-size: 2vmin;
-    .user-status {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
-        margin: 2rem;
-        border: 1px solid gray;
-        border-radius: 3rem;
-        height: 20vh;
-        @media (max-width: 950px) {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            align-items: center;
-            height: auto;
-        }
-        .user-level, .user-writing, .user-received-likes {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            @media (max-width: 950px) {
-                display: flex;
-                flex-direction: row;
-                margin: 0;
-            }
-        }
-
-        .status-icon {
-            padding: 10px;
-            width: 5vw;
-            height: 5vh;
-        }
-
-    }
-
-    .user-point-history {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        margin: 2rem;
-        border: 1px solid gray;
-        border-radius: 3rem;
-        height: 70vh;
-        @media (max-width: 950px) {
-            padding: 1rem;
-            height: 15vh;
-            font-size: .7rem;
-        }
-        @media (max-width: 650px) {
-            font-size: .3rem;
-        }
-
-        .user-point-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly;
-            & > h3 {
-                text-align: center;
-            }
-            @media (max-width: 1050px) {
-                .used-point {
-                    display: none;
-                }
-            }
-        }
-    }
-`;
 
 // 로그아웃 모달창
 const LogoutStyle = styled.div`

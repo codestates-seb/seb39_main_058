@@ -85,6 +85,7 @@ const Main = styled.main`
     @media (max-width: 550px) {
         height: 115vh;
     }
+    margin-top: 5vh;
 
     .container {
         display: flex;

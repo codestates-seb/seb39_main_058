@@ -136,6 +136,7 @@ const NewsPage = () => {
       dataLength={totalElements}
       next = {scrollChange}
       hasMore = {true}
+      loader={data.length < totalElements ? <h2>Loading...</h2> : undefined}
       >
         {data.map(el => {
           return(
@@ -195,6 +196,12 @@ const NewsStyle = styled.div`
   width: 100%;
   border-radius: 30px;
   user-select: none;
+  margin-top: 5vh;
+  
+  h2{
+    display: flex;
+    justify-content: center;
+  }
 
   .edit_view{
     background-color: white;

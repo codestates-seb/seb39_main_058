@@ -76,7 +76,10 @@ function NavBar({welcome}) {
                 <div className='section'>
                     <div className='title'>포인트교환</div>
                     <div>
-                        <li>포인트교환</li>
+                        <li onClick={() => {
+                            navigate('/goods')
+                            setMenu(false)
+                            }}>포인트교환</li>
                     </div>
                 </div>
                 <div className='section'>
@@ -122,7 +125,7 @@ function NavBar({welcome}) {
             </div>
             <div>포인트교환
                 <div className='drop'>
-                    <li>포인트교환</li>
+                    <li><Link to='/goods'>포인트교환</Link></li>
                 </div>
             </div>
             <div>소식
@@ -136,7 +139,7 @@ function NavBar({welcome}) {
             <div>마이페이지
                 <div className='drop'>
                     <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
-                    {userInfo.role === "ROLE_ADMIN" ? <li>관리자</li> : undefined}
+                    {userInfo.role === "ROLE_ADMIN" ? <li><Link to='/admin-users/profile'>관리자</Link></li> : undefined}
                 </div>
             </div>}
             {!userInfo.accessToken ?
