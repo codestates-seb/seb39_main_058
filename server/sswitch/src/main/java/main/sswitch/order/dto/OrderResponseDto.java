@@ -18,11 +18,7 @@ public class OrderResponseDto {
 
     private String userName;
 
-    private int price;
-
-    private int totalPrice;
-
-    private String orderStatus;
+    private String totalPrice;
 
     private LocalDateTime createdAt;
 

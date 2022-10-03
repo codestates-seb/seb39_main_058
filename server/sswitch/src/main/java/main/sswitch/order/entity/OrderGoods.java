@@ -6,6 +6,8 @@ import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,11 +28,11 @@ public class OrderGoods extends BaseEntity {
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "GOODS_ID")
     private Goods goods;
-
     @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    private String giftCode;
 
     public void addOrder(Order order) {
         this.order = order;

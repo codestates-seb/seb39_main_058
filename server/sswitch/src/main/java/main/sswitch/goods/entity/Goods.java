@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.sswitch.order.entity.OrderGoods;
-import main.sswitch.user.entity.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class Goods {
     private String goodsStatus;
 
     private String goodsImage;
-
     @OneToMany(mappedBy = "goods", cascade = CascadeType.REMOVE)
     private List<OrderGoods> orderGoodsList = new ArrayList<>();
 

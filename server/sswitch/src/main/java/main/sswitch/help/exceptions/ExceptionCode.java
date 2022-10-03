@@ -4,47 +4,48 @@ import lombok.Getter;
 
 public enum ExceptionCode {
     ACCESS_DENIED(403, "You are not Authorized"),
-    TRASHCAN_NOT_FOUND(404, "TrashCan not exist"),
-    TRASHCAN_EXISTS(409, "TrashCan exists"),
+    TRASHCAN_NOT_FOUND(404, "TrashCan Not Exist"),
+    TRASHCAN_EXISTS(409, "TrashCan Exists"),
     TRASHCAN_ALREADY_FULL(409, "TrashCan already full"),
-    NOTICE_NOT_FOUND(404, "Notice not exist"),
-    NOTICE_EXISTS(409, "Notice exists"),
+    NOTICE_NOT_FOUND(404, "Notice Not Exist"),
+    NOTICE_EXISTS(409, "Notice Exists"),
 
-    EVENT_NOT_FOUND(404, "Event not found"),
+    EVENT_NOT_FOUND(404, "Event Not Found"),
 
-    EVETN_EXISTS(409, "Event already Exist"),
-    FORUM_NOT_FOUND(404, "Forum not exist"),
-    LIKE_FORUM_NOT_FOUND(404, "LikeForum not exist"),
+    EVETN_EXISTS(409, "Event Already Exist"),
+    FORUM_NOT_FOUND(404, "Forum Not Exist"),
+    LIKE_FORUM_NOT_FOUND(404, "LikeForum Not Exist"),
 
-    FORUM_EXISTS(409, "Forum exists"),
-    COMMENT_NOT_FOUND(404, "Comment not found"),
+    FORUM_EXISTS(409, "Forum Exists"),
+    COMMENT_NOT_FOUND(404, "Comment Not Found"),
 
-    RESULT_NOT_FOUND(404, "Result not exist"),
+    RESULT_NOT_FOUND(404, "Result Not Exist"),
 
-    USER_NOT_FOUND(404, "User not found"),
+    USER_NOT_FOUND(404, "User Not Found"),
 
-    USER_EXISTS(409, "User exists"),
+    USER_EXISTS(409, "User Exists"),
 
-    PASSWORD_NOT_FOUND(404, "Wrong password"),
+    PASSWORD_NOT_FOUND(404, "Wrong Password"),
 
-    EMAIL_EXISTS(409, "Email exists"),
+    EMAIL_EXISTS(409, "Email Exists"),
 
-    EMAIL_NOT_FOUND(404, "Email not found"),
+    EMAIL_NOT_FOUND(404, "Email Not Found"),
 
-    LOGINID_EXISTS(409, "Email exists"),
+    LOGINID_EXISTS(409, "Email Exists"),
 
-    LOGINID_NOT_FOUND(404, "Email not found"),
+    LOGINID_NOT_FOUND(404, "LoginId Not Found"),
 
-    USERNAME_NOT_FOUND(404, "Username not found"),
-    USERNAME_EXISTS(409, "Username exists"),
+    USERNAME_NOT_FOUND(404, "Username Not Found"),
+    USERNAME_EXISTS(409, "Username Exists"),
 
-    GOODS_NOT_FOUND(404, "Goods not found"),
+    GOODS_NOT_FOUND(404, "Goods Not Found"),
 
-    GOODS_EXISTS(409, "Goods exists"),
+    GOODS_EXISTS(409, "Goods Exists"),
 
-    ORDER_NOT_FOUND(404, "Order not found"),
+    ORDER_NOT_FOUND(404, "Order Not Found"),
 
-    ORDER_EXITS(409, "Order exists");
+    ORDER_EXITS(409, "Order Exists"),
+    NOT_ENOUGH_POINTS(404, "Points Not Enough");
 
 
     @Getter

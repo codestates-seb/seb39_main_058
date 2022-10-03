@@ -183,9 +183,9 @@ public class UserService {
     @Transactional
     public User updatePoints(User user, int currentPoints, int usedPoints) {
         User findUser = findVerifiedUser(user.getUserId());
-        if(currentPoints < usedPoints )
+        if(currentPoints < usedPoints)
         {
-            throw  new BusinessLogicException(ExceptionCode.valueOf("NOT_ENOUGH_POINTS"));
+            throw  new BusinessLogicException(ExceptionCode.NOT_ENOUGH_POINTS);
         }
         findUser.setCurrentPoints(currentPoints-usedPoints);
         return userRepository.save(findUser);

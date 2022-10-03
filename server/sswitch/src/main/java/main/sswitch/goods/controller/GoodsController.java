@@ -56,17 +56,6 @@ public class GoodsController {
                 HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getGoodsList(@Positive @RequestParam int page,
-                                     @Positive @RequestParam int size) {
-        Page<Goods> pageGoods = goodsService.findAllGoods(page - 1, size);
-        List<Goods> goods = pageGoods.getContent();
-
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.goodsToGoodsResponseDtos(goods),
-                        pageGoods),
-                HttpStatus.OK);
-    }
 
     @DeleteMapping("/admin/{goods-id}")
     public String deleteGoods(@PathVariable("goods-id") long goodsId) {
