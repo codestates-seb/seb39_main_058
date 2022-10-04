@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector} from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components'
 import { TopBackground } from './AdminUser'
 
 function AllUsersPage() {
 
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
+  
+
   const [ allUsers, setAllUsers ] = useState([]);
   const [ pageInfo, setPageInfo ] = useState([]);
 
@@ -24,7 +27,7 @@ function AllUsersPage() {
         .catch(err => console.log(err))
   },[])
 
-  console.log(allUsers[0])
+  console.log(allUsers)
   return (
     <>
     <Main>
@@ -68,10 +71,6 @@ const AllUsersWrapper = styled.section`
   border-radius: 20px;
   padding: 2rem;
   border: .3rem solid rgb(64,156,155);
-/* 
-  @media screen and (max-width: 500px){
-      border: none;
-  } */
 `;
 
 const EachUser = styled.div`
