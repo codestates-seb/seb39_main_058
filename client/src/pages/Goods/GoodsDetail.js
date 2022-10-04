@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import AnswerModal from '../../components/CommunityAnswer/AnswerModal';
@@ -19,7 +19,7 @@ const [modalOn3, setModalOn3] = useState(false);
 const [alertMsg,setAlertMsg]=useState('');
 const location = useLocation();
 const navigate=useNavigate();
-const dispatch=useDispatch();
+
   const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
  const usersName=useSelector(state=>state.LoginPageReducer.userinfo.userName)
