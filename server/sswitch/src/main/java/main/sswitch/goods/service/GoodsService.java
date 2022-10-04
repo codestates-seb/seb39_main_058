@@ -1,5 +1,6 @@
 package main.sswitch.goods.service;
 
+import main.sswitch.goods.dto.GoodsResponseDto;
 import main.sswitch.goods.entity.Goods;
 import main.sswitch.goods.repository.GoodsRepository;
 import main.sswitch.help.exceptions.BusinessLogicException;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,10 +51,9 @@ public class GoodsService {
         return findVerifiedGoods(goodsId);
     }
 
-//    public Page<Goods> findAllGoods(int page, int size) {
-//        return goodsRepository.findAll(PageRequest.of(page, size,
-//                Sort.by("goodsId").descending()));
-//    }
+    public List<Goods> findAllGoods() {
+        return goodsRepository.findAll();
+    }
 
     public void deleteGoods(long goodsId) {
         Goods goods = findVerifiedGoods(goodsId);
