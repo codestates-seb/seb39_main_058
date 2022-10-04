@@ -88,8 +88,6 @@ function MainPage(){
         .catch(err => console.log(err))
     }
 
-    console.log(markerClick)
-
     return (
         <MainStyle guide>
         {click && !loading ? <Loading /> : undefined }

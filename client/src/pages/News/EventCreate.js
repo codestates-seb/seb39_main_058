@@ -3,21 +3,27 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
-function EventCreate() {
+function EventCreate({edit, setEdit}) {
 
   const [imgLink, setImgLink] = useState('')
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('hi')
   }
+
+  //edit ? 패치 : 포스트
   
   return (
     <Main>
         <div className="container">
             <BoardHeader>
-                <h1>이벤트 등록</h1>
+                {edit ? <h1>이벤트 편집</h1> :
+                <h1>이벤트 등록</h1>}
             </BoardHeader>
             
             <BoardWrite>
@@ -28,6 +34,7 @@ function EventCreate() {
                             onChange={(e) => {
                                 // setWrite({title : e.target.value , content : write.content})
                             }}/>
+                        <input placeholder="이미지 링크를 입력해주세요." id="title" type="text" onChange={(e) => setImgLink(e.target.value)}/>
                     </form>
                 </div>
                 <div className="writer-content">
@@ -43,16 +50,12 @@ function EventCreate() {
             </BoardWrite>
             <ButtonWrapper>
                 <button className="writer-submit" form="board"> 등록 </button>
-                <button className="writer-cancel" onClick={() => navigate()}> 취소 </button>
+                <button className="writer-cancel" onClick={() => {
+                    !edit ? navigate("/news/event") :
+                    setEdit(false)
+                    }}> 취소 </button>
             </ButtonWrapper>
         </div>
-        <div className="link_container">
-          <div className="star">**</div>
-          <div>이미지 링크</div>
-          <input className="img_url" type="text" onChange={(e) => setImgLink(e.target.value)}/>
-          <div className="star">**</div>
-        </div>
-
     </Main>
   )
 }
@@ -66,41 +69,18 @@ const Main = styled.main`
         height: 115vh;
     }
     margin-top: 5vh;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .link_container{
-      display: flex;
-      margin-top: 5vh;
-      font-size: 3vmin;
-
-      div{
-        margin-right: 3vw;
-      }
-
-      .star{
-        color: red;
-        margin-right: -0.1vw;
-      }
-    }
-
-    .img_url{
-      width: 50vw;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 `;
 
 const BoardHeader = styled.div`
 
-    width: 90vw;
+    width: 80vw;
     border-bottom: 3px solid black;
+    margin-left: 4vw;
+
+    @media screen and (max-width: 500px){
+        margin-top: 8vh;
+    }
+
 
     h1 {
         margin-top: 2rem;
@@ -131,23 +111,25 @@ const BoardHeader = styled.div`
 `;
 
 const BoardWrite = styled.div`
-    
-    *{
-        margin: 1rem;
-    } 
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     .writer-title {
-        /* width: 85vw; */
+        width: 70vw;
         padding: 10px 20px;
         border-bottom: 2px solid lightgray;
 
-        label {
+        label, .label {
             margin: 20px;
             font-size: 2vmin;
             font-family: "Courier New", Courier, monospace;
             @media (max-width: 550px) {
                 font-size: 20px;
             }
+            width: 15vw;
         }
 
         input {
@@ -155,20 +137,20 @@ const BoardWrite = styled.div`
             height: 4vh;
             padding: 0 15px;
             font-size: 2vmin;
+            margin: 1vh 2vw;
+            border: 1px solid black;
+            
         }
     }
 
     .writer-content {
         textarea{
-            @media (max-width: 550px) {
-                width: 55vw;
-            }
-            width: 85vw;
-            height: 30vh;
-            padding: 10px 15px;
+            width: 65vw;
+            height: 20vh;
+            padding: 3px 5px;
             font-size: 2vmin;
             resize: none;
-            
+            margin-top: 3vh;
         }
     }
 `;
@@ -176,24 +158,7 @@ const BoardWrite = styled.div`
 const ButtonWrapper = styled.div`
 
     display: flex;
-
-    @media (max-width: 550px) {
-        display: flex;
-        flex-direction: column;
-        
-
-        .writer-submit {
-            width: 50vw;
-            height: 5vh;
-            
-        }
-
-        .writer-cancel {
-            width: 50vw;
-            height: 5vh;
-            
-        }
-    }
+    justify-content: center;
 
     .writer-submit {
         margin: 1rem;
