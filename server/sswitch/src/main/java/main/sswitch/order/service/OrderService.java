@@ -7,13 +7,11 @@ import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
 import main.sswitch.order.dto.OrderGoodsDto;
 import main.sswitch.order.dto.OrderPostDto;
-import main.sswitch.order.dto.OrderResponseDto;
 import main.sswitch.order.entity.Order;
 import main.sswitch.order.entity.OrderGoods;
 import main.sswitch.order.repository.OrderGoodsRepository;
 import main.sswitch.order.repository.OrderRepository;
 import main.sswitch.user.entity.User;
-import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @Service
@@ -50,13 +48,13 @@ public class OrderService {
                     .builder()
                     .user(user)
                     .goods(goods)
-                    .quantity(orderGoodsDto.getQuantity())
+                    .giftCode(UUID.randomUUID().toString())
                     .build();
             orderGoods.addOrder(order);
             orderGoodsRepository.save(orderGoods);
+            userService.updatePoints(order.getUser(), order.getUser().getCurrentPoints(), (orderGoods.getGoods().getPrice()));
         }
 
-        order.updateOrderStatus(Order.OrderStatus.ORDER_REQUEST);
         return orderRepository.save(order);
 
     }
@@ -65,29 +63,40 @@ public class OrderService {
         return findVerifiedOrder(orderId);
     }
 
+    public OrderGoods findOrderGoods(Long orderGoodsId){
+        return findVerifiedOrderGoods(orderGoodsId);
+    }
+
+    public List<OrderGoods> findOrderGoodsWithUserId(Long userId){
+        return orderGoodsRepository.findAllByUserId(userId);
+    }
+
     public Page<Order> findOrders(long userId, int page, int size){
-        User User = userService.findUserWithId(userId);
-        return orderRepository.findAllByUser(User, PageRequest.of(page, size,
+        User user = userService.findUserWithId(userId);
+        return orderRepository.findAllByUser(user, PageRequest.of(page, size,
                 Sort.by("orderId").descending()));
     }
 
     public Order updateOrder(Long orderId, String orderStatus){
         Order order = findVerifiedOrder(orderId);
-        order.updateOrderStatus(Order.OrderStatus.of(orderStatus));
         return order;
     }
 
     public void cancelOrder(Long orderId){
-        Order findOrder = findVerifiedOrder(orderId);
-        int step = findOrder.getOrderStatus().getStepNumber();
-        if(step > 2){
-            throw new BusinessLogicException(ExceptionCode.valueOf("CANNOT_CHANGE_ORDER"));
-        }
-        findOrder.updateOrderStatus(Order.OrderStatus.ORDER_CANCEL);
+        findVerifiedOrder(orderId);
+    }
+
+    public void cancelOrderGoods(Long orderGoodsId){
+        findVerifiedOrderGoods(orderGoodsId);
     }
 
     public Order findVerifiedOrder(Long orderId) {
         return orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
+    }
+
+    public OrderGoods findVerifiedOrderGoods(long orderGoodsId) {
+        return orderGoodsRepository.findById(orderGoodsId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.ORDER_NOT_FOUND));
     }
 

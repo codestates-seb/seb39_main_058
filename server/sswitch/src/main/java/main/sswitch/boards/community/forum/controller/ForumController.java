@@ -5,6 +5,7 @@ import main.sswitch.boards.community.forum.dto.ForumPatchDto;
 import main.sswitch.boards.community.forum.dto.ForumPostDto;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.forum.mapper.ForumMapper;
+import main.sswitch.boards.community.forum.repository.ForumRepository;
 import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 @RestController
@@ -24,7 +26,6 @@ import java.util.List;
 @Slf4j
 public class ForumController {
     private ForumService forumService;
-
     private ForumMapper mapper;
 
     public ForumController(ForumService forumService, ForumMapper mapper) {

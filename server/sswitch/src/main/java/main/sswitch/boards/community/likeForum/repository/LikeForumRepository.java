@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface LikeForumRepository extends JpaRepository<LikeForum, Long> {
 
-    @Query(value = "select * from LikeForum where user_id = :userId", nativeQuery = true)
+    @Query(value = "select * from like_forum where user_id = :userId", nativeQuery = true)
     Optional<LikeForum> findByUserId(long userId);
+
+    @Query(value = "select * from like_forum where user_id = :userId and forum_id =:forumId", nativeQuery = true)
+    Optional<LikeForum> findByUserAndForumId(long userId, long forumId);
 }

@@ -17,4 +17,5 @@ public class OrderPostDto {
 
     @Valid
     private List<OrderGoodsDto> orderGoodsList;
+
 }

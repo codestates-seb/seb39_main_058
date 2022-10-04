@@ -22,10 +22,8 @@ public class GoodsService {
     public Goods createGoods(Goods goods) {
 
         String goodsName = goods.getGoodsName().toUpperCase();
-
         verifyExistGoodsName(goodsName);
         goods.setGoodsName(goodsName);
-
         return goodsRepository.save(goods);
 
     }
@@ -51,10 +49,10 @@ public class GoodsService {
         return findVerifiedGoods(goodsId);
     }
 
-    public Page<Goods> findAllGoods(int page, int size) {
-        return goodsRepository.findAll(PageRequest.of(page, size,
-                Sort.by("goodsId").descending()));
-    }
+//    public Page<Goods> findAllGoods(int page, int size) {
+//        return goodsRepository.findAll(PageRequest.of(page, size,
+//                Sort.by("goodsId").descending()));
+//    }
 
     public void deleteGoods(long goodsId) {
         Goods goods = findVerifiedGoods(goodsId);

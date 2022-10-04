@@ -14,4 +14,5 @@ public class GoodsPostDto {
     @Range(min= 100, max= 1000000)
     private int price;
     private String goodsImage;
+    private String goodsStatus;
 }

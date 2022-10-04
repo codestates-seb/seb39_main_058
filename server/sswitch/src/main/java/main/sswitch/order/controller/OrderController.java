@@ -1,14 +1,16 @@
 package main.sswitch.order.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
+
 import main.sswitch.order.dto.OrderPostDto;
 import main.sswitch.order.dto.OrderResponseDto;
 import main.sswitch.order.entity.Order;
+import main.sswitch.order.entity.OrderGoods;
 import main.sswitch.order.mapper.OrderMapper;
 import main.sswitch.order.service.OrderService;
-import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,6 @@ import java.util.List;
 public class OrderController {
     private final OrderMapper mapper;
     private final OrderService orderService;
-    private final UserService userService;
 
     @PostMapping
     public ResponseEntity createOrder(@RequestBody OrderPostDto requestBody) {
@@ -42,6 +43,12 @@ public class OrderController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/orderGoods/list/{user-id}")
+    public ResponseEntity getOrderGoods(@PathVariable("user-id") @Positive long userId){
+        List<OrderGoods> orderGoods = orderService.findOrderGoodsWithUserId(userId);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.ordersToOrderGoodsResponseDto(orderGoods)), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity getOrders(@RequestParam long id,
                                     @Positive @RequestParam int page,
@@ -54,6 +61,11 @@ public class OrderController {
                 HttpStatus.OK);
     }
 
+    @DeleteMapping("/orderGoods/{order-goods-id}")
+    public ResponseEntity deleteOrderGoods(@PathVariable("order-goods-id") @Positive long orderGoodsId) {
+        orderService.cancelOrderGoods(orderGoodsId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @DeleteMapping("/{order-id}")
     public ResponseEntity cancelOrder(@PathVariable("order-id") @Positive long orderId) {
