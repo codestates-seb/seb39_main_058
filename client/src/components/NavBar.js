@@ -65,8 +65,14 @@ function NavBar({welcome}) {
                     <div className='title'>고객센터</div>
                     <div>
                         <li><a target='_black' href='http://pf.kakao.com/_puDuxj/chat'>채팅상담</a></li>
-                        <li>FAQ</li>
-                        <li>운영정책</li>
+                        <li onClick={() => {
+                            navigate('/cs/faq')
+                            setMenu(false)
+                        }}>FAQ</li>
+                        <li onClick={() => {
+                            navigate('/cs/operationpolicy')
+                            setMenu(false)
+                        }}>운영정책</li>
                         <li onClick={() => {
                             setGuide(1)
                             setMenu(false)
@@ -126,8 +132,8 @@ function NavBar({welcome}) {
             <div>고객센터
                 <div className='drop'>
                     <li><a href='http://pf.kakao.com/_puDuxj/chat' target='_black'>채팅상담</a></li>
-                    <li>FAQ</li>
-                    <li>운영정책</li>
+                    <li><Link to='/cs/faq'>FAQ</Link></li>
+                    <li><Link to='/cs/operationpolicy'>운영정책</Link></li>
                     <li onClick={() => setGuide(1)}>가이드</li>
                 </div>
             </div>
