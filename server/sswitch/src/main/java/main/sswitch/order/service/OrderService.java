@@ -63,9 +63,6 @@ public class OrderService {
         return findVerifiedOrder(orderId);
     }
 
-    public OrderGoods findOrderGoods(Long orderGoodsId){
-        return findVerifiedOrderGoods(orderGoodsId);
-    }
 
     public List<OrderGoods> findOrderGoodsWithUserId(Long userId){
         return orderGoodsRepository.findAllByUserId(userId);
@@ -75,11 +72,6 @@ public class OrderService {
         User user = userService.findUserWithId(userId);
         return orderRepository.findAllByUser(user, PageRequest.of(page, size,
                 Sort.by("orderId").descending()));
-    }
-
-    public Order updateOrder(Long orderId, String orderStatus){
-        Order order = findVerifiedOrder(orderId);
-        return order;
     }
 
     public void cancelOrder(Long orderId){
@@ -102,7 +94,7 @@ public class OrderService {
 
     public void orderInformation(OrderPostDto requestBody, User User, Order order) {
         String userName = requestBody.getUserName();
-        User findUser = userService.findUserWithUserName(userName);
+        userService.findUserWithUserName(userName);
         if(userName != null){
             order.changeUserName(userName);
         } else {

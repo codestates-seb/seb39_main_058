@@ -3,6 +3,7 @@ package main.sswitch.goods.controller;
 import lombok.Builder;
 import main.sswitch.goods.dto.GoodsPatchDto;
 import main.sswitch.goods.dto.GoodsPostDto;
+import main.sswitch.goods.dto.GoodsResponseDto;
 import main.sswitch.goods.entity.Goods;
 import main.sswitch.goods.mapper.GoodsMapper;
 import main.sswitch.goods.service.GoodsService;
@@ -11,6 +12,7 @@ import main.sswitch.help.response.dto.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +57,17 @@ public class GoodsController {
                 new SingleResponseDto<>(mapper.goodsResponseDtoToGoods(goods)),
                 HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity getAllGoods() {
+        List<Goods> goodsList = goodsService.findAllGoods();
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(mapper.goodsToGoodsResponseDtos(goodsList)),
+                HttpStatus.OK);
+    }
+
+
+
 
 
     @DeleteMapping("/admin/{goods-id}")
