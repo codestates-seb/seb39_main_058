@@ -72,6 +72,8 @@ public class UserService {
         Optional.ofNullable(user.getPassword()).ifPresent(password -> findUser.setPassword(passwordEncoder.encode(password)));
         Optional.ofNullable(user.getEmail()).ifPresent(email -> findUser.setEmail(email));
         Optional.ofNullable(user.getProfileImage()).ifPresent(profileImage -> findUser.setProfileImage(profileImage));
+        Optional.ofNullable(user.getCurrentPoints()).ifPresent(currentPoints -> findUser.setCurrentPoints(currentPoints));
+        Optional.ofNullable(user.getRole()).ifPresent(role -> findUser.setRole(role));
         return userRepository.save(findUser);
     }
 
@@ -200,6 +202,13 @@ public class UserService {
             throw  new BusinessLogicException(ExceptionCode.NOT_ENOUGH_POINTS);
         }
         findUser.setCurrentPoints(currentPoints-usedPoints);
+        return userRepository.save(findUser);
+    }
+
+    @Transactional
+    public User addPoints(User user, int totalPoints, int addedPoints) {
+        User findUser = findVerifiedUser(user.getUserId());
+        findUser.setTotalPoints(totalPoints+addedPoints);
         return userRepository.save(findUser);
     }
 
