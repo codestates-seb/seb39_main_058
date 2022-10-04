@@ -22,6 +22,7 @@ function CommunityDetail() {
   const [ title, setTitle ] = useState("");
   const [ content, setContent ] = useState("");
   const [ userName, setUserName ] = useState("");
+  const [ userId, setUserId ] = useState("");
   const [ like, setLike ] = useState(0);
   const [ secret, setSecret ] = useState("");
   const [ tag, setTag ] = useState([]);
@@ -53,6 +54,7 @@ function CommunityDetail() {
         setTitle(data.data.forumTitle);
         setContent(data.data.forumText);
         setUserName(data.data.userName);
+        setUserId(data.data.userId);
         setLike(data.data.forumLike);
         setSecret(data.data.secret);
         setTag(data.data.tag.split(',').slice(1));
@@ -70,17 +72,18 @@ function CommunityDetail() {
   };
 
   const likeBoard = {
-    "forumLike": like,
-  };
+    "forumId" : id,
+    "userId" : userInfo.userId,
+  }
 
   const backToBoard = () => navigate("/community/forum");
 
-  // 게시글 '좋아요' 버튼 -> 2022.10.01 현재 서버에서 작업중
+  // 게시글 '좋아요' 버튼 
   const addLike = () => {
-    (!like) ? setLike(like + 1) : setLike(0)
-    console.log(like)
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like/${id}`, {
-      method: "PATCH",
+    if(!like) setLike(like + 1)
+    // console.log(like)
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like`, {
+      method: "POST",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
         "Content-Type": "application/json"
@@ -89,7 +92,28 @@ function CommunityDetail() {
     })
       .then(res => res.json())
       .then(data => console.log(data))
-      // .then(like => setLike(like))
+      .catch(err => console.log(err))
+  }
+
+  // 게시글 '좋아요' 취소버튼
+  const disLike = () => {
+    if(like) setLike(0);
+
+    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like/`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${userInfo.accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(likeBoard)
+    })
+      .then(res => res.json())
+      .then((data)=>{
+        if(data.error==='Unauthorized'){
+          alert('세션이 만료되었습니다.')
+          navigate('/login',{state: {path:location.pathname}})
+        }
+      })
       .catch(err => console.log(err))
   }
 
@@ -116,7 +140,6 @@ function CommunityDetail() {
     setRevise(!revise);
   }
 
-  
   // 게시글 삭제 및 삭제 확인 버튼
   const deleteBoard = () => setRemove(!remove); 
   const confirmRemove = () => {
@@ -129,7 +152,7 @@ function CommunityDetail() {
     })
       .then(res => res.json())
       .then((data)=>{
-        if(data.error==='Unauthorized'){
+        if(data.error === 'Unauthorized') {
           alert('세션이 만료되었습니다.')
           navigate('/login',{state: {path:location.pathname}})
         }
@@ -147,8 +170,6 @@ function CommunityDetail() {
     
   // 특정 태그 선택
   const selectTag = (e) => {
-    // 만약 tag(배열)의 0번째 인덱스가 빈문자열이면, 첫 요소 잘라낸 새로운 배열 만들기
-    
     if(tags.includes(e.target.value)) {
       setTag([...tag, e.target.value]);
     }
@@ -167,7 +188,7 @@ function CommunityDetail() {
   };
 
   // console.log(userInfo)
-  console.log(data)
+  // console.log(data)
 
   return (
       <>
@@ -229,6 +250,7 @@ function CommunityDetail() {
                   }
               </div>}    
             </SelectedTag>}
+
           {/* 수정으로 인한 태그 선택 */}
           { revise && <BoardTag>
             <select name="tags" onChange={ e => selectTag(e)} >
@@ -245,16 +267,21 @@ function CommunityDetail() {
             <label htmlFor="secret">비밀글</label>
           </Secret> }
           
-          {/* 좋아요 및 수정/취소 버튼 */}
+          {/* 게시글 수정 버튼 및 좋아요 등록/취소 버튼 */}
           { revise ? 
             <RevisedButtonWrapper>
               <button className="writer-submit" onClick={confirmRevise}> 수정하기 </button>
               <button className="writer-cancel" onClick={cancelRevise}> 취소 </button>
             </RevisedButtonWrapper> :
             <ButtonContainer>
+              {/* 'like'로 판별하면 안되고, 'userId'가 있는지 여부로 판단해야함. */}
+              {!like ? 
               <button className="like-btn" onClick={addLike}>
-                {!like ? <FcLikePlaceholder className="like-btn"/> : <FcLike className="like-btn"/>}
-              </button>
+                <FcLikePlaceholder className="like-btn"/>
+              </button> :
+              <button className="like-btn" onClick={disLike}>
+                <FcLike className="like-btn"/>
+              </button>}
               {(userInfo.userName === userName) && 
                 <button className="revise-btn" onClick={reviseBoard} > 
                   <BsFillPencilFill  className="revise-btn"/> 
