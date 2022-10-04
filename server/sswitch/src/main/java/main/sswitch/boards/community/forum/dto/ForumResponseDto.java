@@ -4,6 +4,7 @@ import lombok.*;
 import main.sswitch.boards.community.comment.dto.CommentResponseDto;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.comment.entity.Comment;
+import main.sswitch.boards.community.likeForum.dto.LikeForumResponseDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
 
@@ -34,6 +35,8 @@ public class ForumResponseDto {
         private LocalDateTime dateModified;
 
         public List<CommentResponseDto> commentResponses;
+
+        public List<LikeForumResponseDto> likeForumResponses;
 
         public void setDateCreated(LocalDateTime dateCreated) {
             this.dateCreated = dateCreated;

@@ -48,8 +48,8 @@ public class UserService {
         user.setRole("ROLE_USER");
         user.setProfileImage("https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg");
         user.setUserStatus(User.UserStatus.USER_EXIST);
-        user.setCurrentPoints(1000);
-        user.setTotalPoints(1000);
+        user.setCurrentPoints(10000);
+        user.setTotalPoints(10000);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
 
         return userRepository.save(user);

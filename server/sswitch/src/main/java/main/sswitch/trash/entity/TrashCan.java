@@ -35,8 +35,11 @@ public class TrashCan extends BaseEntity {
     @Column(length = 255, nullable = false)
     private TrashStatus trashStatus = TrashStatus.TRASH_CAN_FULL;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "USER_ID")
 //    private long userId;
     //쓰레기통 등록, 수정, 삭제등의 권한
