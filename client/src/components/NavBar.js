@@ -139,7 +139,7 @@ function NavBar({welcome}) {
             <div>소식
                 <div className='drop news'>
                     <li><Link to= '/news/notice'>공지사항</Link></li>
-                    <li>이벤트</li>
+                    <li><Link to= '/news/event'>이벤트</Link></li>
                 </div>
             </div>
             {!userInfo.accessToken ?

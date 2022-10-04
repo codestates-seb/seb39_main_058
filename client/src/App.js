@@ -16,6 +16,8 @@ import CommunityDetail from './pages/Community/CommunityDetail';
 import CommunityCreate from './pages/Community/CommunityCreate';
 import GoodsPage from './pages/Goods/GoodsPage';
 import GoodsCreate from './pages/Goods/GoodsCreate';
+import Event from './pages/News/Event';
+import EventCreate from './pages/News/EventCreate';
 
 function App() {
   
@@ -52,6 +54,8 @@ function App() {
           <Route path='/community/create' element={<CommunityCreate/>}/>
           <Route path='/goods' element={<GoodsPage/>}/>
           <Route path='/goods/create' element={<GoodsCreate/>}/>
+          <Route path='/news/event' element={<Event/>}/>
+          <Route path='news/event/create' element={<EventCreate/>}/>
         </Routes>
     </div>  
   );

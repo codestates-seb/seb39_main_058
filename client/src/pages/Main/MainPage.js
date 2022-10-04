@@ -4,6 +4,7 @@ import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk
 import { BiCurrentLocation } from "react-icons/bi";
 import { GiCancel } from "react-icons/gi";
 import Loading from "../../components/Loading";
+import { useSelector } from "react-redux";
 
 function MainPage(){
 
@@ -36,6 +37,8 @@ function MainPage(){
         경도 : undefined ,
         주소 : undefined
     })
+
+    const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
     
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -64,6 +67,29 @@ function MainPage(){
         })
     };
 
+    const trashTakeCreate = () => {
+
+        const trashInfo = {
+            "userId" : userInfo.userId,
+            "latitude" : markerClick.위도,
+            "longitude" : markerClick.경도,
+            "trashStatus" : "TRASH_CAN_FULL"
+        }
+        
+        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/take/create",{
+            method : "POST",
+            headers: { 
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify(trashInfo)
+        })
+        .then(() => console.log("비워주세요"))
+        .catch(err => console.log(err))
+    }
+
+    console.log(markerClick)
+
     return (
         <MainStyle guide>
         {click && !loading ? <Loading /> : undefined }
@@ -76,10 +102,6 @@ function MainPage(){
                     { lat: initLoc.center.lat, lng: initLoc.center.lng } : 
                     { lat: myLocation.center.lat, lng: myLocation.center.lng }
                     }>
-                    {/* {myLocation.center.lat ?
-                    <CustomInfoWindow>
-                        <div className="my_location">{myLocation.center.lat ? "현재 위치" : undefined}</div>
-                    </CustomInfoWindow> : undefined} */}
                     {myLocation.center.lat ?
                     <MapMarker position={myLocation.center}>
                     <div className="my_location">
@@ -125,7 +147,9 @@ function MainPage(){
                         <div className="get_directions" 
                         onClick={() => window.open(`https://map.kakao.com/link/to/${markerClick.주소},${markerClick.위도},${markerClick.경도}`)}
                         >길찾기</div>
-                        <div className="empty">비워주세요</div>
+                        <div className="empty" onClick={() => {
+                            trashTakeCreate()
+                        }}>비워주세요</div>
                         </>
                     </div> :
                 undefined}
@@ -286,22 +310,5 @@ const MyLocationBtn = styled.div`
 
     .guide{
         display: none;
-    }
-`;
-
-const CustomInfoWindow = styled.div`
-    user-select: none;
-
-    .my_location{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: white;
-        padding: 1vh 1.5vw;
-        margin-top: -1vh;
-        border: 3px solid #277BC0;
-        cursor: default;
-        font-size: 2.5vmin;
-        border-radius: 10%;
     }
 `;
