@@ -4,6 +4,8 @@ import main.sswitch.boards.community.comment.dto.CommentResponseDto;
 import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.dto.*;
 import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.community.likeForum.dto.LikeForumResponseDto;
+import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 import org.mapstruct.Mapper;
@@ -32,6 +34,7 @@ public interface ForumMapper {
     //특정 게시글 반환 메서드
     default ForumResponseDto.GetResponse ForumToForumResponseDto(Forum forum) {
         List<Comment> comments = forum.getComments();
+        List<LikeForum> likeForums = forum.getLikeForums();
 
         ForumResponseDto.GetResponse forumResponseDto = new ForumResponseDto.GetResponse();
         forumResponseDto.setUserId(forum.getUser().getUserId());
@@ -46,6 +49,9 @@ public interface ForumMapper {
         forumResponseDto.setDateModified(forum.getDateModified());
         forumResponseDto.setCommentResponses(
                 commentsToForumResponseDto(comments)
+        );
+        forumResponseDto.setLikeForumResponses(
+                likesToForumResponseDto(likeForums)
         );
 
         return forumResponseDto;
@@ -112,4 +118,15 @@ public interface ForumMapper {
                 .collect(Collectors.toList());
     }
 
+    default List<LikeForumResponseDto> likesToForumResponseDto(List<LikeForum> likeForums) {
+        return likeForums
+                .stream()
+                .map(likeForum -> LikeForumResponseDto
+                        .builder()
+                        .likeForumId(likeForum.getLikeForumId())
+                        .forumId(likeForum.getForum().getForumId())
+                        .userId(likeForum.getUser().getUserId())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

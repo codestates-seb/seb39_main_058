@@ -59,6 +59,9 @@ public class ForumService {
         Forum findForum = findVerifiedForum(forumId);
         long likeforum = findForum.getForumLike();
         likeforum++;
+        if (likeforum >= 10) {
+            findForum.setDdabong(findForum.getDdabong() + 1);
+        }
         findForum.setForumLike(likeforum);
 
         return forumRepository.save(findForum);

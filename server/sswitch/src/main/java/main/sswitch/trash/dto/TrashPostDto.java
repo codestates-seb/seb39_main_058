@@ -21,7 +21,7 @@ public class TrashPostDto {
 
     private TrashCan.TrashStatus trashStatus;
 
-    public User setUser() {
+    public User getUser() {
         User user = new User();
         user.setUserId(userId);
         return user;
