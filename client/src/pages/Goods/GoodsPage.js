@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GoodsDetail from './GoodsDetail';
-
+import CouponBag from './CouponBag';
 
 const GoodsPage = () => {
 const [userInfo,setUserInfo]=useState({
@@ -13,8 +13,10 @@ const [userInfo,setUserInfo]=useState({
   point:'',
 });
 const [goodsList,setGoodsList]=useState([])
+const [seeCoupon,setSeeCoupon]=useState(false)
 const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken);
 const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
+
 
 //유저정보 불러오기
   const getUserInfo=async()=>{
@@ -47,7 +49,7 @@ const getGoodsList=async()=>{
 await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
 .then(res => res.json())
 .then((data)=>{
-//  console.log('상품리스트',data)
+ console.log('상품리스트',data)
  setGoodsList(data.data)
 
 })
@@ -84,17 +86,22 @@ useEffect(()=>{
         
   </UserInfoContainer>
 
-  
+  <CouponBagContainer>
+    <CouponBagHead >
+      <div>쿠폰함</div><button className='open' onClick={() => setSeeCoupon(!seeCoupon)}>펼치기</button>
+    </CouponBagHead>
 
+      {seeCoupon ? <CouponBag/> :''}
+  </CouponBagContainer>
  
-<GoodsList>
+  <GoodsList>
 상품리스트
 
     
-    {goodsList.map((item)=>{
+    {goodsList?.map((item)=>{
       return <GoodsDetail key={item.goodsId} item={item}/>
     })}
-</GoodsList>
+  </GoodsList>
   
 </Container>
 
@@ -178,4 +185,27 @@ margin-bottom: 30px;
  
            
        }
+`
+const CouponBagContainer=styled.div`
+width: 80%;
+@media (max-width: 550px) {
+            
+            width: 90%;
+           
+ 
+           
+       }
+`
+const CouponBagHead=styled.div`
+display: flex;
+width: 100%;
+border: solid 1px;
+justify-content: space-between;
+
+ .open{
+  :hover {
+        cursor: pointer;
+        /* background-color: lightgray; */
+      }
+ }
 `

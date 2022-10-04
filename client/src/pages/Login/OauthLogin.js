@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom'
 import styled from "styled-components";
 
-const googleback='http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google'
-const REDIRECT_URI='http://localhost:3000/login/'
+const REDIRECT_URI='http://localhost:3000/login'
+const googleback=`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google?redirect_uri=`+REDIRECT_URI
 ///////////카카오
   const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
   const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
