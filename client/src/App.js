@@ -18,6 +18,8 @@ import GoodsPage from './pages/Goods/GoodsPage';
 import GoodsCreate from './pages/Goods/GoodsCreate';
 import Event from './pages/News/Event';
 import EventCreate from './pages/News/EventCreate';
+import FAQ from './pages/CS/FAQ';
+import OperationPolicy from './pages/CS/OperationPolicy';
 
 function App() {
   
@@ -55,7 +57,9 @@ function App() {
           <Route path='/goods' element={<GoodsPage/>}/>
           <Route path='/goods/create' element={<GoodsCreate/>}/>
           <Route path='/news/event' element={<Event/>}/>
-          <Route path='news/event/create' element={<EventCreate/>}/>
+          <Route path='/news/event/create' element={<EventCreate/>}/>
+          <Route path='/cs/faq' element={<FAQ/>}/>
+          <Route path='/cs/operationpolicy' element={<OperationPolicy/>}/>
         </Routes>
     </div>  
   );
