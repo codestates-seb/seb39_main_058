@@ -67,7 +67,7 @@ function ReviseUser() {
       .then(res => res.json())
       .then(data => console.log(data))
       .catch(err => console.log(err))
-      
+
     if(userInfo.role === "ROLE_ADMIN") {
       navigate("/admin-users/profile")
     } 
@@ -78,7 +78,7 @@ function ReviseUser() {
     window.location.reload();
   };
   
-  console.log(userInfo)
+  // console.log(userInfo)
 
   // 회원정보 수정 취소
   const confirmCancel = () => { 

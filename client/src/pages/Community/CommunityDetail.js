@@ -81,6 +81,8 @@ function CommunityDetail() {
   // 게시글 '좋아요' 버튼 
   const addLike = () => {
     if(!like) setLike(like + 1)
+
+    if(!userInfo.accessToken) navigate('/login', {state: {path: location.pathname}});
     // console.log(like)
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like`, {
       method: "POST",
@@ -97,7 +99,8 @@ function CommunityDetail() {
 
   // 게시글 '좋아요' 취소버튼
   const disLike = () => {
-    if(like) setLike(0);
+    // 만약 like가 0이 아니라면, like수 하나 줄이고, like가 0이라면 그 상태 그대로 0으로 두기 
+    like ? setLike(like - 1) : setLike(0);
 
     fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like/`, {
       method: "DELETE",
@@ -132,13 +135,11 @@ function CommunityDetail() {
       .then(data => console.log(data))
       .catch(err => console.log(err))
     navigate("/community/forum");
-    window.location.reload();
+    // window.location.reload();
   }
   
   // 게시글 수정(모달창) 취소
-  const cancelRevise = () => {
-    setRevise(!revise);
-  }
+  const cancelRevise = () => setRevise(!revise);
 
   // 게시글 삭제 및 삭제 확인 버튼
   const deleteBoard = () => setRemove(!remove); 
@@ -162,13 +163,13 @@ function CommunityDetail() {
     window.location.reload();
   }
 
-  // 태그 삭제
+  // 태그 삭제(게시글 작성 및 수정 시)
   const deleteTag = (el) => {
     const filteredTag = tag.filter(tag => tag !== el);
     setTag(filteredTag);        
   }
     
-  // 특정 태그 선택
+  // 특정 태그 선택(게시글 작성 및 수정 시)
   const selectTag = (e) => {
     if(tags.includes(e.target.value)) {
       setTag([...tag, e.target.value]);
@@ -274,14 +275,29 @@ function CommunityDetail() {
               <button className="writer-cancel" onClick={cancelRevise}> 취소 </button>
             </RevisedButtonWrapper> :
             <ButtonContainer>
-              {/* 'like'로 판별하면 안되고, 'userId'가 있는지 여부로 판단해야함. */}
-              {!like ? 
+              {/* 'like'로 판별하면 안되고, 'userId'로 판단해야함. */}
+              {console.log(data.data?.likeForumResponses)}
+              {/* {console.log(userInfo)} */}
+              {data.data?.likeForumResponses.map(el => {
+                if (el.userId !== userInfo.userId) {
+                  return <button className="like-btn" key={el.likeForumId} onClick={addLike}>
+                    <FcLikePlaceholder className="like-btn"/>
+                  </button> 
+                } else if (el.userId === userInfo.userId) {
+                  return <button className="like-btn" key={el.likeForumId} onClick={disLike}>
+                    <FcLike className="like-btn"/>
+                  </button>
+                }
+              })}
+
+              {/* {!like ?
               <button className="like-btn" onClick={addLike}>
                 <FcLikePlaceholder className="like-btn"/>
-              </button> :
+              </button> : 
               <button className="like-btn" onClick={disLike}>
                 <FcLike className="like-btn"/>
-              </button>}
+              </button>
+              } */}
               {(userInfo.userName === userName) && 
                 <button className="revise-btn" onClick={reviseBoard} > 
                   <BsFillPencilFill  className="revise-btn"/> 
