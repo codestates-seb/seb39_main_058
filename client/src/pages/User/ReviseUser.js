@@ -41,52 +41,63 @@ function ReviseUser() {
   }, []);
 
   const reviseUserInfo = {
-    "userName" : userName.value,
+    "userName" : !userName.value ? userData.userName: userName.value,
     "password" : password.value,
-    "email": email.value,
-    "profileImage": profileImg.value
+    "email": !email.value ? userData.email : email.value,
+    "profileImage": profileImg.value,
   }
 
   // 회원정보 수정
   const handleSubmit = (e) => {
-    if(!profileImg.state || !email.state || !userName.state || !password.state) {
+
+    // 프로필 이미지 링크와 비밀번호만 채워지고, 나머지 정보는 빈칸인 경우,
+    if(profileImg.state && password.state && (!email.state || !userName.state)) {
+      e.preventDefault();
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${userInfo.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviseUserInfo)
+      })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    } else {
+      e.preventDefault();
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${userInfo.accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviseUserInfo)
+      })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(err => console.log(err))
+    }
+
+    // 이미지 링크와 비밀번호가 모두 빈칸인 경우(위 상황의 여사건),
+    if(!profileImg.state || !password.state) {
       setFillout(!fillout);
       e.preventDefault();
       return
     }
 
-    e.preventDefault();
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
-      method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${userInfo.accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reviseUserInfo)
-    })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.log(err))
-
-    if(userInfo.role === "ROLE_ADMIN") {
-      navigate("/admin-users/profile")
-    } 
-
-    if(userInfo.role === "ROLE_USER") {
+    if(userInfo.role === "ROLE_ADMIN" || userInfo.role === "ROLE_USER") {
       navigate("/users/profile")
     }
     window.location.reload();
   };
   
   // console.log(userInfo)
+console.log(userData);
 
   // 회원정보 수정 취소
   const confirmCancel = () => { 
-    if(userInfo.role === "ROLE_ADMIN") {
-      navigate("/admin-users/profile")
-    } 
-
-    if(userInfo.role === "ROLE_USER") {
+    if(userInfo.role === "ROLE_ADMIN" || userInfo.role === "ROLE_USER") {
       navigate("/users/profile")
     }
   }
