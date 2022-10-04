@@ -66,16 +66,15 @@ export default Guide
 
 const GuideStyle = styled.div`
 
-  color: white;
-  font-size: 5vmin;
-
   *{
     white-space: pre-line;
+    font-size: 5vmin;
+    color: white;
   }
 
   .fast{
     margin-left: 20vw;
-    color: red;
+    color: #FF4A4A;
     font-weight: bold;
     margin-top: -1vh;
   }

@@ -124,13 +124,13 @@ function User() {
                         userData.totalPoints < 10000 ? "/bronze.png" : 
                         userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "/silver.png" :
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "/gold.png" :
-                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "/platinum.png" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 100000 ? "/platinum.png" :
                         userData.totalPoints >= 100000 ? "/diamond.png" : undefined} />
                     <span>
                         {userData.totalPoints < 10000 ? "브론즈" :
                         userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "실버" :
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "골드" :
-                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "플래티넘" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 100000 ? "플래티넘" :
                         userData.totalPoints >= 100000 ? "다이아몬드" : undefined}
                     </span>
                     <span className='more' onClick={() => setRank(true)}><FaQuestionCircle/></span>
@@ -147,7 +147,7 @@ function User() {
                             </li>
                             <li>
                                 <img src='/gold.png' />
-                                <p>골드 : 누적 포인틑 25,000 포인트 이상</p>
+                                <p>골드 : 누적 포인트 25,000 포인트 이상</p>
                             </li>
                             <li>
                                 <img src='/platinum.png' />
@@ -271,6 +271,7 @@ const Main = styled.main`
         color: white;
         padding: .5vh 1vw;
         border: 0.2rem solid #395B64;
+        cursor: default;
     }
 
     .more{
