@@ -25,7 +25,7 @@ const navigate=useNavigate();
     .then(res => res.json())
     .then((data)=>{
     
-     console.log('쿠폰리스트',data.data)
+    //  console.log('쿠폰리스트',data.data)
   
      setCoupon(data.data)
     
@@ -40,7 +40,7 @@ const navigate=useNavigate();
 
   /////쿠폰삭제
 const couponDelete=()=>{
-console.log('삭제되냐')
+// console.log('삭제되냐')
 if (!accesstoken){
   alert('로그인 후 이용 가능 합니다')
   navigate('/login',{state: {path:location.pathname}})
@@ -62,7 +62,7 @@ const couponDeleteFetch=async()=>{
     })
     .then((res) => res.json())
     .then((data)=>{
-      console.log('삭제데이타',data)
+      // console.log('삭제데이타',data)
             if(data.error==='Unauthorized'){
               alert('세션이 만료되었습니다.')
               navigate('/login',{state: {path:location.pathname}})
@@ -108,7 +108,7 @@ const couponDeleteFetch=async()=>{
      })}
      
      {/* 삭제 모달창 */}
-{console.log('딜리트쿠폰 타입은',deleteCoupon)}
+{/* {console.log('딜리트쿠폰 타입은',deleteCoupon)} */}
      {modalOn && (
         <AnswerModal closeModal={() => setModalOn(!modalOn)}>
           <ModalItem>
