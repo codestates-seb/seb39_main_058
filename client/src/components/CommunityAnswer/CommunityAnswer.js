@@ -50,7 +50,7 @@ const submitFunc=async(event)=>{
   event.preventDefault()
  
   if(!accesstoken){
-    alert('로그인 후 이용 가능 합니다')
+    // alert('로그인 후 이용 가능 합니다')
     navigate('/login',{state: {path:location.pathname}})
   }else if(accesstoken){
 
