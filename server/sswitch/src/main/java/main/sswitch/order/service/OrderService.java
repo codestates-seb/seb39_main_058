@@ -63,6 +63,7 @@ public class OrderService {
         return findVerifiedOrder(orderId);
     }
 
+
     public List<OrderGoods> findOrderGoodsWithUserId(Long userId){
         return orderGoodsRepository.findAllByUserId(userId);
     }
@@ -72,7 +73,6 @@ public class OrderService {
         return orderRepository.findAllByUser(user, PageRequest.of(page, size,
                 Sort.by("orderId").descending()));
     }
-
 
     public void cancelOrder(Long orderId){
         findVerifiedOrder(orderId);

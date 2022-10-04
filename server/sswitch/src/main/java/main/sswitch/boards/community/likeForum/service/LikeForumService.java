@@ -2,6 +2,7 @@ package main.sswitch.boards.community.likeForum.service;
 
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.boards.community.likeForum.repository.LikeForumRepository;
 import main.sswitch.help.exceptions.BusinessLogicException;
@@ -20,18 +21,21 @@ import java.util.Optional;
 public class LikeForumService {
     private final LikeForumRepository likeForumRepository;
     private final UserService userService;
+    private final ForumService forumService;
 
 
     public LikeForumService(LikeForumRepository likeForumRepository,
+                            ForumService forumService,
                             UserService userService) {
+        this.forumService = forumService;
         this.likeForumRepository = likeForumRepository;
         this.userService = userService;
     }
 
     public LikeForum createLike(LikeForum likeForum) {
+        verifyExistLikeForum(likeForum);
         LikeForum saveLike = likeForumRepository.save(likeForum);
-        Forum forum = new Forum();
-        forum.setForumLike(forum.getForumLike()+1);
+        forumService.likeForum(likeForum.getForum().getForumId());
         return saveLike;
     }
 
@@ -41,22 +45,31 @@ public class LikeForumService {
                 Sort.by("userId").descending()));
     }
 
-    public void deleteLike(long userId) {
-        Forum forum = new Forum();
-        forum.setForumLike(forum.getForumLike() -1);
-        LikeForum findLike = findUserLike(userId);
+    public void deleteLike(LikeForum likeForum) {
+        findVerifyLikeForum(likeForum);
+        forumService.hateForum(likeForum.getForum().getForumId());
 
-        likeForumRepository.delete(findLike);
+        likeForumRepository.delete(likeForum);
     }
 
-    public LikeForum findUserLike(long userId) {
+    public LikeForum findVerifyLikeForum(LikeForum likeForum) {
+        long userId = likeForum.getUser().getUserId();
+        long forumId = likeForum.getForum().getForumId();
         Optional<LikeForum> optionalLike =
-                likeForumRepository.findByUserId(userId);
+                likeForumRepository.findByUserAndForumId(userId,forumId);
 
         LikeForum findLike =
                 optionalLike.orElseThrow(() ->
                         new BusinessLogicException(ExceptionCode.LIKE_FORUM_NOT_FOUND));
         return findLike;
+    }
+
+    public void verifyExistLikeForum(LikeForum likeForum) {
+        long userId = likeForum.getUser().getUserId();
+        long forumId = likeForum.getForum().getForumId();
+        Optional<LikeForum> optionalLike = likeForumRepository.findByUserAndForumId(userId, forumId);
+        if (optionalLike.isPresent())
+           throw new BusinessLogicException(ExceptionCode.LIKE_FORUM_EXIST);
     }
 
 }

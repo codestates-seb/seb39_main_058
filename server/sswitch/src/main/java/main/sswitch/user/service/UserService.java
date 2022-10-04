@@ -48,8 +48,8 @@ public class UserService {
         user.setRole("ROLE_USER");
         user.setProfileImage("https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg");
         user.setUserStatus(User.UserStatus.USER_EXIST);
-        user.setCurrentPoints(10000);
-        user.setTotalPoints(10000);
+        user.setCurrentPoints(1000);
+        user.setTotalPoints(1000);
         user.setProviders(User.Providers.PROVIDER_SSWITCH);
 
         return userRepository.save(user);
@@ -143,6 +143,14 @@ public class UserService {
         return findUserName;
     }
 
+    private User findVerifiedUserWithUserNameForSearch(String userName) {
+        Optional<User> optionalUser = userRepository.findByUsername(userName);
+        User findUserName = optionalUser
+                .orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.USERNAME_NOT_FOUND));
+        return findUserName;
+    }
+
     @Transactional(readOnly = true)
     public User findUserWithId(long userId) {
         return findVerifiedUser(userId);
@@ -158,6 +166,10 @@ public class UserService {
         return findVerifiedUserWithUserName(userName);
     }
 
+    @Transactional(readOnly = true)
+    public User findUserWithUserNameForSearch(String userName) {
+        return findVerifiedUserWithUserNameForSearch(userName);
+    }
     @Transactional(readOnly = true)
     public User findUserWithLoginId(String loginId) {
         return findVerifiedUserWithLoginId(loginId);

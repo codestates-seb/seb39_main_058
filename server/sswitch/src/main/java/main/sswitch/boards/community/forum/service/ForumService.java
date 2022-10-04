@@ -55,15 +55,22 @@ public class ForumService {
     //게시글 좋아요 버튼 구현
     //우선 해당글 따봉누른 유저 목록을 불러옴
     //없으면 넣어줌 있으면 빼줌
-    public LikeForum likeForum(LikeForum likeForum) {
-        Forum findForum = findVerifiedForum(likeForum.getForum().getForumId());
-        LikeForum saveLikeForum = likeForumRepository.save(likeForum);
+    public Forum likeForum(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long likeforum = findForum.getForumLike();
+        likeforum++;
+        findForum.setForumLike(likeforum);
 
-        long findForumLike = likeForum.getForum().getForumLike();
-        findForumLike++;
-        findForum.setForumLike(findForumLike);
+        return forumRepository.save(findForum);
+    }
 
-        return saveLikeForum;
+    public Forum hateForum(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long hateforum = findForum.getForumLike();
+        hateforum--;
+        findForum.setForumLike(hateforum);
+
+        return forumRepository.save(findForum);
     }
 
     public Forum findForum(long forumId) {
@@ -91,8 +98,12 @@ public class ForumService {
 
     //작성자 검색기능 구현
     public Page<Forum> findUsername(String username, int page, int size) {
-        User user = userService.findUserWithUserName(username);
+        User user = userService.findUserWithUserNameForSearch(username);
         long userId = user.getUserId();
+        if (userId == 0) {
+            return null;
+        }
+//        userService.findUserWithId(userId);     //이러면 null값 반환이 안될듯??
         return forumRepository.findByForumUserId(userId,PageRequest.of(page, size));
     }
 

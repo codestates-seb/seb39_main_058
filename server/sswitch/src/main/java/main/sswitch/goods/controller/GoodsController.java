@@ -69,6 +69,7 @@ public class GoodsController {
 
 
 
+
     @DeleteMapping("/admin/{goods-id}")
     public String deleteGoods(@PathVariable("goods-id") long goodsId) {
         goodsService.deleteGoods(goodsId);

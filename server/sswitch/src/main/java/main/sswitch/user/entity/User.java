@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.entity.Forum;
+import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.order.entity.Order;
@@ -76,6 +77,9 @@ public class User extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Forum> forums = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<LikeForum> likeForums = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notice> notices = new ArrayList<>();
