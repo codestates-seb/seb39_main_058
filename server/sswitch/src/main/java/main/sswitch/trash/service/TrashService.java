@@ -33,7 +33,6 @@ public class TrashService {
                 .ifPresent(longitude -> findTrashCan.setLongitude(longitude));
         Optional.ofNullable(trashCan.getLatitude())
                 .ifPresent(latitude -> findTrashCan.setLatitude(latitude));
-
         Optional.ofNullable(trashCan.getTrashStatus())
                 .ifPresent(trashStatus -> findTrashCan.setTrashStatus(trashStatus));
 
