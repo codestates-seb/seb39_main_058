@@ -30,6 +30,9 @@ public class Forum extends BaseEntity {
     @Column(nullable = false)
     private long forumLike;
 
+    @Column
+    private long ddabong;
+
     @Column(columnDefinition = "text", nullable = false)
     private String tag;
 
