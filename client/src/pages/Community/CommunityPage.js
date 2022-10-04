@@ -104,7 +104,7 @@ function CommunityPage() {
         <p>자유게시판</p>
       </div>
       <div className='btn'>
-        <span className='list'>목록</span>
+        <span className='list' onClick={() => window.location.reload()}>목록</span>
         <span className='write' onClick={() => {
           userInfo.accessToken ?
           navigate('/community/create') :
