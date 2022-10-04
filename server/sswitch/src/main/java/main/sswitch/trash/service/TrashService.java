@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static main.sswitch.trash.entity.TrashCan.TrashStatus.TRASH_CAN_FULL;
+
 @Service
 @RequiredArgsConstructor
 public class TrashService {
@@ -37,6 +39,9 @@ public class TrashService {
     public TrashCanAlarm createTrashCanAlarm(TrashCanAlarmDto requestBody, long trashId){
         User user = userService.findUserWithId(requestBody.getUserId());
         TrashCan trashCan = findTrashCan(trashId);
+        if(trashCan.getTrashStatus().equals(TRASH_CAN_FULL)) {
+            throw new BusinessLogicException(ExceptionCode.TRASHCAN_ALREADY_FULL);
+        }
         TrashCanAlarm trashCanAlarm = new TrashCanAlarm();
         trashCanAlarm.setUser(user);
         trashCanAlarm.setTrashCan(trashCan);
@@ -65,9 +70,9 @@ public class TrashService {
     public TrashCan changeTrashCanStatus(TrashCan trashCan) {
         TrashCan findTrashCan = findVerifiedTrashCan(trashCan.getTrashId());
 
-        if (trashCan.getTrashStatus() != TrashCan.TrashStatus.TRASH_CAN_FULL) {
+        if (trashCan.getTrashStatus() != TRASH_CAN_FULL) {
             Optional.ofNullable(trashCan.getTrashStatus())
-                    .ifPresent(trashStatus -> findTrashCan.setTrashStatus(TrashCan.TrashStatus.TRASH_CAN_FULL));
+                    .ifPresent(trashStatus -> findTrashCan.setTrashStatus(TRASH_CAN_FULL));
         } else {
             Optional.ofNullable(trashCan.getTrashStatus())
                     .ifPresent(trashStatus -> findTrashCan.setTrashStatus(TrashCan.TrashStatus.TRASH_CAN_EMPTY));

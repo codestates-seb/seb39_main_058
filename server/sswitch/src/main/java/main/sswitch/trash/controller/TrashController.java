@@ -113,7 +113,7 @@ public class TrashController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-//쓰레기통 비움
+    //쓰레기통 비움
     @DeleteMapping("/flush/{trash-id}")
     public ResponseEntity deleteTrashCanAlarm(@PathVariable("trash-id") long trashId) {
         trashService.deleteTrashCanAlarm(trashId);

@@ -89,8 +89,8 @@ public class User extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TrashCan> trashCan = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private TrashCanAlarm trashCanAlarm;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TrashCanAlarm> trashCanAlarm;
 
     boolean enabled = false;
 

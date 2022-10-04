@@ -17,7 +17,7 @@ public class TrashCanAlarm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trashCanAlarmId;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
