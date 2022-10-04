@@ -79,9 +79,8 @@ function CommunityCreate() {
 export default CommunityCreate;
 
 const Main = styled.main`
-    /* border: 1px solid black; // 삭제 예정 */
-    width: 100%;
-    height: 92vh;
+    width: 95%;
+    height: 87vh;
     @media (max-width: 550px) {
         height: 115vh;
     }
@@ -166,40 +165,6 @@ const BoardWrite = styled.div`
             font-size: 2vmin;
             resize: none;
             
-        }
-    }
-`;
-
-const SelectedTag = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 20px;    
-    border: 1px solid black;
-    padding: 10px 0;
-    width: 80vw;
-    height: 5vh;
-    @media (max-width: 550px) {
-        width: 55vw;
-        height: 7vh;
-        font-size: 2vmin;
-    }
-
-    .tag {
-        margin: 10px;
-        padding: 0.5rem;
-        border-radius: 10px;
-        color: white;
-        background-color: rgb(56,217,169);
-        font-family: 'Courier New', Courier, monospace;
-        &:hover {
-            background: rgb(71,182,181);
-        }
-
-        .delete-tag {
-            margin: 0;
-            padding: 3px;
-            cursor: pointer;
         }
     }
 `;

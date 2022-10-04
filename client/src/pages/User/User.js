@@ -72,22 +72,6 @@ function User() {
         window.location.reload();
     }
 
-    // console.log(userInfo)
-    // console.log(userData)
-
-    // const dummy = [
-    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 0},
-    //     {his : "치킨", date : "2022-09-13", point : "-3000", id : 1},
-    //     {his : "커피", date : "2022-09-12", point : "-3000", id : 2},
-    //     {his : "적립", date : "2022-09-11", point : "+7000", id : 3},
-    //     {his : "여기는", date : "2022-09-11", point : "-3000", id : 4},
-    //     {his : "무한스크롤", date : "2022-09-11", point : "-3000", id : 5},
-    //     {his : "하려구요", date : "2022-09-11", point : "+3000", id : 6},
-    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 7},
-    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 8},
-    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 9},
-    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 10}
-    // ]
 
     useEffect(() => {
         fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders?id=${userInfo.userId}&page=1&size=10`,{
@@ -103,8 +87,6 @@ function User() {
         })
         .catch(err => console.log(err))
     },[])
-
-    // console.log(order)
 
     return (
     <Main>
