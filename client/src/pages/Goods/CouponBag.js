@@ -114,7 +114,7 @@ const couponDeleteFetch=async()=>{
           <ModalItem>
              
               
-              <div>상품을 삭제하시겠습니까?</div>
+              <div>쿠폰을 삭제하시겠습니까?</div>
               <div className="confirm-wrapper">
                 <div className="confirm" onClick={()=>{couponDelete()}}>확인</div>
                 <div className="cancel" onClick={() => setModalOn(!modalOn)}>취소</div>
