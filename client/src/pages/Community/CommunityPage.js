@@ -39,10 +39,16 @@ function CommunityPage() {
   },[page])
 
   const filteredTag = (value) => {
-    if(tags.includes(value) === true || value === '태그를 선택해주세요'){
-      setTags(tags)
-    }else{
-      setTags([...tags, value])
+    // if(tags.includes(value) === true || value === '태그를 선택해주세요'){
+    //   setTags(tags)
+    // }else{
+    //   setTags([...tags, value])
+    // }
+    if(value === "태그를 선택해주세요"){
+      setTags([])
+    }
+    else{
+      setTags([value])
     }
   }
 
@@ -65,11 +71,30 @@ function CommunityPage() {
     }
     window.scrollTo(0, 0);
     setSearch({select : "title" , content : ""})
+    document.getElementById("search").value = "title"
   }
 
   const handleEnter = (e) => {
     if(e.key === 'Enter'){
       handleSearchButton()
+    }
+  }
+
+  const handleTagSearch = () => {
+    if(tags.length !== 0){
+      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search/tag?page=1&size=20&tag=${tags[0]}`)
+      .then(res => res.json())
+      .then(res => {
+        setData(res.data)
+        setTotal(res.pageInfo.totalElements)
+      })
+      .catch(err => console.log(err))
+      window.scrollTo(0, 0);
+      setTags([])
+      document.getElementById("select").value = "태그를 선택해주세요"
+    }
+    else{
+      alert("태그를 선택해주세요.")
     }
   }
 
@@ -87,7 +112,7 @@ function CommunityPage() {
         }}>글쓰기</span>
       </div>
       <div className='select_container'>
-        <select onChange={(e) => {
+        <select id='select' onChange={(e) => {
           filteredTag(e.target.value)
         }}>
           <option>태그를 선택해주세요</option>
@@ -109,7 +134,7 @@ function CommunityPage() {
               }} />
             </div>)})}
       </div>
-        <div className='tag_search'> <AiOutlineSearch/> 태그 검색</div>
+        <div className='tag_search' onClick={handleTagSearch}> <AiOutlineSearch/> 태그 검색</div>
         <div className='bords_container'>
           <div className='bords_list'>
             <span className='id'>번호</span>
@@ -144,12 +169,12 @@ function CommunityPage() {
           <PageNation data={data} total={total}/>
         </div>
         <div className='search_container'>
-          <select onChange={e => setSearch({select : e.target.value, content : search.content})}>
+          <select id='search' onChange={e => setSearch({select : e.target.value, content : search.content})}>
             <option>title</option>
             <option>text</option>
             <option>username</option>
           </select>
-          <input onKeyDown={handleEnter} type='search' onChange={e => setSearch({select : search.select, content : e.target.value})} />
+          <input value={search.content} onKeyDown={handleEnter} type='search' onChange={e => setSearch({select : search.select, content : e.target.value})} />
           <span onClick={() => {
             handleSearchButton()
             }}><FaSearch /></span>
@@ -348,10 +373,9 @@ const CommunityPageStyle = styled.div`
 
   .bords_container{
     width: 80vw;
-    height: 90vh; // 한페이지에 몇개 들어오나 봐서 수정할거임
+    height: 90vh;
     margin-top: 2vh;
     font-size: 1.5vmin;
-    /* border: 3px solid red; */
   }
 
   .bords_list{
