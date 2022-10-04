@@ -146,6 +146,14 @@ height: 90vh;
 justify-content: center;
 align-items: center;
 flex-direction: column;
+@media (max-width: 550px) {
+          height: 100%;
+          margin-top: 120px;
+           
+          
+
+          
+      }
 .title-style{
   margin-bottom: 30px;
   font-family: 'Gugi', cursive;

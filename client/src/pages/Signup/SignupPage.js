@@ -278,6 +278,8 @@ const signupPostFunc=async()=>{
    
   return (
     <Container onKeyDown={tabKey} onMouseDown={()=>{overlapConfirm();passwordConfirmFunc()}} >
+   
+
       <SignUpForm >
         <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
         <p>회원정보를 입력해 주세요</p>
@@ -285,7 +287,7 @@ const signupPostFunc=async()=>{
         <InfoMsg>아이디는 영문과 숫자만 가능 합니다.</InfoMsg>
         {
           alertSpaceId ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
-        <OverlapForm>
+          <OverlapForm>
           <AlertMsg>{alertId}</AlertMsg>
           <CorrectMsg>{alertOverlapId}</CorrectMsg>
         </OverlapForm>
@@ -294,7 +296,7 @@ const signupPostFunc=async()=>{
         <input id="name" name="name" type='text' placeholder="닉네임" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
         {
           alertSpaceName ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
-        <OverlapForm>
+          <OverlapForm>
           <AlertMsg>{alertName}</AlertMsg>
           <CorrectMsg>{alertOverlapName}</CorrectMsg>
 
@@ -318,7 +320,7 @@ const signupPostFunc=async()=>{
         <input id="email" name="email" type='text' placeholder="이메일" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
         {
           alertSpaceEmail ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
-        <OverlapForm>
+          <OverlapForm>
         <AlertMsg>{alertEmail}</AlertMsg>
         <CorrectMsg>{alertOverlapEmail}</CorrectMsg>
         </OverlapForm>
@@ -328,6 +330,7 @@ const signupPostFunc=async()=>{
 
       </SignUpForm>
       <SignUpButton onClick={signupPostFunc}>회원가입</SignUpButton>      
+       
     </Container>
   )
 }
@@ -340,6 +343,16 @@ height: 90vh;
 justify-content: center;
 align-items: center;
 flex-direction: column;
+@media (max-width: 550px) {
+          height: 100%;
+          margin-top: 50px;
+           
+          
+
+          
+      }
+
+
 .title-style{
   margin-bottom: 30px;
   font-family: 'Gugi', cursive;
@@ -362,6 +375,7 @@ input{
   box-sizing: border-box;
 }
 `
+
 const SignUpForm=styled.div`
  display: flex;
   justify-content: center;
