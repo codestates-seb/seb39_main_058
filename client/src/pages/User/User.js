@@ -23,6 +23,7 @@ function User() {
     const [ revisedInfo, setRevisedInfo ] = useState(false);
     const [ withdrawal, setWithdrawal ] = useState(false);
     const [rank, setRank] = useState(false)
+    const [order, setOrder] = useState([])
 
     useEffect(() => {
         fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
@@ -74,19 +75,36 @@ function User() {
     // console.log(userInfo)
     // console.log(userData)
 
-    const dummy = [
-        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 0},
-        {his : "치킨", date : "2022-09-13", point : "-3000", id : 1},
-        {his : "커피", date : "2022-09-12", point : "-3000", id : 2},
-        {his : "적립", date : "2022-09-11", point : "+7000", id : 3},
-        {his : "여기는", date : "2022-09-11", point : "-3000", id : 4},
-        {his : "무한스크롤", date : "2022-09-11", point : "-3000", id : 5},
-        {his : "하려구요", date : "2022-09-11", point : "+3000", id : 6},
-        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 7},
-        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 8},
-        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 9},
-        {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 10}
-    ]
+    // const dummy = [
+    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 0},
+    //     {his : "치킨", date : "2022-09-13", point : "-3000", id : 1},
+    //     {his : "커피", date : "2022-09-12", point : "-3000", id : 2},
+    //     {his : "적립", date : "2022-09-11", point : "+7000", id : 3},
+    //     {his : "여기는", date : "2022-09-11", point : "-3000", id : 4},
+    //     {his : "무한스크롤", date : "2022-09-11", point : "-3000", id : 5},
+    //     {his : "하려구요", date : "2022-09-11", point : "+3000", id : 6},
+    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 7},
+    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 8},
+    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 9},
+    //     {his : "떡볶이", date : "2022-09-14", point : "-3000", id : 10}
+    // ]
+
+    useEffect(() => {
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders?id=${userInfo.userId}&page=1&size=10`,{
+            headers: {
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            setOrder(res.data)
+            console.log(res.data)
+        })
+        .catch(err => console.log(err))
+    },[])
+
+    // console.log(order)
 
     return (
     <Main>
@@ -124,13 +142,13 @@ function User() {
                         userData.totalPoints < 10000 ? "/bronze.png" : 
                         userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "/silver.png" :
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "/gold.png" :
-                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "/platinum.png" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 100000 ? "/platinum.png" :
                         userData.totalPoints >= 100000 ? "/diamond.png" : undefined} />
                     <span>
                         {userData.totalPoints < 10000 ? "브론즈" :
                         userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "실버" :
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "골드" :
-                        userData.totalPoints <= 50000 || userData.totalPoints < 70000 ? "플래티넘" :
+                        userData.totalPoints <= 50000 || userData.totalPoints < 100000 ? "플래티넘" :
                         userData.totalPoints >= 100000 ? "다이아몬드" : undefined}
                     </span>
                     <span className='more' onClick={() => setRank(true)}><FaQuestionCircle/></span>
@@ -147,7 +165,7 @@ function User() {
                             </li>
                             <li>
                                 <img src='/gold.png' />
-                                <p>골드 : 누적 포인틑 25,000 포인트 이상</p>
+                                <p>골드 : 누적 포인트 25,000 포인트 이상</p>
                             </li>
                             <li>
                                 <img src='/platinum.png' />
@@ -175,12 +193,12 @@ function User() {
                             <span className='date'>날짜</span>
                             <span className='point'>포인트</span>
                         </div>
-                        {dummy.map(el => {
+                        {order.map(el => {
                             return(
-                                <div className='bords_list select' key={el.id}>
-                                    <span className='his'>{el.his}</span>
-                                    <span className='date'>{el.date}</span>
-                                    <span className={el.point[0] === '-' ? "point minus" : "point plus"}>{el.point}</span>
+                                <div className='bords_list select' key={el.orderId}>
+                                    <span className='his'>{el.orderGoodsList[0].goodsName}</span>
+                                    <span className='date'>{el.createdAt.slice(0,10)}</span>
+                                    <span className="point minus">{el.orderGoodsList[0].price}</span>
                                 </div>
                             )
                         })}
@@ -271,6 +289,7 @@ const Main = styled.main`
         color: white;
         padding: .5vh 1vw;
         border: 0.2rem solid #395B64;
+        cursor: default;
     }
 
     .more{
