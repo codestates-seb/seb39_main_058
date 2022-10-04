@@ -62,6 +62,10 @@ public class UserDto {
 
         private User.UserStatus userStatus;
 
+        private int currentPoints;
+
+        private int totalPoints;
+
         private String role;
 
         private String email;
