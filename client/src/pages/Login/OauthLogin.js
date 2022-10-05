@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import styled from "styled-components";
 
 const REDIRECT_URI='https://seb39-main-058-tawny.vercel.app/login'
-const googleback=`https://sswitch.ga/oauth2/authorization/google`
+const googleback=`https://sswitch.ga/oauth2/authorization/google?redirect_uri=${REDIRECT_URI}`
 ///////////카카오
   const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
   const kakaoLogin=`https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
