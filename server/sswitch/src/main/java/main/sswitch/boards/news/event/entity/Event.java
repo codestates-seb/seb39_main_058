@@ -29,6 +29,8 @@ public class Event extends BaseEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    private String imagePath;
+
     public void setUser(User user) {
         this.user = user;
     }

@@ -8,6 +8,7 @@ import main.sswitch.user.entity.User;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @NoArgsConstructor
 @Getter
@@ -51,4 +52,29 @@ public class Order extends BaseEntity {
         }
     }
 
+    public String couponNum(int couponSize){
+        final char[] possibleCharacters = {'1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F',
+                'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+        final int possibleCharacterCount = possibleCharacters.length;
+        String[] arr = new String[couponSize];
+        Random rnd = new Random();
+        int currentIndex = 0;
+        int i = 0;
+        while (currentIndex < couponSize) {
+            StringBuffer buf = new StringBuffer(16);
+
+            for (i= 16; i > 0; i--) {
+                if(i == 12 || i == 8 || i == 4 )
+                {
+                    buf.append("-");
+                }
+                buf.append(possibleCharacters[rnd.nextInt(possibleCharacterCount)]);
+            }
+            String couponnum = buf.toString();
+            System.out.println("couponnum==>"+couponnum);
+            arr[currentIndex] = couponnum;
+            currentIndex++;
+        }
+        return arr[0];
+    }
 }

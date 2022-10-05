@@ -38,7 +38,7 @@ public class TrashCan extends BaseEntity {
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 255, nullable = false)
-    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_FULL;
+    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_EMPTY;
 
     public void setUser(User user) {
         this.user = user;

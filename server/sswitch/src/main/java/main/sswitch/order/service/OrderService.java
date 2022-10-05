@@ -48,7 +48,7 @@ public class OrderService {
                     .builder()
                     .user(user)
                     .goods(goods)
-                    .giftCode(UUID.randomUUID().toString())
+                    .giftCode(order.couponNum(1))
                     .build();
             orderGoods.addOrder(order);
             orderGoodsRepository.save(orderGoods);

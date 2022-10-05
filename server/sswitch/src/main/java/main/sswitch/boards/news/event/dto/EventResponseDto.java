@@ -18,6 +18,7 @@ public class EventResponseDto {
 
     private String eventText;
 
+    private String imagePath;
     private LocalDateTime dateCreated;
 
     public void getDateCreated(LocalDateTime dateCreated) {
