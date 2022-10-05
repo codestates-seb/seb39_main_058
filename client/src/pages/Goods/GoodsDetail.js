@@ -45,7 +45,7 @@ const goodsDelete=()=>{
 const goodsDeleteFetch=async()=>{
   if(deleteGoods!==''){
 
-    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods/admin/${deleteGoods}`, {
+    await fetch(`https://sswitch.ga/goods/admin/${deleteGoods}`, {
       method: "DELETE",
       headers: { 'Authorization': `Bearer ${accesstoken}`}
 
@@ -94,7 +94,7 @@ const goodsBuyFetch=async()=>{
     
     }
     
-    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders`, {
+    await fetch(`https://sswitch.ga/orders`, {
       method: "POST",
       headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`},
       body: JSON.stringify(buyInfo)

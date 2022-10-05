@@ -23,7 +23,7 @@ const AnswerMap = ({item}) => {
 const answerDeleteFetch=async()=>{
   if(clickCommentId!==''){
 
-    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/${clickCommentId}`, {
+    await fetch(`https://sswitch.ga/community/comment/take/${clickCommentId}`, {
       method: "DELETE",
       headers: { 'Authorization': `Bearer ${accesstoken}`}
 
