@@ -19,6 +19,8 @@ public class EventPatchDto {
     @NotBlank
     private String eventText;
 
+    private String imagePath;
+
     public void setEventId(long eventId) {
         this.eventId = eventId;
     }

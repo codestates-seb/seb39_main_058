@@ -73,16 +73,16 @@ public class TrashController {
     }
 
     //쓰레기통 비움 기능(상황에 맞게 패치와 합침 가능)
-    @PatchMapping("/take/flush/{trash-id}")
-    public ResponseEntity TrashCan(@PathVariable("trash-id") @Positive long trashId,
-                                   @Valid @RequestBody TrashStatusDto trashStatusDto) {
-        trashStatusDto.setTrashId(trashId);
-        TrashCan trashCan = trashService.changeTrashCanStatus(mapper.trashStatusChangeDtoToTrash(trashStatusDto));
-
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
-                HttpStatus.OK);
-    }
+//    @PatchMapping("/take/{trash-id}")
+//    public ResponseEntity TrashCan(@PathVariable("trash-id") @Positive long trashId,
+//                                   @Valid @RequestBody TrashStatusDto trashStatusDto) {
+//        trashStatusDto.setTrashId(trashId);
+//        TrashCan trashCan = trashService.changeTrashCanStatus(mapper.trashStatusChangeDtoToTrash(trashStatusDto));
+//
+//        return new ResponseEntity<>(
+//                new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
+//                HttpStatus.OK);
+//    }
 
     //쓰레기통 조회
     @GetMapping("/{trash-id}")
