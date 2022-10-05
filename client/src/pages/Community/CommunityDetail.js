@@ -276,27 +276,32 @@ function CommunityDetail() {
             </RevisedButtonWrapper> :
             <ButtonContainer>
               {/* 'like'로 판별하면 안되고, 'userId'로 판단해야함. */}
-              {console.log(data.data?.likeForumResponses)}
+              {/* {console.log(data.data)} */}
               {/* {console.log(userInfo)} */}
-              {data.data?.likeForumResponses.map(el => {
+              {console.log(userInfo.accessToken)}
+              {/* {console.log(data) // 게시글 작성자 데이터} */}
+              {/* {data.data?.likeForumResponses.map(el => {
                 (el.userId !== userInfo.userId) ?
                   <button className="like-btn" key={el.likeForumId} onClick={addLike}>
                     <FcLikePlaceholder className="like-btn"/>
                   </button> :
+                ((el.userId === userInfo.userId) &&
                   <button className="like-btn" key={el.likeForumId} onClick={disLike}>
                     <FcLike className="like-btn"/>
-                  </button>
-                
-              })}
-
-              {/* {!like ?
+                  </button>)
+              })} */}
+{/* 
+// a: 좋아요 누른 사람(좋아요 버튼 활성화)
+// b: 글 작성자
+// c: 좋아요 안 누른 사람(좋아요 버튼 비활성화) */}
+              {!like  ?
               <button className="like-btn" onClick={addLike}>
                 <FcLikePlaceholder className="like-btn"/>
               </button> : 
               <button className="like-btn" onClick={disLike}>
                 <FcLike className="like-btn"/>
-              </button>
-              } */}
+              </button>}
+
               {(userInfo.userName === userName) && 
                 <button className="revise-btn" onClick={reviseBoard} > 
                   <BsFillPencilFill  className="revise-btn"/> 

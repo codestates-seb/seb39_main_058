@@ -130,16 +130,16 @@ function CommunityCreate() {
             </BoardWrite>
 
             {/* 유저가 태그를 선택한 경우, 태그 담는 상자와 선택한 태그 만들기 */}
-            { clickTag && <SelectedTag>
+            <SelectedTag>   
+            { clickTag && 
                 <div className="selected-tags">
                     { clickTag && tag.map( el =>
-                        <span className="tag" key={el}>{el} 
+                        <div className="tag" key={el}>{el} 
                             <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                        </span>)}
-                </div>                
-            </SelectedTag> }
-            
-           
+                        </div>)}
+                </div> }
+            </SelectedTag>
+
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>
                     <option name="tags">지역 태그를 선택하세요</option>
@@ -148,6 +148,7 @@ function CommunityCreate() {
                     )}
                 </select>
             </BoardTag> 
+
             <Secret>
                 <input type="checkbox" name="secret" onClick={handleSecret}/>
                 <label htmlFor="secret">비밀글</label>
@@ -187,12 +188,13 @@ const BoardHeader = styled.div`
     border-bottom: 3px solid black;
     
     h1 {
-        margin-top: 2rem;
+        margin-top: 5rem;
         font-size: 4vmin;
         font-family: 'Jua', sans-serif;
         font-weight: lighter;
         letter-spacing: 3px;
         @media (max-width: 550px) {
+            
             font-size: 30px;
         }
     }
@@ -271,22 +273,56 @@ const Secret = styled.div`
 `
 
 const SelectedTag = styled.div`
-    display: flex;
+    
+    border: 1px solid black;
+    width: 30vw;
+    height: 10vh;
+    
+    /* white-space: pre-line;
+    word-break: keep-all;
+    word-break: keep-all;
+    -ms-overflow-style: none;
+    scrollbar-width: none; */
+
+    
+    .selected-tags {
+        display: flex;
+        border: 1px solid red;
+        width: 100%;
+        height: 100%;
+    }
+
+    .tag {
+        font-size: 2.5vmin;
+    }
+    
+    /* display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 20px;    
+    margin-bottom: 1rem;    
     border: 1px solid black;
-    padding: 10px 0;
+    padding: 0.5rem 0;
     width: 80vw;
     height: 5vh;
     @media (max-width: 550px) {
         width: 55vw;
-        height: 7vh;
+        height: 8vh;
         font-size: 2vmin;
+    }
+    .selected-tags{
+        border: 1px solid red;
+        margin: 1rem;
+        padding: 1rem .5rem;
+        height: 100%;
+        
+        overflow: scroll;
     }
 
     .tag {
-        margin: 10px;
+        border: 1px solid blue;
+        margin: 3vh;
+        word-break: keep-all;
+        
         padding: 0.5rem;
         border-radius: 10px;
         color: white;
@@ -297,11 +333,12 @@ const SelectedTag = styled.div`
         }
 
         .delete-tag {
+            
             margin: 0;
             padding: 3px;
             cursor: pointer;
         }
-    }
+    } */
 `;
 
 const ButtonWrapper = styled.div`
