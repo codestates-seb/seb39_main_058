@@ -273,56 +273,26 @@ const Secret = styled.div`
 `
 
 const SelectedTag = styled.div`
-    
-    border: 1px solid black;
-    width: 30vw;
-    height: 10vh;
-    
-    /* white-space: pre-line;
-    word-break: keep-all;
-    word-break: keep-all;
-    -ms-overflow-style: none;
-    scrollbar-width: none; */
-
-    
-    .selected-tags {
-        display: flex;
-        border: 1px solid red;
-        width: 100%;
-        height: 100%;
-    }
-
-    .tag {
-        font-size: 2.5vmin;
-    }
-    
-    /* display: flex;
+        
+    display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 1rem;    
     border: 1px solid black;
-    padding: 0.5rem 0;
+    
     width: 80vw;
-    height: 5vh;
+    
     @media (max-width: 550px) {
-        width: 55vw;
-        height: 8vh;
+        width: 80vw;
         font-size: 2vmin;
     }
     .selected-tags{
-        border: 1px solid red;
-        margin: 1rem;
-        padding: 1rem .5rem;
-        height: 100%;
-        
-        overflow: scroll;
+        display: flex;
+        flex-flow: wrap;        
     }
 
     .tag {
-        border: 1px solid blue;
-        margin: 3vh;
-        word-break: keep-all;
-        
+        margin: 1vh;      
         padding: 0.5rem;
         border-radius: 10px;
         color: white;
@@ -338,7 +308,7 @@ const SelectedTag = styled.div`
             padding: 3px;
             cursor: pointer;
         }
-    } */
+    }
 `;
 
 const ButtonWrapper = styled.div`
@@ -352,13 +322,13 @@ const ButtonWrapper = styled.div`
 
         .writer-submit {
             width: 50vw;
-            height: 5vh;
+            height: 45px;
             
         }
 
         .writer-cancel {
             width: 50vw;
-            height: 5vh;
+            height: 45px;
             
         }
     }

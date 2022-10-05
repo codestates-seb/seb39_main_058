@@ -500,27 +500,27 @@ const SelectedTag = styled.div`
   width: 80vw;
   height: 5vh;
   @media (max-width: 550px) {
-      width: 55vw;
-      height: 7vh;
-      font-size: 2vmin;
+    width: 55vw;
+    height: 7vh;
+    font-size: 2vmin;
   }
 
   .tag {
-      margin: 10px;
-      padding: 0.5rem;
-      border-radius: 10px;
-      color: white;
-      background-color: rgb(56,217,169);
-      font-family: 'Courier New', Courier, monospace;
-      &:hover {
-          background: rgb(71,182,181);
-      }
+    margin: 10px;
+    padding: 0.5rem;
+    border-radius: 10px;
+    color: white;
+    background-color: rgb(56,217,169);
+    font-family: 'Courier New', Courier, monospace;
+    &:hover {
+      background: rgb(71,182,181);
+    }
 
-      .delete-tag {
-          margin: 0;
-          padding: 3px;
-          cursor: pointer;
-      }
+    .delete-tag {
+      margin: 0;
+      padding: 3px;
+      cursor: pointer;
+    }
   }
 `
 
