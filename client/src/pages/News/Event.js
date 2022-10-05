@@ -46,7 +46,7 @@ const Event = () => {
 
 
     useEffect(() => {
-        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event?page=1&size=10")
+        fetch("https://sswitch.ga/news/event?page=1&size=10")
         .then(res => res.json())
         .then(res => {
             setData(res.data)
@@ -57,7 +57,7 @@ const Event = () => {
     const scrollChange = () => {
 
         setTimeout(() => {
-          fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event?page=${page+1}&size=10`)
+          fetch(`https://sswitch.ga/news/event?page=${page+1}&size=10`)
           .then(res => res.json())
           .then(res => {
             setData(data.concat(res.data))

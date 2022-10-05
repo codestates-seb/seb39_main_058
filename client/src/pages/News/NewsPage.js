@@ -37,7 +37,7 @@ const NewsPage = () => {
   }
 
   useEffect(() => {
-    fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice?page=1&size=10")
+    fetch("https://sswitch.ga/news/notice?page=1&size=10")
     .then((res) => res.json())
     .then((res) => {
       setData(res.data)
@@ -47,7 +47,7 @@ const NewsPage = () => {
 
   const handleDeletButton = () => {
     for(let i = 0 ; i < check.length ; i++){
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/${check[i]}`,{
+      fetch(`https://sswitch.ga/news/notice/take/${check[i]}`,{
         method: "DELETE",
         headers: { 
           "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -66,7 +66,7 @@ const NewsPage = () => {
       "noticeText" : edit.noticeText
     }
     
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/${edit.noticeId}`,{
+    fetch(`https://sswitch.ga/news/notice/take/${edit.noticeId}`,{
       method : "PATCH",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -83,7 +83,7 @@ const NewsPage = () => {
   const scrollChange = () => {
 
     setTimeout(() => {
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice?page=${page+1}&size=10`)
+      fetch(`https://sswitch.ga/news/notice?page=${page+1}&size=10`)
       .then(res => res.json())
       .then(res => {
         setData(data.concat(res.data))

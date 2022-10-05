@@ -25,7 +25,7 @@ function CommunityCreate() {
             "noticeText" : write.content
         }
         
-        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/notice/take/create",{
+        fetch("https://sswitch.ga/news/notice/take/create",{
             method: "POST",
             headers: { 
                 "Authorization": `Bearer ${userInfo.accessToken}`,
