@@ -72,6 +72,8 @@ function User() {
         window.location.reload();
     }
 
+    console.log(order)
+
 
     useEffect(() => {
         fetch(`https://sswitch.ga/orders?id=${userInfo.userId}&page=1&size=10`,{
@@ -178,7 +180,7 @@ function User() {
                             return(
                                 <div className='bords_list select' key={el.orderId}>
                                     <span className='his'>{el.orderGoodsList[0].goodsName}</span>
-                                    <span className='date'>{el.createdAt.slice(0,10)}</span>
+                                    <span className='date'>{el.createdAt}</span>
                                     <span className="point minus">{el.orderGoodsList[0].price}</span>
                                 </div>
                             )
