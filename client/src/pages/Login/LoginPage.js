@@ -71,7 +71,7 @@ const tabKey2=(event)=>{
   const loginPost = async()=>{
 
 
-    await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/login', {
+    await fetch('https://sswitch.ga/login', {
 
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},
