@@ -3,7 +3,7 @@ package main.sswitch.user.service;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import main.sswitch.security.oauth.jwt.TokenProvider;
+import main.sswitch.security.jwt.TokenProvider;
 
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
@@ -145,6 +145,16 @@ public class UserService {
         return findUserName;
     }
 
+//    private int findUserOnlyUserName(String userName) {
+//        Optional<User> optionalUser = userRepository.findByUsername(userName);
+//        if (optionalUser.isPresent()) {
+//            return 1;
+//        }
+////        User findUserName = optionalUser.orElseThrow(() ->
+////                new BusinessLogicException(ExceptionCode.USERNAME_NOT_FOUND));
+//        return 0;
+//    }
+
     private User findVerifiedUserWithUserNameForSearch(String userName) {
         Optional<User> optionalUser = userRepository.findByUsername(userName);
         User findUserName = optionalUser
@@ -167,6 +177,11 @@ public class UserService {
     public User findUserWithUserName(String userName) {
         return findVerifiedUserWithUserName(userName);
     }
+
+//    @Transactional(readOnly = true)
+//    public User findUserWithUserName(String userName) {
+//        return findUserWithUserName(userName);
+//    }
 
     @Transactional(readOnly = true)
     public User findUserWithUserNameForSearch(String userName) {
