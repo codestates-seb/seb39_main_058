@@ -42,7 +42,7 @@ function CommunityDetail() {
   
   // 특정 게시글 조회
   useEffect(() => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/${id}`,{
+    fetch(`https://sswitch.ga/community/forum/${id}`,{
       headers: { 
         "Authorization": `Bearer ${userInfo.accessToken}`,
         "Content-Type": "application/json"
@@ -84,7 +84,7 @@ function CommunityDetail() {
 
     if(!userInfo.accessToken) navigate('/login', {state: {path: location.pathname}});
     // console.log(like)
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like`, {
+    fetch(`https://sswitch.ga/community/forum/take/like`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -102,7 +102,7 @@ function CommunityDetail() {
     // 만약 like가 0이 아니라면, like수 하나 줄이고, like가 0이라면 그 상태 그대로 0으로 두기 
     like ? setLike(like - 1) : setLike(0);
 
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/like/`, {
+    fetch(`https://sswitch.ga/community/forum/take/like/`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -123,7 +123,7 @@ function CommunityDetail() {
   // 게시글 수정 및 수정 확인 버튼
   const reviseBoard = () => setRevise(!revise);
   const confirmRevise = () => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
+    fetch(`https://sswitch.ga/community/forum/take/${id}`, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -144,7 +144,7 @@ function CommunityDetail() {
   // 게시글 삭제 및 삭제 확인 버튼
   const deleteBoard = () => setRemove(!remove); 
   const confirmRemove = () => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/${id}`, {
+    fetch(`https://sswitch.ga/community/forum/take/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
