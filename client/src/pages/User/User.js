@@ -29,7 +29,6 @@ function User() {
             .then(res => res.json())
             .then(data => {
                 setUserData(data.data)
-                console.log(data)
             })
             .catch(err => console.log(err))
     },[])
@@ -444,53 +443,4 @@ export const UserContainer = styled.div`
     top: 10vh;
     border-radius: 2%;
     padding: 2rem;
-`;
-
-// 회원탈퇴 모달창
-const RemoveModal = styled.div`
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  white-space: nowrap;
-
-  .delete-warning {
-    .delete-warning-icon {
-      color: rgb(254,104,0);
-      font-size: 5vmin;
-    }
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    background-color: white;
-    width: 55vw;
-    height: 30vh;
-    border-radius: 10px;
-    font-family: Jua, serif;
-    font-size: 3vmin;
-  }
-
-  .confirm-wrapper {
-    display: flex;
-    .confirm, .cancel {
-      margin: 0.2rem;
-      padding: 0.3rem;
-      border: 3px solid black;
-      border-radius: 5px;
-      :hover {
-        cursor: pointer;
-        background-color: lightgray;
-      }
-    }
-  }
 `;
