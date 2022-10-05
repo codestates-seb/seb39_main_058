@@ -30,7 +30,7 @@ function CommunityPage() {
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
   useEffect(() => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum?page=${page}&size=20`)
+    fetch(`https://sswitch.ga/community/forum?page=${page}&size=20`)
     .then(res => res.json())
     .then(res => {
       setData(res.data)
@@ -62,7 +62,7 @@ function CommunityPage() {
 
   const handleSearchButton = () => {
     if(search.content !== undefined){
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search/${search.select}?page=1&size=20&${search.select}=${search.content}`)
+      fetch(`https://sswitch.ga/community/forum/search/${search.select}?page=1&size=20&${search.select}=${search.content}`)
       .then(res => res.json())
       .then(res => {
         setData(res.data)
@@ -82,7 +82,7 @@ function CommunityPage() {
 
   const handleTagSearch = () => {
     if(tags.length !== 0){
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/search/tag?page=1&size=20&tag=${tags[0]}`)
+      fetch(`https://sswitch.ga/community/forum/search/tag?page=1&size=20&tag=${tags[0]}`)
       .then(res => res.json())
       .then(res => {
         setData(res.data)

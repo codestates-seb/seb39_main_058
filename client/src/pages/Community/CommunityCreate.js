@@ -48,7 +48,7 @@ function CommunityCreate() {
         }
         
         if(title && content) {
-            fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/forum/take/create", {
+            fetch("https://sswitch.ga/community/forum/take/create", {
                 method: "POST",
                 headers: { 
                     "Authorization": `Bearer ${userInfo.accessToken}`,
