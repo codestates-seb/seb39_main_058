@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
-function EventCreate({edit, setEdit}) {
+function EventCreate({edit, setEdit, eventId}) {
 
-  const [imgLink, setImgLink] = useState('')
+  const [newEdit, setNewEdit] = useState({
+    title : ``,
+    content : '',
+    img : undefined
+  })
 
   const navigate = useNavigate();
 
@@ -13,10 +17,50 @@ function EventCreate({edit, setEdit}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('hi')
-  }
 
-  //edit ? 패치 : 포스트
+    const editInfo = {
+        "eventTitle": newEdit.title,
+        "eventText": newEdit.content,
+        "imagePath": newEdit.img
+    }
+
+    const postInfo = {
+        "userId": userInfo.userId,
+        "eventTitle": newEdit.title,
+        "eventText": newEdit.content,
+        "imagePath": newEdit.img
+    }
+
+    if(edit){
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/${eventId}`,{
+            method : "PATCH",
+            headers: {
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(editInfo)
+        })
+        .then(() => {
+            window.location.reload()
+        })
+        .catch(err => console.log(err))
+    }
+
+    if(!edit){
+        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/create",{
+            method : "POST",
+            headers: {
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postInfo)
+        })
+        .then(() => {
+            navigate('/news/event')
+        })
+        .catch(err => console.log(err))
+    }
+  }
   
   return (
     <Main>
@@ -32,9 +76,10 @@ function EventCreate({edit, setEdit}) {
                         <label htmlFor="title">제목</label>
                         <input type="text" id="title" placeholder="제목을 입력해주세요." 
                             onChange={(e) => {
-                                // setWrite({title : e.target.value , content : write.content})
+                                setNewEdit({title : e.target.value , content : newEdit.content, img : newEdit.img})
                             }}/>
-                        <input placeholder="이미지 링크를 입력해주세요." id="title" type="text" onChange={(e) => setImgLink(e.target.value)}/>
+                        <input placeholder="이미지 링크를 입력해주세요." id="title" type="text"
+                        onChange={(e) => setNewEdit({title : newEdit.title , content : newEdit.content , img : e.target.value})}/>
                     </form>
                 </div>
                 <div className="writer-content">
@@ -42,7 +87,7 @@ function EventCreate({edit, setEdit}) {
                         <label htmlFor="content"></label>
                         <textarea id="content" placeholder="내용을 입력해주세요." 
                             onChange={(e) => {
-                                // setWrite({title : write.title , content : e.target.value})
+                                setNewEdit({title : newEdit.title , content : e.target.value, img : newEdit.img})
                             }}/>
                     </form>
                 </div>
