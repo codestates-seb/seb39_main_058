@@ -52,7 +52,7 @@ public class OrderService {
                     .build();
             orderGoods.addOrder(order);
             orderGoodsRepository.save(orderGoods);
-            userService.updatePoints(order.getUser(), order.getUser().getCurrentPoints(), (orderGoods.getGoods().getPrice()));
+            userService.updatePoints(order.getUser(), order.getUser().getCurrentPoints(), (orderGoods.getGoods().getPrice()), order.getUser().getTotalPoints(),0);
         }
 
         return orderRepository.save(order);
@@ -73,13 +73,16 @@ public class OrderService {
         return orderRepository.findAllByUser(user, PageRequest.of(page, size,
                 Sort.by("orderId").descending()));
     }
-
+    @Transactional
     public void cancelOrder(Long orderId){
-        findVerifiedOrder(orderId);
+        Order findOrder = findVerifiedOrder(orderId);
+        orderRepository.delete(findOrder);
     }
 
+    @Transactional
     public void cancelOrderGoods(Long orderGoodsId){
-        findVerifiedOrderGoods(orderGoodsId);
+        OrderGoods fubdOrderGoods = findVerifiedOrderGoods(orderGoodsId);
+        orderGoodsRepository.delete(fubdOrderGoods);
     }
 
     public Order findVerifiedOrder(Long orderId) {

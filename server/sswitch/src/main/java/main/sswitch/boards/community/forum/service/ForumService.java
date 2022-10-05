@@ -55,15 +55,21 @@ public class ForumService {
     //게시글 좋아요 버튼 구현
     //우선 해당글 따봉누른 유저 목록을 불러옴
     //없으면 넣어줌 있으면 빼줌
-    public Forum likeForum(long forumId) {
+    public Forum likeForum(long forumId, long userId) {
         Forum findForum = findVerifiedForum(forumId);
         long likeforum = findForum.getForumLike();
         likeforum++;
         if (likeforum >= 10) {
             findForum.setDdabong(findForum.getDdabong() + 1);
+            if (findForum.getDdabong() >= 10) {
+                findForum.setDdabong(10);
+            }
         }
         findForum.setForumLike(likeforum);
-
+        User findUser = userService.findUserWithId(userId);
+        if(findForum.getDdabong() == 1) {
+            userService.updatePoints(findUser, findUser.getCurrentPoints(), 0, findUser.getTotalPoints(), 100);
+        }
         return forumRepository.save(findForum);
     }
 

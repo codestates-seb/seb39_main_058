@@ -22,13 +22,13 @@ public class OrderGoods extends BaseEntity {
 
     @Column(nullable = false)
     private int quantity;
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ORDER_ID")
     private Order order;
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "GOODS_ID")
     private Goods goods;
-    @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 

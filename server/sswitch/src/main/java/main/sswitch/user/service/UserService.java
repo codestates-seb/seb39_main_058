@@ -195,24 +195,16 @@ public class UserService {
     }
 
     @Transactional
-    public User updatePoints(User user, int currentPoints, int usedPoints) {
+    public User updatePoints(User user, int currentPoints, int usedPoints, int totalPoints, int addedPoints) {
         User findUser = findVerifiedUser(user.getUserId());
         if(currentPoints < usedPoints)
         {
             throw  new BusinessLogicException(ExceptionCode.NOT_ENOUGH_POINTS);
         }
-        findUser.setCurrentPoints(currentPoints-usedPoints);
-        return userRepository.save(findUser);
-    }
 
-    @Transactional
-    public User addPoints(User user, int totalPoints, int addedPoints) {
-        User findUser = findVerifiedUser(user.getUserId());
+        findUser.setCurrentPoints(currentPoints-usedPoints+addedPoints);
         findUser.setTotalPoints(totalPoints+addedPoints);
         return userRepository.save(findUser);
     }
-
-
-
 
 }

@@ -22,8 +22,8 @@ public class TrashResponseDto {
     private LocalDateTime dateModified;
 
     private TrashCan.TrashStatus trashStatus;
-
-    private long userId;
+//
+//    private long userId;
 
 
     public void getDateCreated(LocalDateTime dateCreated) {

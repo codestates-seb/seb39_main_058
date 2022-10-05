@@ -14,6 +14,8 @@ import main.sswitch.boards.news.notice.entity.Notice;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.order.entity.Order;
 import main.sswitch.order.entity.OrderGoods;
+import main.sswitch.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCanAlarm;
 
 
 import javax.persistence.*;
@@ -83,6 +85,12 @@ public class User extends BaseEntity implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notice> notices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TrashCan> trashCan = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<TrashCanAlarm> trashCanAlarm;
 
     boolean enabled = false;
 
