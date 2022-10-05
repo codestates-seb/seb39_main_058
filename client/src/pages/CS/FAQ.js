@@ -69,7 +69,7 @@ function FAQ() {
                 <p className='title'>{el.title}</p>
               </div>
               {click && findId === el.id ?
-              <div className="title_container">
+              <div className="content_container">
                 <p className="title content">{el.content}</p>
               </div> : undefined}
             </div>
@@ -111,6 +111,12 @@ const FAQStyle = styled.div`
     :hover{
       background-color: lightgray;
     }
+  }
+
+  .content_container{
+    display: flex;
+    cursor: pointer;
+    border-bottom: 0.1rem solid rgba(0,0,0,0.3);
   }
 
   .body{

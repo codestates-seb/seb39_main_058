@@ -29,7 +29,6 @@ function User() {
             .then(res => res.json())
             .then(data => {
                 setUserData(data.data)
-                console.log(data)
             })
             .catch(err => console.log(err))
     },[])
