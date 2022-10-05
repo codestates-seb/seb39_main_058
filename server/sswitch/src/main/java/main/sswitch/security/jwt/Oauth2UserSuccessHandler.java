@@ -1,5 +1,8 @@
 package main.sswitch.security.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
 import main.sswitch.security.utils.CustomAuthorityUtils;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.user.dto.UserClassifiedResponseDto;
@@ -14,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,6 +40,8 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         this.userService = userService;
     }
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException{
@@ -49,6 +55,14 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         if(optionalUser.isEmpty()){
             saveUser(email, name, given_name, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
         }
+
+        HelloData data = new HelloData();
+        data.setProvider(provider);
+        data.setUsername(given_name);
+        String result = objectMapper.writeValueAsString(data);
+        response.getWriter().write(result);
+
+        response.setHeader("email", email);
 
         redirect(request, response, email, authorities, given_name);
     }
@@ -112,12 +126,19 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(80)
-                .path("/receive-token.html")
-                .queryParams(queryParams)
+                .scheme("https")
+//                .host("localhost")
+//                .port(8080)
+                .path("seb39-main-058-tawny.vercel.app/")
+//                .queryParams(queryParams)
                 .build()
                 .toUri();
+    }
+
+    @Getter
+    @Setter
+    private class HelloData {
+        private String username;
+        private String provider;
     }
 }
