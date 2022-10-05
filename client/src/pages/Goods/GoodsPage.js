@@ -80,7 +80,7 @@ useEffect(()=>{
         <div>{userInfo.userName}님</div> <div>보유포인트{userInfo.point}</div>
       </UserInfo> 
       :
-        <div>서비스는 로그인 후 이용 하실 수 있습니다.</div>
+        <div className='noLoginMsg'>서비스는 로그인 후 이용 하실 수 있습니다.</div>
       }
         
         
@@ -133,6 +133,14 @@ width: 80%;
 
 text-align : center;
 
+.noLoginMsg{
+  font-size: 5vmin;
+  @media (max-width: 550px) {
+     
+     font-size: 20px;
+     
+    }
+}
 
 @media (max-width: 550px) {
           /* margin-top: 50px; */
@@ -167,7 +175,17 @@ const BoardHeader = styled.div`
 const UserInfo=styled.div`
 display: flex;
 justify-content: space-between;
+font-size: 5vmin;
 
+ div{
+
+   @media (max-width: 550px) {
+     
+     font-size: 20px;
+     
+    }
+  }
+    
 `
 
 
@@ -188,6 +206,7 @@ margin-bottom: 30px;
 `
 const CouponBagContainer=styled.div`
 width: 80%;
+margin-top: 20px;
 @media (max-width: 550px) {
             
             width: 90%;
@@ -199,10 +218,30 @@ width: 80%;
 const CouponBagHead=styled.div`
 display: flex;
 width: 100%;
-border: solid 1px;
+border: solid 1.5px;
 justify-content: space-between;
+background-color: #F2F2F2;
+div{
+  font-size: 20px;
+  font-weight: bold;
+  @media (max-width: 550px) {
+    font-size: 17px;
+    
+  }
+}
 
  .open{
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #002B5B;
+  color: white;
+  border-radius: 5px;
+  @media (max-width: 550px) {
+    font-size: 17px;
+    
+  }
+
+
   :hover {
         cursor: pointer;
         /* background-color: lightgray; */
