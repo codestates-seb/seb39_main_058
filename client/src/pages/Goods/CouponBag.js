@@ -136,10 +136,19 @@ width: 100%;
 height: 400px;
 /* margin-bottom: 10px; */
 align-items: center;
-/* flex-direction: column; */
+
 flex-wrap: wrap;
 overflow-y: auto;
 justify-content: space-around;
+@media (max-width: 550px) {
+            
+           
+  flex-direction: column;
+  justify-content: start;
+  flex-wrap: nowrap;
+
+}
+
 
 `
 const CouponContainer=styled.div`
@@ -150,6 +159,11 @@ justify-content: space-around;
 
 margin-top: 10px;
 flex-basis: 600px;
+@media (max-width: 550px) {
+            flex-basis: 0px;
+          
+            
+}
 
 `
 const GoodsImg=styled.div`
@@ -161,7 +175,7 @@ width: 20%;
 }
 
   img{
-  /* width: 90px; */
+ 
   width: 100%;
   height: 90px;
  }
