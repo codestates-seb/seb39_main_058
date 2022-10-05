@@ -26,7 +26,7 @@ function User() {
     const [order, setOrder] = useState([])
 
     useEffect(() => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+        fetch(`https://sswitch.ga/users/profile`, {
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
                 "Content-Type": "application/json"
@@ -56,7 +56,7 @@ function User() {
     // 회원탈퇴
     const userWithdraw = () => setWithdrawal(!withdrawal);
     const confirmWithdrawal = () => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/signout/`, {
+        fetch(`https://sswitch.ga/users/signout/`, {
             method: "DELETE",
             headers: {
             "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -74,7 +74,7 @@ function User() {
 
 
     useEffect(() => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders?id=${userInfo.userId}&page=1&size=10`,{
+        fetch(`https://sswitch.ga/orders?id=${userInfo.userId}&page=1&size=10`,{
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
                 "Content-Type": "application/json"

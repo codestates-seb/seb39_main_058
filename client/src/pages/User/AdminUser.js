@@ -20,7 +20,7 @@ function AdminUser() {
     const navigate = useNavigate();
     
     useEffect(() => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+        fetch(`https://sswitch.ga/users/profile`, {
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
                 "Content-Type": "application/json"
