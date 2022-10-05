@@ -28,7 +28,7 @@ function ReviseUser() {
   const [ cancel, setCancel ] = useState(false);
 
   useEffect(() => {
-    fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`,{
+    fetch(`https://sswitch.ga/users/profile`,{
       method: "GET",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -53,7 +53,7 @@ function ReviseUser() {
     // 프로필 이미지 링크와 비밀번호만 채워지고, 나머지 정보는 빈칸인 경우,
     if(profileImg.state && password.state && (!email.state || !userName.state)) {
       e.preventDefault();
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+      fetch(`https://sswitch.ga/users/profile`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -66,7 +66,7 @@ function ReviseUser() {
         .catch(err => console.log(err))
     } else {
       e.preventDefault();
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+      fetch(`https://sswitch.ga/users/profile`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -105,7 +105,7 @@ console.log(userData);
   // 회원탈퇴
   const userWithdraw = () => setWithdrawal(!withdrawal);
   const confirmWithdrawal = () => {
-      fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/signout/`, {
+      fetch(`https://sswitch.ga/users/signout/`, {
           method: "DELETE",
           headers: {
           "Authorization": `Bearer ${userInfo.accessToken}`,
