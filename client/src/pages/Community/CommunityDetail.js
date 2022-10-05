@@ -279,15 +279,14 @@ function CommunityDetail() {
               {console.log(data.data?.likeForumResponses)}
               {/* {console.log(userInfo)} */}
               {data.data?.likeForumResponses.map(el => {
-                if (el.userId !== userInfo.userId) {
-                  return <button className="like-btn" key={el.likeForumId} onClick={addLike}>
+                (el.userId !== userInfo.userId) ?
+                  <button className="like-btn" key={el.likeForumId} onClick={addLike}>
                     <FcLikePlaceholder className="like-btn"/>
-                  </button> 
-                } else if (el.userId === userInfo.userId) {
-                  return <button className="like-btn" key={el.likeForumId} onClick={disLike}>
+                  </button> :
+                  <button className="like-btn" key={el.likeForumId} onClick={disLike}>
                     <FcLike className="like-btn"/>
                   </button>
-                }
+                
               })}
 
               {/* {!like ?
