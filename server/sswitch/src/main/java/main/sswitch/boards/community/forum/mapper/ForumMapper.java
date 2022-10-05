@@ -16,12 +16,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ForumMapper {
-//    default Forum ForumPostDtoToForum(ForumPostDto forumPostDto) {
-//        Forum forum = new Forum();
-//        User user = new User();
-//        user.setLoginId(forumPostDto.getLoginId());
-//
-//    }
 
     Forum ForumPostDtoToForum(ForumPostDto forumPostDto);
 

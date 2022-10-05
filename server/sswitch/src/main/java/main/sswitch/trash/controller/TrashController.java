@@ -1,8 +1,11 @@
 package main.sswitch.trash.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import main.sswitch.trash.dto.TrashCanAlarmDto;
 import main.sswitch.trash.dto.TrashStatusDto;
 import main.sswitch.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCanAlarm;
+import main.sswitch.trash.mapper.TrashAlarmMapper;
 import main.sswitch.trash.mapper.TrashMapper;
 import main.sswitch.trash.service.TrashService;
 import main.sswitch.help.response.dto.MultiResponseDto;
@@ -27,18 +30,32 @@ public class TrashController {
     private TrashService trashService;
     private TrashMapper mapper;
 
-    public TrashController(TrashService trashService, TrashMapper mapper) {
+    private TrashAlarmMapper alarmMapper;
+
+    public TrashController(TrashService trashService, TrashMapper mapper, TrashAlarmMapper alarmMapper) {
         this.trashService = trashService;
         this.mapper = mapper;
+        this.alarmMapper = alarmMapper;
     }
 
     //쓰레기통 등록
     @PostMapping("/take/create")
     public ResponseEntity postTrashCan(@Valid @RequestBody TrashPostDto trashPostDto) {
+
         TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto));
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
+                HttpStatus.CREATED);
+    }
+
+    @PostMapping("/flush/create/{trash-id}")
+    public ResponseEntity createTrashCanAlarm(@PathVariable("trash-id") long trashId, @Valid @RequestBody TrashCanAlarmDto requestBody) {
+        TrashCanAlarm trashCanAlarm = trashService.createTrashCanAlarm(requestBody, trashId);
+        TrashCanAlarmDto.Response response = alarmMapper.alarmToTrashAlarmResponseDto(trashCanAlarm);
+
+        return new ResponseEntity<>(
+                new SingleResponseDto<>(response),
                 HttpStatus.CREATED);
     }
 
@@ -94,6 +111,12 @@ public class TrashController {
     public ResponseEntity deleteTrashCans(@PathVariable("trash-id") long trashId) {
         trashService.deleteTrashCan(trashId);
 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    //쓰레기통 비움
+    @DeleteMapping("/flush/{trash-id}")
+    public ResponseEntity deleteTrashCanAlarm(@PathVariable("trash-id") long trashId) {
+        trashService.deleteTrashCanAlarm(trashId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

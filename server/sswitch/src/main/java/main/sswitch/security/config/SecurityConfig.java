@@ -3,7 +3,6 @@ package main.sswitch.security.config;
 import lombok.RequiredArgsConstructor;
 import main.sswitch.security.jwt.JwtAccessDeniedHandler;
 import main.sswitch.security.jwt.JwtAuthenticationEntryPoint;
-import main.sswitch.security.utils.CustomAuthorityUtils;
 import main.sswitch.security.oauth.filter.JwtVerificationFilter;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.security.handler.Oauth2UserSuccessHandler;
@@ -34,14 +33,12 @@ import java.util.Arrays;
 )
 public class SecurityConfig {
     private final OauthJwtTokenizer oauthJwtTokenizer;
-    private final CustomAuthorityUtils authorityUtils;
     private final UserService userService;
     private final UserRepository userRepository;
 
     private final CorsFilter corsFilter;
 
     public SecurityConfig(OauthJwtTokenizer oauthJwtTokenizer,
-                          CustomAuthorityUtils authorityUtils,
                           UserService userService,
                           UserRepository userRepository,
                           CorsFilter corsFilter) {
@@ -49,7 +46,6 @@ public class SecurityConfig {
         this.corsFilter = corsFilter;
         this.userService = userService;
         this.oauthJwtTokenizer = oauthJwtTokenizer;
-        this.authorityUtils = authorityUtils;
 
     }
 
@@ -89,7 +85,7 @@ public class SecurityConfig {
 //                .redirectionEndpoint()
 //                .baseUri("/oauth2/callback/*")
 //                .and()
-                                .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, authorityUtils, userService, userRepository)));
+                                .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
 
         return http.build();
     }
@@ -116,7 +112,7 @@ public class SecurityConfig {
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(oauthJwtTokenizer, authorityUtils);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(oauthJwtTokenizer);
 
             builder.addFilter(corsFilter)
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);

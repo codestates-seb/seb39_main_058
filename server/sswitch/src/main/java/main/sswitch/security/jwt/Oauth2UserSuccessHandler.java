@@ -3,9 +3,7 @@ package main.sswitch.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import main.sswitch.security.utils.CustomAuthorityUtils;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
-import main.sswitch.user.dto.UserClassifiedResponseDto;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
@@ -27,16 +25,14 @@ import java.util.*;
 public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final OauthJwtTokenizer oauthJwtTokenizer;
     private final UserService userService;
-    private final CustomAuthorityUtils authorityUtils;
+
     private final UserRepository userRepository;
 
     public Oauth2UserSuccessHandler(OauthJwtTokenizer oauthJwtTokenizer,
-                                    CustomAuthorityUtils authorityUtils,
                                     UserService userService,
                                     UserRepository userRepository) {
         this.userRepository = userRepository;
         this.oauthJwtTokenizer = oauthJwtTokenizer;
-        this.authorityUtils = authorityUtils;
         this.userService = userService;
     }
 
@@ -50,7 +46,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String name = String.valueOf(oAuth2User.getAttributes().get("name"));
         String given_name = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
-        List<String> authorities = authorityUtils.createRoles(email);
+        String authorities = "ROLE_USER";
         Optional<User> optionalUser = userRepository.findByUsername(given_name);
         if(optionalUser.isEmpty()){
             saveUser(email, name, given_name, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
@@ -62,9 +58,15 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String result = objectMapper.writeValueAsString(data);
         response.getWriter().write(result);
 
-        response.setHeader("email", email);
+        Cookie cookie = new Cookie("provider", provider);
+        response.addCookie(cookie);
+        String accessToken = delegateAccessToken(given_name, authorities);    //현재 작성하는 access토큰과 일치시켜야함
 
-        redirect(request, response, email, authorities, given_name);
+
+        response.setHeader("email", email);
+        response.setHeader("accessToken", accessToken);
+
+        redirect(request, response, name, authorities);
     }
 
     private void saveUser(String email,String name,String given_name,String provider) {
@@ -85,18 +87,17 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response,
-                          String username, List<String> authorities, String name) throws IOException {
-        String accessToken = delegateAccessToken(username, authorities);    //현재 작성하는 access토큰과 일치시켜야함
-        String refreshToken = delegateRefreshToken(username);
+                          String name, String authorities) throws IOException {
+        String accessToken = delegateAccessToken(name, authorities);    //현재 작성하는 access토큰과 일치시켜야함
+        String refreshToken = delegateRefreshToken(name);
 
-        String uri = createURI(accessToken, refreshToken, name).toString();
+        String uri = createURI(accessToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String delegateAccessToken(String username, List<String> authorities) {
+    private String delegateAccessToken(String username, String authorities) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
-        claims.put("roles", authorities);
+        claims.put("auth", authorities);
 
         String subject = username;
         Date expiration = oauthJwtTokenizer.getTokenExpiration(oauthJwtTokenizer.getAccessTokenExpirationMinutes());
@@ -118,19 +119,20 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         return refreshToken;
     }
 
-    private URI createURI(String accessToken, String refreshToken, String name) {
+    private URI createURI( String accessToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
+
 //        queryParams.add("refresh_token", refreshToken);
-        queryParams.add("username", name);
+//        queryParams.add("username", name);
 
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("https")
-//                .host("localhost")
+                .host("seb39-main-058-tawny.vercel.app")
 //                .port(8080)
-                .path("seb39-main-058-tawny.vercel.app/")
-//                .queryParams(queryParams)
+                .path("/login")
+                .queryParams(queryParams)
                 .build()
                 .toUri();
     }

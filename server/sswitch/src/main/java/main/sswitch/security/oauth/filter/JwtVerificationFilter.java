@@ -2,11 +2,10 @@ package main.sswitch.security.oauth.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import main.sswitch.security.utils.CustomAuthorityUtils;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,17 +14,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class JwtVerificationFilter extends OncePerRequestFilter {
     private final OauthJwtTokenizer oauthJwtTokenizer;
-    private final CustomAuthorityUtils authorityUtils;
 
-    public JwtVerificationFilter(OauthJwtTokenizer oauthJwtTokenizer,
-                                 CustomAuthorityUtils authorityUtils) {
+    public JwtVerificationFilter(OauthJwtTokenizer oauthJwtTokenizer) {
         this.oauthJwtTokenizer = oauthJwtTokenizer;
-        this.authorityUtils = authorityUtils;
     }
 
     @Override
@@ -62,9 +57,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticaionToContext(Map<String, Object> claims) {
-        String username = (String) claims.get("username");
-        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List) claims.get("roles"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken( null, "auth");
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

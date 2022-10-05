@@ -16,15 +16,16 @@ public class TrashPostDto {
     @NotBlank
     private String latitude;
 
-    @NotNull
-    private long userId;
+//    @NotNull
+//    private long userId;
 
     private TrashCan.TrashStatus trashStatus;
 
-    public User getUser() {
-        User user = new User();
-        user.setUserId(userId);
-        return user;
-    }
+
+//    public User getUser() {
+//        User user = new User();
+//        user.setUserId(userId);
+//        return user;
+//    }
 
 }

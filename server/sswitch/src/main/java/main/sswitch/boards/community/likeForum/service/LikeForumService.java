@@ -35,7 +35,7 @@ public class LikeForumService {
     public LikeForum createLike(LikeForum likeForum) {
         verifyExistLikeForum(likeForum);
         LikeForum saveLike = likeForumRepository.save(likeForum);
-        forumService.likeForum(likeForum.getForum().getForumId());
+        forumService.likeForum(likeForum.getForum().getForumId() , likeForum.getUser().getUserId());
         return saveLike;
     }
 
