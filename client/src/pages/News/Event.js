@@ -72,8 +72,6 @@ const Event = () => {
         console.log('hi')
     }
 
-    console.log(edit)
-
 return (
     <EventStyle modal={modal}>
     <div className="flex">
@@ -85,7 +83,10 @@ return (
     <div className="back" onClick={() => setModal(false)}>
         <div className="view" onClick={e => e.stopPropagation()}>
             <div className="title">제목</div>
-            <div className="content">내용</div>
+            <div className="content">
+                <div className="content_detail">내용</div>
+                <div className="close" onClick={() => setModal(false)}>닫기</div>
+            </div>
         </div>
     </div> :
     undefined}
@@ -208,7 +209,7 @@ const EventStyle = styled.div`
 
     .view{
         background-color: white;
-        width: 90%;
+        width: 80%;
         height: 80%;
         border-radius: 10%;
 
@@ -224,17 +225,36 @@ const EventStyle = styled.div`
         }
 
         .content{
-            height: 60vh;
+            height: 56vh;
             overflow-y: scroll;
             white-space: pre-wrap;
             word-break: keep-all;
             font-size: 5vmin;
             margin-left: 3vw;
+            margin-right: 3vw;
             -ms-overflow-style: none;
             scrollbar-width: none;
+            /* border: 1px solid red; */
 
             ::-webkit-scrollbar {
                 display: none;
+            }
+
+            .content_detail{
+                height: 48vh;
+                margin-bottom: 1vh;
+            }
+
+            .close{
+                height: 6vh;
+                border: 5px solid orange;
+                text-align: center;
+                margin: 0 15vw;
+
+                :hover{
+                    background-color: lightgrey;
+                    cursor: pointer;
+                }
             }
         }
     }

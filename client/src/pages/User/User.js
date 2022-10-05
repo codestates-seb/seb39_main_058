@@ -83,7 +83,6 @@ function User() {
         .then(res => res.json())
         .then(res => {
             setOrder(res.data)
-            console.log(res.data)
         })
         .catch(err => console.log(err))
     },[])
