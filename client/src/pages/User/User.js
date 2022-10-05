@@ -6,9 +6,8 @@ import styled from 'styled-components';
 import { FaQuestionCircle } from "react-icons/fa";
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
-import { ImWarning } from 'react-icons/im';
 import { HiPencil } from "react-icons/hi";
-import InfiniteScroll from 'react-infinite-scroll-component';
+// import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 
@@ -16,12 +15,7 @@ function User() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
     
     const [ userData, setUserData ] = useState({});
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const [ logout, setLogout ] = useState(false);
-    const [ revisedInfo, setRevisedInfo ] = useState(false);
-    const [ withdrawal, setWithdrawal ] = useState(false);
     const [rank, setRank] = useState(false)
     const [order, setOrder] = useState([])
 
@@ -33,47 +27,12 @@ function User() {
             }
         })
             .then(res => res.json())
-            .then(data => setUserData(data.data))
+            .then(data => {
+                setUserData(data.data)
+                console.log(data)
+            })
             .catch(err => console.log(err))
     },[])
-
-    // 로그아웃
-    const userLogout = () => setLogout(!logout);
-    const confirmLogout = () => {
-        dispatch({type:'LOGOUT'});
-        navigate('/');
-        setLogout(false);
-    };
-
-    // 회원정보 수정
-    const userRevise = () => {
-        console.log('회원정보 수정!')
-        // console.log(userInfo);
-        console.log(userData);
-        navigate("/users/profile/revise")
-    };
-
-    // 회원탈퇴
-    const userWithdraw = () => setWithdrawal(!withdrawal);
-    const confirmWithdrawal = () => {
-        fetch(`https://sswitch.ga/users/signout/`, {
-            method: "DELETE",
-            headers: {
-            "Authorization": `Bearer ${userInfo.accessToken}`,
-            "Content-Type": "application/json"
-            }
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
-        dispatch({type: "LOGOUT"})
-        setLogout(false);
-        navigate("/");
-        window.location.reload();
-    }
-
-    console.log(order)
-
 
     useEffect(() => {
         fetch(`https://sswitch.ga/orders?id=${userInfo.userId}&page=1&size=10`,{
@@ -89,6 +48,8 @@ function User() {
         .catch(err => console.log(err))
     },[])
 
+    let aaa = order.map(el => el.orderGoodsList[0])
+
     return (
     <Main>
         <div className='wrapper'>
@@ -97,7 +58,7 @@ function User() {
             <div className='user'>
                 <div>
                     <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
-                        <img src={ userData.profileImage === null ? '/profile.png' : userData.profileImage}/>
+                        <img src={ !userData.profileImage ? '/profile.png' : userData.profileImage}/>
                         <HiPencil className='edit'/>
                     </div>
                     <div className='flex'>
@@ -179,9 +140,9 @@ function User() {
                         {order.map(el => {
                             return(
                                 <div className='bords_list select' key={el.orderId}>
-                                    <span className='his'>{el.orderGoodsList[0].goodsName}</span>
+                                    <span className='his'>{aaa[0].goodsName}</span>
                                     <span className='date'>{el.createdAt}</span>
-                                    <span className="point minus">{el.orderGoodsList[0].price}</span>
+                                    <span className="point minus">{aaa[0].price}</span>
                                 </div>
                             )
                         })}
@@ -191,20 +152,6 @@ function User() {
 
         </div>
         </div>
-
-        {/* 회원탈퇴 모달창 */}
-        { withdrawal && <RemoveModal>
-              <div className="delete-warning">
-                <ImWarning className="delete-warning-icon"/>
-                <div>회원탈퇴 시, 회원님의 모든 정보가 삭제되며,</div>
-                <div>삭제된 정보는 복구가 불가합니다.</div>
-                <div>정말 회원탈퇴를 하시겠습니까?</div>
-                <div className="confirm-wrapper">
-                  <div className="confirm" onClick={confirmWithdrawal}>확인</div>
-                  <div className="cancel" onClick={() => setWithdrawal(!withdrawal)}>취소</div>
-                </div>
-              </div>
-          </RemoveModal>}
     </Main>
     )
 }
