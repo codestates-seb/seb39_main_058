@@ -27,6 +27,8 @@ const Event = () => {
     const [modal, setModal] = useState(false)
     const [del, setDel] = useState(false)
     const [edit, setEdit] = useState(false)
+    const [eventId, setEventId] = useState(null)
+    const [modalInfo, setModalInfo] = useState(undefined)
 
     const navigate = useNavigate();
 
@@ -54,8 +56,7 @@ const Event = () => {
         })
     },[])
 
-    const scrollChange = () => {
-
+    const scrollChange = () => { // 관리자가 목록조회 할떄 무한스크롤
         setTimeout(() => {
           fetch(`https://sswitch.ga/news/event?page=${page+1}&size=10`)
           .then(res => res.json())
@@ -70,6 +71,21 @@ const Event = () => {
 
     const handleConfirmButton = () => {
         console.log('hi')
+        //쿠폰
+    }
+    
+    const handleDeletClick = () => {
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/${eventId}`,{
+            method: "DELETE",
+            headers: { 
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(() => {
+            window.location.reload()
+        })
+        .catch((err) => console.log(err))
     }
 
 return (
@@ -82,9 +98,9 @@ return (
     {modal ?
     <div className="back" onClick={() => setModal(false)}>
         <div className="view" onClick={e => e.stopPropagation()}>
-            <div className="title">제목</div>
+            <div className="title">{modalInfo.title}</div>
             <div className="content">
-                <div className="content_detail">내용</div>
+                <div className="content_detail">{modalInfo.content}</div>
                 <div className="close" onClick={() => setModal(false)}>닫기</div>
             </div>
         </div>
@@ -92,30 +108,17 @@ return (
     undefined}
     {click === 1 ?
     <Slider {...settings}>
-        <div onClick={() => setModal(true)}>
-            <img src="https://images.unsplash.com/photo-1556647034-7aa9a4ea7437?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8Z29sZGVuJTIwcmV0cmlldmVyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60" />
-            <span>갓댕리트리버</span>
-        </div>
-        <div>
-            <img src="https://images.unsplash.com/photo-1611250282006-4484dd3fba6b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Z29sZGVuJTIwcmV0cmlldmVyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60" />
-            <span>댕댕이는 최고야</span>
-        </div>
-        <div>
-            <img src="https://images.unsplash.com/photo-1548439739-0cf616cef1cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60" />
-            <span>골댕이 헿</span>
-        </div>
-        <div>
-            <img src="https://images.unsplash.com/photo-1612464321028-0e86f94b2c52?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60" />
-            <span>갓댕리트리버</span>
-        </div>
-        <div>
-            <img src="https://images.unsplash.com/photo-1592769606534-fe78d27bf450?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60" />
-            <span>댕댕이는 최고야</span>
-        </div>
-        <div>
-            <img src="https://media.istockphoto.com/photos/cute-happy-dog-playing-with-a-stick-picture-id1184184060?b=1&k=20&m=1184184060&s=170667a&w=0&h=ajupbh27Z0yoSz1W2LmO9JJsZSgNfGgSj17aaNvo8Hc=" />
-            <span>골댕이 헿</span>
-        </div>
+        {data.map(el => {
+            return (
+                <div key={el.eventId} onClick={() => {
+                    setModal(true)
+                    setModalInfo({title : el.eventTitle , content : el.eventText})
+                    }}>
+                    {el.imagePath ? <img src={el.imagePath} /> : undefined}
+                    <span>{el.eventTitle}</span>
+                </div>
+            )
+        })}
     </Slider> : click === 2 ? 
     <div className="coupon_container">
         <div className="logo">쓰위치</div>
@@ -142,7 +145,7 @@ return (
                 <div className="modal_view" onClick={e => e.stopPropagation()}>
                     <div>삭제 하시겠습니까?</div>
                     <div className="final">
-                        <div>확인</div>
+                        <div onClick={handleDeletClick}>확인</div>
                         <div onClick={() => setDel(false)}>취소</div>
                     </div>
                 </div>
@@ -150,7 +153,7 @@ return (
             {edit ?
             <div className="back" onClick={() => setEdit(false)}>
                 <div className="view" onClick={e => e.stopPropagation()}>
-                    <EventCreate edit={edit} setEdit={setEdit} />
+                    <EventCreate edit={edit} setEdit={setEdit} eventId={eventId} />
                 </div>
             </div> : undefined}
         <InfiniteScroll
@@ -158,13 +161,21 @@ return (
         next = {scrollChange}
         hasMore = {true}
         loader={data.length < totalElements ? <h2>Loading...</h2> : undefined}>
-            <div className="flex">
-                <li className="title">회원가입시 1000포인트 지급</li>
-                <div className="edit" onClick={() => {
-                    setEdit(true)
-                }}>수정</div>
-                <div className="delete" onClick={() => setDel(true)}>삭제</div>
-            </div>
+            {data.map(el => {
+                return (
+                    <div className="flex" key={el.eventId}>
+                        <li className="title">{el.eventTitle}</li>
+                        <div className="edit" onClick={() => {
+                            setEdit(true)
+                            setEventId(el.eventId)
+                        }}>수정</div>
+                        <div className="delete" onClick={() => {
+                            setDel(true)
+                            setEventId(el.eventId)
+                            }}>삭제</div>
+                    </div>
+                )
+            })}
         </InfiniteScroll>
         </div>
     </div> : undefined}
@@ -210,11 +221,11 @@ const EventStyle = styled.div`
     .view{
         background-color: white;
         width: 80%;
-        height: 80%;
-        border-radius: 10%;
+        height: 85%;
+        border-radius: 5%;
 
         .title{
-            height: 20vh;
+            height: 25vh;
             display: flex;
             align-items: center;
             font-size: 7vmin;
@@ -222,27 +233,34 @@ const EventStyle = styled.div`
             margin-right: 3vw;
             margin-bottom: 3vh;
             border-bottom: 0.3rem solid black;
+            overflow-y: scroll;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            word-break: keep-all;
+
+            ::-webkit-scrollbar {
+                display: none;
+            }
         }
 
         .content{
             height: 56vh;
-            overflow-y: scroll;
             white-space: pre-wrap;
             word-break: keep-all;
             font-size: 5vmin;
             margin-left: 3vw;
             margin-right: 3vw;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            /* border: 1px solid red; */
-
-            ::-webkit-scrollbar {
-                display: none;
-            }
 
             .content_detail{
                 height: 48vh;
                 margin-bottom: 1vh;
+                overflow-y: scroll;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+
+                ::-webkit-scrollbar {
+                    display: none;
+                }
             }
 
             .close{
@@ -459,6 +477,7 @@ span{
     width: 98.5vw;
     white-space: pre-wrap;
     word-break: keep-all;
+    text-align: center;
 }
 
 .slick-list {  //슬라이드 스크린
