@@ -63,7 +63,7 @@ const submitFunc=async(event)=>{
           "userId": userid,
 
       }
-        await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/community/comment/take/create', {
+        await fetch('https://sswitch.ga/community/comment/take/create', {
         
             method: 'POST',
             headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`,},

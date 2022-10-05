@@ -19,7 +19,7 @@ const navigate=useNavigate();
 
 ///쿠폰정보불러오기
   const getCouponData=async()=>{
-    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders/orderGoods/list/${userId}`,{
+    await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
       headers: { 'Authorization': `Bearer ${accesstoken}`}
     })
     .then(res => res.json())
@@ -55,7 +55,7 @@ couponDeleteFetch()
 const couponDeleteFetch=async()=>{
   if(deleteCoupon!==''){
 
-    await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/orders/orderGoods/${deleteCoupon}`, {
+    await fetch(`https://sswitch.ga/orders/orderGoods/${deleteCoupon}`, {
       method: "DELETE",
       headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`}
 

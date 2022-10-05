@@ -22,7 +22,7 @@ const GoodsCreate = () => {
         "goodsImage" : e.target.goodsImage.value,
         "goodsStatus" :e.target.goodsStatus.value
     }
-    fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods/admin/create', {
+    fetch('https://sswitch.ga/goods/admin/create', {
         
       method: 'POST',
       headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`,},

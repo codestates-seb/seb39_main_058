@@ -99,7 +99,7 @@ const overlapConfirm=()=>{
 const idPost = async()=>{
 
 
- let response= await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/login-id/${id}/verification`)
+ let response= await fetch(`https://sswitch.ga/login-id/${id}/verification`)
  let data =await response.json();
  
 //  console.log(data)
@@ -117,7 +117,7 @@ const idPost = async()=>{
 const namePost = async()=>{
 
 
-  let response= await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/username/${name}/verification`)
+  let response= await fetch(`https://sswitch.ga/username/${name}/verification`)
   let data =await response.json();
   
   // console.log(data)
@@ -136,7 +136,7 @@ const namePost = async()=>{
 const emailPost = async()=>{
 
 
-  let response= await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/email/${emailInfo}/verification`)
+  let response= await fetch(`https://sswitch.ga/email/${emailInfo}/verification`)
   let data =await response.json();
   
   // console.log(data)
@@ -254,7 +254,7 @@ const signupPostFunc=async()=>{
       "password": password,
       "email": emailInfo
     }
-   await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/signup`, {
+   await fetch(`https://sswitch.ga/signup`, {
 
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},

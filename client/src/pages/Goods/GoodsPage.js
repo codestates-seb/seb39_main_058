@@ -22,7 +22,7 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   const getUserInfo=async()=>{
     if(accesstoken){
 
-      await fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/users/profile`, {
+      await fetch(`https://sswitch.ga/users/profile`, {
         headers: {
           "Authorization": `Bearer ${accesstoken}`,
           "Content-Type": "application/json"
@@ -46,7 +46,7 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 
 //상품정보 불러오기 
 const getGoodsList=async()=>{
-await fetch('http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/goods?page=1&size=10')
+await fetch('https://sswitch.ga/goods?page=1&size=10')
 .then(res => res.json())
 .then((data)=>{
 //  console.log('상품리스트',data)
