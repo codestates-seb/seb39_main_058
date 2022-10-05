@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom'
 import styled from "styled-components";
 
-const REDIRECT_URI='http://localhost:3000/login'
+const REDIRECT_URI='https://seb39-main-058-tawny.vercel.app/login'
 const googleback=`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google?redirect_uri=`+REDIRECT_URI
 ///////////카카오
   const KAKAO_REST_API_KEY='57b175e9a7e058d7b81488512a16d03f'
@@ -108,7 +108,13 @@ useEffect(()=>{
   // getGoogleAccess()
 },[kakaoCode])
 
-
+const googleBackFetch=()=>{
+  fetch(googleback)
+  .then((res) => res.json())
+  .then((data)=>{
+    console.log('오우뜨데이타',data)
+  })
+}
 
 
 
@@ -124,12 +130,12 @@ useEffect(()=>{
     </LinkStyle>
 
 
-   <LinkStyle href={googleback}>
+   {/* <LinkStyle href={googleback}> */}
 
-    <KakaoLoginButton >
+    <KakaoLoginButton onClick={()=>{googleBackFetch()}}>
         <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>
       </KakaoLoginButton>
-    </LinkStyle> 
+    {/* </LinkStyle>  */}
     </>
   )
 }
