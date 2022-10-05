@@ -130,12 +130,12 @@ const googleBackFetch=()=>{
     </LinkStyle>
 
 
-   {/* <LinkStyle href={googleback}> */}
+   <LinkStyle href={googleback}>
 
-    <KakaoLoginButton onClick={()=>{googleBackFetch()}}>
+    <KakaoLoginButton >
         <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>
       </KakaoLoginButton>
-    {/* </LinkStyle>  */}
+    </LinkStyle> 
     </>
   )
 }
