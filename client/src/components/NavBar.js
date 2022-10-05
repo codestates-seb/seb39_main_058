@@ -95,7 +95,10 @@ function NavBar({welcome}) {
                             navigate('/news/notice')
                             setMenu(false)
                             }}>공지사항</li>
-                        <li>이벤트</li>
+                        <li onClick={() => {
+                            navigate('news/event')
+                            setMenu(false)
+                        }}>이벤트</li>
                     </div>
                 </div>
 
