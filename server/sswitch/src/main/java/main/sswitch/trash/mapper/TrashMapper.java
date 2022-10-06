@@ -23,7 +23,8 @@ public interface TrashMapper {
         trashResponseDto.setTrashId(trashCan.getTrashId());
         trashResponseDto.setLongitude(trashCan.getLongitude());
         trashResponseDto.setLatitude(trashCan.getLatitude());
-//        trashResponseDto.setUserId(trashCan.getUser().getUserId());
+        trashResponseDto.setUserId(trashCan.getUser().getUserId());
+        trashResponseDto.setAddress(trashCan.getAddress());
         trashResponseDto.setTrashStatus(trashCan.getTrashStatus());
         trashResponseDto.setDateCreated(trashCan.getDateCreated());
         trashResponseDto.setDateModified(trashCan.getDateModified());
