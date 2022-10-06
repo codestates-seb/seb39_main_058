@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +6,6 @@ import { FaQuestionCircle } from "react-icons/fa";
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { HiPencil } from "react-icons/hi";
-import InfiniteScroll from 'react-infinite-scroll-component';
-
 
 
 function User() {
@@ -17,7 +14,7 @@ function User() {
     const [ userData, setUserData ] = useState({});
     const navigate = useNavigate();
     const [rank, setRank] = useState(false)
-    const [order, setOrder] = useState([])
+    const [data, setData] = useState([])
 
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
@@ -34,7 +31,7 @@ function User() {
     },[])
 
     useEffect(() => {
-        fetch(`https://sswitch.ga/orders?id=${userInfo.userId}&page=1&size=10`,{
+        fetch(`https://sswitch.ga/orders?id=${userInfo.userId}&page=1&size=20`,{
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
                 "Content-Type": "application/json"
@@ -42,12 +39,10 @@ function User() {
         })
         .then(res => res.json())
         .then(res => {
-            setOrder(res.data)
+            setData(res.data)
         })
         .catch(err => console.log(err))
     },[])
-
-    // 무한스크롤 해야됨
 
     return (
     <Main>
@@ -136,19 +131,18 @@ function User() {
                             <span className='date'>날짜</span>
                             <span className='point'>포인트</span>
                         </div>
-                        {order.map(el => {
-                            return(
-                                <div className='bords_list select' key={el.orderId}>
-                                    <span className='his'>{el.orderGoodsList.map(el => el.goodsName)}</span>
-                                    <span className='date'>{el.createdAt}</span>
-                                    <span className="point minus">{el.orderGoodsList.map(el => el.price)}</span>
-                                </div>
-                            )
-                        })}
+                            {data.map(el => {
+                                return(
+                                    <div className='bords_list select' key={el.orderId}>
+                                        <span className='his'>{el.goodsName}</span>
+                                        <span className='date'>{el.createdAt}</span>
+                                        <span className="point minus">{el.totalPrice}</span>
+                                    </div>
+                                )
+                            })}
                     </div>
                 </div>
             </div>
-
         </div>
         </div>
     </Main>
@@ -299,11 +293,11 @@ const Main = styled.main`
 
     .bords_container{
         width: 100%;
-        overflow-y: scroll;
         font-size: 80%;
         margin-bottom: 5vh;
         border: 0.1rem solid black;
-        height: 30vh
+        height: 25vh;
+        overflow-y: scroll;
     }
 
     .bords_list{
