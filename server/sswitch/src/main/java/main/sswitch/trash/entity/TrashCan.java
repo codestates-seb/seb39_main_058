@@ -27,7 +27,7 @@ public class TrashCan extends BaseEntity {
     @Column(length = 255, nullable = false)
     private String latitude;
 
-    @Column(columnDefinition = "text", nullable = false, unique = true)
+    @Column(length = 255, nullable = false, unique = true)
     private String address;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
