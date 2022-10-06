@@ -50,17 +50,19 @@ public class UserController {
         return "Main Page";
     }
 
-    @PostMapping("/main")
-    public String main() {
-        return "Home";
-    }
-
     @PostMapping("/signup")
     public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);
         userService.createUser(user);
         return "회원가입 완료";
     }
+
+//    @GetMapping("/users/oauth")
+//    public ResponseEntity getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+//        User user = userService.findUserWithLoginId(principalDetails.getUsername());
+//        return new ResponseEntity(new SingleResponseDto<>(userMapper.userLoginToUser(user)),
+//                HttpStatus.OK);
+//    }
 
     @PostMapping("/login")
     public ResponseEntity loginUser(@Valid @RequestBody UserDto.LoginDto loginDto, HttpServletResponse res) {
@@ -76,7 +78,7 @@ public class UserController {
     @GetMapping("/users/profile")
     public ResponseEntity getProfile(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         User user = userService.findUserWithLoginId(principalDetails.getUsername());
-        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToUserResponseDto(user)),
+        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToAdminResponse(user)),
                 HttpStatus.OK);
     }
 
