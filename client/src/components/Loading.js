@@ -31,13 +31,14 @@ const LoadingStyle = styled.div`
 }
   div {
     min-width:500px;
-    background-color: white;
-    padding: 40px 60px;
-    border-radius: 10px;
-    box-shadow: -2px 19px 59px 0px rgb(71,182,181);
+    /* background-color: white; */
+    /* padding: 40px 60px; */
+    /* border-radius: 10px;
+    box-shadow: -2px 19px 59px 0px rgb(71,182,181); */
     h1 {
       font-size:8em;
       color :#A7D2CB;
+      /* color: white; */
       position:relative;
       margin:0px;
       &:after {
