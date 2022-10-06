@@ -2,6 +2,8 @@ package main.sswitch.order.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import main.sswitch.goods.entity.Goods;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 
@@ -12,6 +14,7 @@ import java.util.Random;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity(name = "ORDERS")
 public class Order extends BaseEntity {
     @Id
@@ -24,8 +27,13 @@ public class Order extends BaseEntity {
 
     private String userName;
 
+    private int totalPrice;
+
+    private String goodsName;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderGoods> orderGoodsList = new ArrayList<>();
+
 
     public void changeUser(User user) {
         if(this.user != null){
