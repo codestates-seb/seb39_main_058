@@ -130,16 +130,16 @@ function CommunityCreate() {
             </BoardWrite>
 
             {/* 유저가 태그를 선택한 경우, 태그 담는 상자와 선택한 태그 만들기 */}
-            { clickTag && <SelectedTag>
+            <SelectedTag>   
+            { clickTag && 
                 <div className="selected-tags">
                     { clickTag && tag.map( el =>
-                        <span className="tag" key={el}>{el} 
+                        <div className="tag" key={el}>{el} 
                             <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
-                        </span>)}
-                </div>                
-            </SelectedTag> }
-            
-           
+                        </div>)}
+                </div> }
+            </SelectedTag>
+
             <BoardTag>
                 <select name="tags" onChange={ e => selectTag(e)}>
                     <option name="tags">지역 태그를 선택하세요</option>
@@ -148,6 +148,7 @@ function CommunityCreate() {
                     )}
                 </select>
             </BoardTag> 
+
             <Secret>
                 <input type="checkbox" name="secret" onClick={handleSecret}/>
                 <label htmlFor="secret">비밀글</label>
@@ -187,12 +188,13 @@ const BoardHeader = styled.div`
     border-bottom: 3px solid black;
     
     h1 {
-        margin-top: 2rem;
+        margin-top: 5rem;
         font-size: 4vmin;
         font-family: 'Jua', sans-serif;
         font-weight: lighter;
         letter-spacing: 3px;
         @media (max-width: 550px) {
+            
             font-size: 30px;
         }
     }
@@ -271,22 +273,26 @@ const Secret = styled.div`
 `
 
 const SelectedTag = styled.div`
+        
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 20px;    
+    margin-bottom: 1rem;    
     border: 1px solid black;
-    padding: 10px 0;
+    
     width: 80vw;
-    height: 5vh;
+    
     @media (max-width: 550px) {
-        width: 55vw;
-        height: 7vh;
+        width: 80vw;
         font-size: 2vmin;
+    }
+    .selected-tags{
+        display: flex;
+        flex-flow: wrap;        
     }
 
     .tag {
-        margin: 10px;
+        margin: 1vh;      
         padding: 0.5rem;
         border-radius: 10px;
         color: white;
@@ -297,6 +303,7 @@ const SelectedTag = styled.div`
         }
 
         .delete-tag {
+            
             margin: 0;
             padding: 3px;
             cursor: pointer;
@@ -315,13 +322,13 @@ const ButtonWrapper = styled.div`
 
         .writer-submit {
             width: 50vw;
-            height: 5vh;
+            height: 45px;
             
         }
 
         .writer-cancel {
             width: 50vw;
-            height: 5vh;
+            height: 45px;
             
         }
     }

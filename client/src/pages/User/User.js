@@ -7,7 +7,7 @@ import { FaQuestionCircle } from "react-icons/fa";
 import { FcLike } from 'react-icons/fc';
 import { BsPencilSquare } from 'react-icons/bs';
 import { HiPencil } from "react-icons/hi";
-// import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 
@@ -29,7 +29,6 @@ function User() {
             .then(res => res.json())
             .then(data => {
                 setUserData(data.data)
-                console.log(data)
             })
             .catch(err => console.log(err))
     },[])
@@ -48,7 +47,7 @@ function User() {
         .catch(err => console.log(err))
     },[])
 
-    let aaa = order.map(el => el.orderGoodsList[0])
+    // 무한스크롤 해야됨
 
     return (
     <Main>
@@ -140,9 +139,9 @@ function User() {
                         {order.map(el => {
                             return(
                                 <div className='bords_list select' key={el.orderId}>
-                                    <span className='his'>{aaa[0].goodsName}</span>
+                                    <span className='his'>{el.orderGoodsList.map(el => el.goodsName)}</span>
                                     <span className='date'>{el.createdAt}</span>
-                                    <span className="point minus">{aaa[0].price}</span>
+                                    <span className="point minus">{el.orderGoodsList.map(el => el.price)}</span>
                                 </div>
                             )
                         })}
