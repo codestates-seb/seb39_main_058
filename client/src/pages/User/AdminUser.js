@@ -33,7 +33,7 @@ function AdminUser() {
             .catch(err => console.log(err))
     },[])
 
-    // '비워주세요' 요청 정보
+    // '비워주세요' 요청 정보 조회
     useEffect(() => {
         fetch(`https://sswitch.ga/trash?page=1&size=10`)
         .then(res => res.json())
@@ -44,15 +44,19 @@ function AdminUser() {
         .catch(err => console.log(err))
     },[])
 
+    // 처리완료(삭제 버튼)
     const emptyConfirm = () => {
         console.log('처리완료!')
         setProcessed(!processed)
+
+        fetch(``)
+
     }
 
-    console.log(trashTotal);
+    console.log(emptyRequest);
 
     // console.log(userData)
-    // console.log(userInfo)
+    // console.log(userInfo.accessToken)
 
 
     return (
@@ -75,7 +79,7 @@ function AdminUser() {
                             <p>이메일 : {userData.email}</p>
                             <p>현재 포인트 : {userData.currentPoints}</p>
                             <p>누적 포인트 : {userData.totalPoints}</p>
-                            <p>가입일 : {userData.dateCreated}</p>
+                            <p>가입일 : {userData.dateCreated?.slice(0, 10)}</p>
                         </div>
                         <ButtonWrapper>
                             <button className='all_users_btn'
@@ -88,10 +92,10 @@ function AdminUser() {
                 <EmptyRequest>   
                     {emptyRequest.map(trash => {
                         return (
-                        <TrashInfo key={trash.trashId}>
+                        <TrashInfo key={trash?.trashId}>
                             <div className='info_wrapper'>
                                 <div className='address'>주소: {trash?.address}</div>
-                                <div className='request_date'>요청일자: {trash?.dateCreated}</div>
+                                <div className='request_date'>요청일자: {`${trash.dateCreated.slice(0,10)} / ${trash.dateCreated.slice(11,16)} `}</div>
                                 <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "가득찼습니다." : "비워졌습니다."}</div>
                             </div>
                             <ButtonContainer>
@@ -118,8 +122,6 @@ function AdminUser() {
                     </div>
                 </RemoveModal>}
         </div>
-
-        
     </Main>
     )
 }
@@ -145,7 +147,7 @@ const Main = styled.main`
         flex-direction: column;
         background-color: white;
         position: absolute;
-        width: 80%;
+        width: 70vw;
         top: 10vh;
         border-radius: 2%;
         padding: 2rem;
@@ -154,19 +156,15 @@ const Main = styled.main`
         @media screen and (max-width: 500px){
             border: none;
         }
+
+        .pagenation_wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
 
-
-
-    .rank_img{
-        width: 30vw;
-        height: 20vh;
-    }
-
-    .more{
-        cursor: pointer;
-    }
 
     .edit{
         position: absolute;
@@ -177,27 +175,7 @@ const Main = styled.main`
             top: 6%;
         }
     }
-
-    @keyframes identifier {
-        0%{
-            padding: 0;
-            opacity: 0;
-        }
-
-        20% {
-            padding-left: 20vw;
-            padding-right: 20vw;
-        }
-
-        100%{
-            padding-left: 20vw;
-            padding-right: 20vw;
-            opacity: 1;
-        }
-    }
-
-
-    
+  
 
        
 
@@ -254,11 +232,14 @@ export const TopBackground = styled.div`
 `;
 
 const AdminInfo = styled.div`
-    /* height: 40vh; */
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom: .3rem solid rgb(64,156,155);
+    @media (max-width: 550px) {
+        display: flex;
+        flex-direction: column;
+    }
 
     img{
         width: 15vw;

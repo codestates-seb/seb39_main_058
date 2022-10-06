@@ -8,24 +8,9 @@ import { ImWarning } from 'react-icons/im';
 function AllUsersPage() {
 
   const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
-  
-
   const [ allUsers, setAllUsers ] = useState([]);
   const [ pageInfo, setPageInfo ] = useState([]);
   const [ pointBtn, setPointBtn ] = useState(false);
-
-
-  const [ dateCreated, setDateCreated ] = useState([]);
-  // 서버 날짜 기반 customizing
-  const createdDate = new Date();
-  const year = createdDate.getFullYear();
-  const month = createdDate.getMonth() + 1;
-  const date = createdDate.getDate();
-  const hours = createdDate.getHours();
-  const minutes = createdDate.getMinutes();
-  const today = ['(일)','(월)','(화)','(수)','(목)','(금)','(토)'];
-
-  // console.log(allUsers[0].dateCreated)
 
   // 전체 유저 정보 받아오기
   useEffect(() => {
