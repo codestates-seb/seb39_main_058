@@ -49,7 +49,7 @@ public class likeForumController {
 //        );
 //    }
 
-    @DeleteMapping("/take/like/")
+    @DeleteMapping("/take/like")
     public ResponseEntity deleteLikeForum(@Valid @RequestBody LikeForumDto likeForumDto) {
         likeForumService.deleteLike(mapper.LikeForumDeleteDtoToLikeForum(likeForumDto));
         return new ResponseEntity(HttpStatus.NO_CONTENT);

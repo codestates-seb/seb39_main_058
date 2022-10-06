@@ -57,11 +57,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.userDetailsService(principalDetailService).passwordEncoder(passwordEncoder());
-//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
-
         http.headers().frameOptions().disable().and()
                 .csrf().disable()
                 .cors()
@@ -77,7 +72,7 @@ public class SecurityConfig {
                 .apply(new CustomDsl())
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/goods/**","/community/forum/take/**", "/community/comment/take/**","/news/event/**","/news/notice/**")
+                .antMatchers(HttpMethod.GET,"/goods/**","/community/forum/take/**","/community/comment/take/**","/news/event/**","/news/notice/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET,"/users/**","/trash/take/**","/orders/**")
                 .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
@@ -98,9 +93,9 @@ public class SecurityConfig {
                 .anyRequest()
                 .permitAll()
                 .and()
-                .oauth2Login(
-                        oauth2 -> oauth2
-                    .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
+                .oauth2Login(oauth2 -> oauth2
+                                .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
+
 
         return http.build();
     }

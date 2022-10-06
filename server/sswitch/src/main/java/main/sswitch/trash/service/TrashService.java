@@ -82,6 +82,7 @@ public class TrashService {
 
         TrashCan findTrashCan = findTrashCan(trashId);
         changeTrashCanStatus(findTrashCan);
+        trashRepository.delete(findTrashCan);
     }
 
 
