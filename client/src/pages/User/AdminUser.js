@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ImWarning } from 'react-icons/im';
 import { HiPencil } from "react-icons/hi";
@@ -12,14 +12,14 @@ import PageNation from '../../components/PageNation';
 function AdminUser() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
     
-    const [ trashTotal, setTrashTotal ] = useState();
-    // const [ trashData, setTrashData ] = useState();
     const [ userData, setUserData ] = useState({});
     const [ emptyRequest, setEmptyRequest ] = useState([]);
+    const [ trashId, setTrashId ] = useState([]);
     const [ processed, setProcessed ] = useState(false);
     
     const navigate = useNavigate();
     
+
     // 관리자 마이페이지 정보
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
@@ -33,32 +33,50 @@ function AdminUser() {
             .catch(err => console.log(err))
     },[])
 
+
     // '비워주세요' 요청 정보 조회
     useEffect(() => {
         fetch(`https://sswitch.ga/trash?page=1&size=10`)
         .then(res => res.json())
-        .then(data => {
-            setTrashTotal(data.pageInfo);
-            setEmptyRequest(data.data);
-        })
+        .then(data => setEmptyRequest(data.data))
         .catch(err => console.log(err))
     },[])
 
-    // 처리완료(삭제 버튼)
+    // 처리완료(버튼)
+    const processedBtn = () => {
+        setTrashId(emptyRequest.map(ele => ele.trashId))
+        setProcessed(!processed);
+    };
+    // 처리완료 -> 모달창(확인 버튼)
     const emptyConfirm = () => {
-        console.log('처리완료!')
-        setProcessed(!processed)
+        console.log('확인!');
+        setProcessed(!processed);
+        
 
-        fetch(``)
-
+        // trashId.filter(el => {})
+       
+        
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/$17`,{
+            method: "DELETE",
+            headers: { 
+            "Authorization": `Bearer ${userInfo.accessToken}`,
+            "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+        
+        // fliter사용
     }
 
-    console.log(emptyRequest);
+    // 관리자가 '처리완료' 버튼을 클릭한 trashId가 
 
+    // console.log(emptyRequest.map(el => el.trashId));
     // console.log(userData)
     // console.log(userInfo.accessToken)
-
-
+    // console.log(trashId)
+    // console.log('trashId', trashId)
     return (
     <Main>
         <div className='wrapper'>
@@ -95,18 +113,15 @@ function AdminUser() {
                         <TrashInfo key={trash?.trashId}>
                             <div className='info_wrapper'>
                                 <div className='address'>주소: {trash?.address}</div>
-                                <div className='request_date'>요청일자: {`${trash.dateCreated.slice(0,10)} / ${trash.dateCreated.slice(11,16)} `}</div>
-                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "가득찼습니다." : "비워졌습니다."}</div>
+                                <div className='request_date'>요청일자: {`${trash.dateCreated?.slice(0,10)} / ${trash.dateCreated?.slice(11,16)} `}</div>
+                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "FULL" : "EMPTY"}</div>
                             </div>
                             <ButtonContainer>
-                                <button className="empty_confirm" onClick={emptyConfirm}>처리완료</button>
+                                <button className="empty_confirm" onClick={processedBtn}>처리완료</button>
                             </ButtonContainer>
                         </TrashInfo>)
                     })}
                 </EmptyRequest>
-                <div className='pagenation_wrapper'>
-                    <PageNation emptyRequest={emptyRequest} trashTotal={trashTotal?.totalElements} />
-                </div>
             </div>
 
             {/* 쓰레기통 비움요청 확인 모달창 */}
@@ -156,15 +171,7 @@ const Main = styled.main`
         @media screen and (max-width: 500px){
             border: none;
         }
-
-        .pagenation_wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
     }
-
-
 
     .edit{
         position: absolute;
@@ -175,11 +182,7 @@ const Main = styled.main`
             top: 6%;
         }
     }
-  
-
-       
-
-    .img_container{
+   .img_container{
         display: flex;
         flex-direction: column;
         align-items: center;
