@@ -85,7 +85,7 @@ function NavBar({welcome}) {
                         <li onClick={() => {
                             navigate('/goods')
                             setMenu(false)
-                            }}>포인트교환</li>
+                            }}>쿠폰교환</li>
                     </div>
                 </div>
                 <div className='section'>
@@ -140,9 +140,9 @@ function NavBar({welcome}) {
                     <li onClick={() => setGuide(1)}>가이드</li>
                 </div>
             </div>
-            <div>포인트교환
+            <div>포인트 교환
                 <div className='drop'>
-                    <li><Link to='/goods'>포인트교환</Link></li>
+                    <li><Link to='/goods'>쿠폰교환</Link></li>
                 </div>
             </div>
             <div>소식

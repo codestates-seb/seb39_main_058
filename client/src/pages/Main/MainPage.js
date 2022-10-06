@@ -131,19 +131,19 @@ function MainPage(){
                     </div>
                 ))}
                 {markerClick.boolean ?
-                    <div className="roadview_modal_container">
-                        <div className="modal_container">
+                    <div className="roadview_modal_container" onClick={() => {
+                        setMarkerClick({
+                            boolean : false ,
+                            위도 : undefined ,
+                            경도 : undefined ,
+                            주소 : undefined
+                        })
+                    }}>
+                        <div className="modal_container" onClick={(e) => e.stopPropagation()}>
                             <Roadview 
                             position={{ lat : markerClick.위도, lng : markerClick.경도, radius : 50}}
                             style={{width: "100%", height: "100%"}}
                             />
-                            <span className="cancel"
-                            onClick={() => setMarkerClick({
-                                boolean : false ,
-                                위도 : undefined ,
-                                경도 : undefined ,
-                                주소 : undefined
-                            })}><GiCancel/></span>
                         </div>
                         <>
                         <div className="get_directions" 
@@ -171,7 +171,10 @@ function MainPage(){
                     }}>
                         {res === 500 ?
                         <div>이미 다른 사용자가 비움 요청한 쓰레기통 입니다.</div> : 
-                        <div>정상적으로 접수 되었습니다. 100 포인트가 적립되었습니다.</div>}
+                        <div>
+                            <div>정상적으로 접수 되었습니다.</div>
+                            <div>100 포인트가 적립되었습니다.</div>
+                        </div>}
                     </div>
                 </div> :
                 undefined}
@@ -196,7 +199,6 @@ const MainStyle = styled.div`
     align-items: center;
 
     .notice_modal_container{
-        width: 50vw;
         height: 25vh;
         background-color: white;
         display: flex;
