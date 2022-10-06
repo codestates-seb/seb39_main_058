@@ -72,7 +72,7 @@ useEffect(()=>{
 <Container>
   <UserInfoContainer>
      <BoardHeader>
-       <div>포인트교환</div>
+       <div>쿠폰교환</div>
        {role==="ROLE_ADMIN" ? <Link to='/goods/create'> <button>상품등록하기</button> </Link>:''}
      </BoardHeader>
       {accesstoken ? 

@@ -2,7 +2,7 @@ import {React ,useState } from 'react'
 import styled from "styled-components";
 import {Link, useNavigate} from 'react-router-dom';
 import { useEffect } from 'react';
-
+import AnswerModal from '../../components/CommunityAnswer/AnswerModal';
 
 
 function SignupPage() {
@@ -38,6 +38,7 @@ function SignupPage() {
   const [alertOverlapName,setAlertOverlapName]=useState('')
   const [alertOverlapEmail,setAlertOverlapEmail]=useState('')
 
+  const [modalOn, setModalOn] = useState(false);
 
 
 const click =(event)=>{
@@ -276,7 +277,10 @@ const signupPostFunc=async()=>{
   
     // console.log(res)
     if(res.ok===true){
-       navigate('/login')
+      setModalOn(!modalOn)
+      setTimeout(() => {
+        navigate('/login')
+      }, 1000);
     }else if(res.ok===false){
         alert('작성하신 회원정보를 다시 확인해 주세요.')
     }
@@ -345,6 +349,20 @@ const signupPostFunc=async()=>{
       </SignUpForm>
       <SignUpButton onClick={signupPostFunc}>회원가입</SignUpButton>      
        
+
+       {/* 삭제 모달창 */}
+
+      {modalOn && (
+        <AnswerModal closeModal={() => setModalOn(!modalOn)}>
+          <ModalItem>
+             
+              <div className='modalHead'>쓰위치</div>
+              <div className='modalInfo'>회원가입에 성공했습니다!</div>
+              
+
+          </ModalItem>
+        </AnswerModal>
+        )}
     </Container>
   )
 }
@@ -444,3 +462,22 @@ const CorrectMsg=styled(AlertMsg)`
 color: green;
 `
 
+const ModalItem=styled.div`
+font-family: Jua, serif;
+font-size: x-large;
+ display: flex;
+flex-direction: column;
+
+ 
+ 
+ .modalHead{
+  font-family: 'Gugi', cursive;
+  color: rgb(71,182,181);
+    font-size: xx-large;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.modalInfo{
+}
+`
