@@ -60,7 +60,6 @@ function User() {
                     </div>
                 </div>
                 <div className='detail'>
-                    <span className='view_more'>상세보기</span>
                     <div className='detail_content'>
                         <p>이메일 : {userData.email}</p>
                         <p>현재 포인트 : {userData.currentPoints}</p>
@@ -70,11 +69,6 @@ function User() {
                 </div>
             </div>
             <div className='rank_container'>
-                <div className='flex_box icons'>
-                    <span>글 쓴 횟수</span>
-                    <BsPencilSquare className='icon'/>
-                    <span>3회</span>
-                </div>
                 <div className='flex_box'>
                     <img src={
                         userData.totalPoints < 10000 ? "/bronze.png" : 
@@ -117,17 +111,12 @@ function User() {
                     </div> :
                     undefined}
                 </div>
-                <div className='flex_box icons'>
-                    <span>누적 좋아요 수</span>
-                    <FcLike className='icon' />
-                    <span>3회</span>
-                </div>
             </div>
             <div className='etc'>
                 <div className='history'>
                     <div className='bords_container'>
                         <div className='bords_list header'>
-                            <span className='his'>내역</span>
+                            <span className='his'>차감 내역</span>
                             <span className='date'>날짜</span>
                             <span className='point'>포인트</span>
                         </div>
@@ -142,6 +131,7 @@ function User() {
                             })}
                     </div>
                 </div>
+                <div className='red'>※ 위 표는 포인트 차감 내역만 확인이 가능합니다 ※</div>
             </div>
         </div>
         </div>
@@ -158,6 +148,12 @@ const Main = styled.main`
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 122vh;
     width: 100%;
+
+    .red{
+        font-size: 2vmin;
+        text-align: center;
+        color: red;
+    }
 
     .back{
         position: fixed;
@@ -203,20 +199,9 @@ const Main = styled.main`
         height: 20vh;
     }
 
-    .view_more{
-        position: absolute;
-        font-size: 2vmin;
-        top: 2vh;
-        right: 4vw;
-        background-color: #002B5B;
-        color: white;
-        padding: .5vh 1vw;
-        border: 0.2rem solid #395B64;
-        cursor: default;
-    }
-
     .more{
         cursor: pointer;
+        margin-top: -1vh;
     }
 
     .edit{
@@ -227,37 +212,9 @@ const Main = styled.main`
     }
 
     .detail_content{
-        display: none;
-        margin-top: -5vh;
-    }
-
-    .detail:hover{
-        .detail_content{
-            display: block;
-            position: relative;
-            animation: identifier 3s forwards;
-            margin-left: -20vw;
-            font-size: 2vmin;
-            white-space: nowrap;
-        }
-    }
-
-    @keyframes identifier {
-        0%{
-            padding: 0;
-            opacity: 0;
-        }
-
-        20% {
-            padding-left: 20vw;
-            padding-right: 20vw;
-        }
-
-        100%{
-            padding-left: 20vw;
-            padding-right: 20vw;
-            opacity: 1;
-        }
+        position: relative;
+        font-size: 2vmin;
+        white-space: nowrap;
     }
 
     .rank_container{
@@ -265,10 +222,20 @@ const Main = styled.main`
         justify-content: space-around;
         align-items: center;
         height: 40vh;
+
+        @media screen and (max-width: 500px){
+            height: 25vh;
+        }
         
         img{
             width: 35vw;
             height: 30vh;
+
+            @media screen and (max-width: 500px){
+            width: 50vw;
+            height: 28vh;
+            margin-top: -7vh;
+        }
         }
 
         .icon{
@@ -284,6 +251,9 @@ const Main = styled.main`
         justify-content: center;
         img{
             margin-bottom: -3vh;
+        }
+        span{
+            padding-top: 1vh;
         }
     }
 
@@ -337,11 +307,15 @@ const Main = styled.main`
         border-bottom: .3rem solid rgb(64,156,155);
 
         img{
-            width: 18vw;
+            width: 15vw;
             height: 15vh;
             border-radius: 50%;
             margin: 0 3vw;
             padding: 3vh 0;
+
+            @media screen and (max-width: 500px){
+            width: 26vw;
+        }
         }
 
         .history{
@@ -357,14 +331,14 @@ const Main = styled.main`
         flex-direction: column;
         background-color: white;
         position: absolute;
-        width: 80%;
+        width: 60%;
         top: 10vh;
         border-radius: 2%;
         padding: 2rem;
         border: .3rem solid rgb(64,156,155);
 
         @media screen and (max-width: 500px){
-            border: none;
+            /* border: none; */
         }
     }
 
