@@ -54,7 +54,7 @@ public class TokenProvider{
 
 
         return UserDto.TokenDetailsDto.builder()
-                .accessToken(accessToken)
+                .accessToken("@"+accessToken)
                 .accessTokenExpiredAt(ACCESS_TOKEN_EXPIRE_LENGTH)
                 .grantType("Bearer")
                 .userId(user.getUserId())
