@@ -93,9 +93,9 @@ useEffect(()=>{
 
       {seeCoupon ? <CouponBag/> :''}
   </CouponBagContainer>
- 
   <GoodsList>
-상품리스트
+  <div className='goodsLi'>상품리스트</div>
+
 
     
     {goodsList?.map((item)=>{
@@ -127,6 +127,8 @@ white-space: nowrap;
 
           
       }
+
+      
 `
 const UserInfoContainer=styled.div`
 width: 80%;
@@ -203,6 +205,19 @@ margin-bottom: 30px;
  
            
        }
+
+       .goodsLi{
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 10px;
+        @media (max-width: 550px) {
+            
+            font-size: 17px;
+           
+ 
+           
+       }
+      }
 `
 const CouponBagContainer=styled.div`
 width: 80%;
@@ -244,7 +259,6 @@ div{
 
   :hover {
         cursor: pointer;
-        /* background-color: lightgray; */
       }
  }
 `

@@ -208,7 +208,9 @@ button{
   font-weight: bold;
   border: solid 0px;
   border-radius: 5px;
-
+  :hover {
+        cursor: pointer;
+      }
 }
 
 `
