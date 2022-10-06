@@ -362,6 +362,7 @@ const Main = styled.main`
   @media (max-width: 550px) {
     width: 85vw;
     margin: 7px;
+    margin-top: 4rem;
     padding-left: 2rem;
   }
 
