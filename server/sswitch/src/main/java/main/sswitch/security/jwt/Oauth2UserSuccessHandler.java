@@ -38,14 +38,19 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    //카카오 메일 못받을때 처리 생각해야함
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException{
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = String.valueOf(oAuth2User.getAttributes().get("email"));
-        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
         String given_name = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
+        String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+//        Optional<String> email = Optional.ofNullable(String.valueOf(oAuth2User.getAttributes().get("email")));
+//        if (email.isPresent()) {
+//            email = Optional.of(given_name + "@" + provider + ".com");
+//        }
+        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
         String authorities = "ROLE_USER";
         Optional<User> optionalUser = userRepository.findByUsername(given_name);
         if(optionalUser.isEmpty()){
@@ -78,7 +83,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
         user.setEmail(email);
         user.setUserName(given_name);
-        user.setLoginId(provider + given_name);
+        user.setLoginId(given_name);
         user.setPassword(given_name + provider);
         user.setCurrentPoints(10000);
         user.setTotalPoints(10000);

@@ -25,11 +25,11 @@ public class Event extends BaseEntity {
     @Column(columnDefinition = "text", nullable = false)
     private String eventText;
 
+    private String imagePath;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
-
-    private String imagePath;
 
     public void setUser(User user) {
         this.user = user;

@@ -73,10 +73,11 @@ public class ForumService {
         return forumRepository.save(findForum);
     }
 
+    //추천수 음수 안되게 처리함
     public Forum hateForum(long forumId) {
         Forum findForum = findVerifiedForum(forumId);
         long hateforum = findForum.getForumLike();
-        hateforum--;
+        if (hateforum > 0) { hateforum--; }
         findForum.setForumLike(hateforum);
 
         return forumRepository.save(findForum);
