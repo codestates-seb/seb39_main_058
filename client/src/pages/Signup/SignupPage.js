@@ -58,8 +58,10 @@ const click =(event)=>{
 const overlapConfirm=()=>{
   if(clickId){
     if(id.length===0){
+      setAlertOverlapId('')
       setAlertId('아이디를 입력해 주세요.')
     } else if(spaceCheck(id)===false||onlyEng(id)===false){
+      setAlertOverlapId('')
       setAlertId('정확한 아이디를 입력해 주세요.')
         
     } else if(spaceCheck(id)===true&&onlyEng(id)===true){
@@ -72,8 +74,10 @@ const overlapConfirm=()=>{
 
   if(clickName){
     if(name.length===0){
+      setAlertOverlapName('')
       setAlertName('닉네임을 입력해 주세요.')
     }else if(spaceCheck(name)===false||koEng(name)===false){
+      setAlertOverlapName('')
       setAlertName('정확한 닉네임을 입력해 주세요.')
     
     }else if(spaceCheck(name)===true&&koEng(name)===true){
