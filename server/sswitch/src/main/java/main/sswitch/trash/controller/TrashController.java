@@ -1,20 +1,24 @@
 package main.sswitch.trash.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import main.sswitch.trash.dto.TrashCanAlarmDto;
+import main.sswitch.security.oauth.PrincipalDetails;
+
 import main.sswitch.trash.dto.TrashStatusDto;
 import main.sswitch.trash.entity.TrashCan;
-import main.sswitch.trash.entity.TrashCanAlarm;
-import main.sswitch.trash.mapper.TrashAlarmMapper;
 import main.sswitch.trash.mapper.TrashMapper;
 import main.sswitch.trash.service.TrashService;
 import main.sswitch.help.response.dto.MultiResponseDto;
 import main.sswitch.help.response.dto.SingleResponseDto;
 import main.sswitch.trash.dto.TrashPatchDto;
 import main.sswitch.trash.dto.TrashPostDto;
+import main.sswitch.user.entity.User;
+import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,39 +29,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/trash")
 @Validated
+@AllArgsConstructor
 @Slf4j
 public class TrashController {
     private TrashService trashService;
     private TrashMapper mapper;
 
-    private TrashAlarmMapper alarmMapper;
+    private UserService userService;
 
-    public TrashController(TrashService trashService, TrashMapper mapper, TrashAlarmMapper alarmMapper) {
-        this.trashService = trashService;
-        this.mapper = mapper;
-        this.alarmMapper = alarmMapper;
-    }
+//    public TrashController(TrashService trashService, TrashMapper mapper, TrashAlarmMapper alarmMapper) {
+//        this.trashService = trashService;
+//        this.mapper = mapper;
+//        this.alarmMapper = alarmMapper;
+//    }
 
     //쓰레기통 등록
     @PostMapping("/take/create")
-    public ResponseEntity postTrashCan(@Valid @RequestBody TrashPostDto trashPostDto) {
-
-        TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto));
-
+    public ResponseEntity postTrashCan(@AuthenticationPrincipal PrincipalDetails principal, @Valid @RequestBody TrashPostDto trashPostDto) {
+        User user = userService.findUserWithLoginId(principal.getUsername());
+        TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto), user);
+        userService.updatePoints(user,user.getCurrentPoints(),0,user.getTotalPoints(),100);
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
                 HttpStatus.CREATED);
     }
 
-    @PostMapping("/flush/create/{trash-id}")
-    public ResponseEntity createTrashCanAlarm(@PathVariable("trash-id") long trashId, @Valid @RequestBody TrashCanAlarmDto requestBody) {
-        TrashCanAlarm trashCanAlarm = trashService.createTrashCanAlarm(requestBody, trashId);
-        TrashCanAlarmDto.Response response = alarmMapper.alarmToTrashAlarmResponseDto(trashCanAlarm);
-
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(response),
-                HttpStatus.CREATED);
-    }
+//    @PostMapping("/flush/create/{trash-id}")
+//    public ResponseEntity createTrashCanAlarm(@PathVariable("trash-id") long trashId, @Valid @RequestBody TrashCanAlarmDto requestBody) {
+//        TrashCanAlarm trashCanAlarm = trashService.createTrashCanAlarm(requestBody, trashId);
+//        TrashCanAlarmDto.Response response = alarmMapper.alarmToTrashAlarmResponseDto(trashCanAlarm);
+//
+//        return new ResponseEntity<>(
+//                new SingleResponseDto<>(response),
+//                HttpStatus.CREATED);
+//    }
 
     // 수정시 쓰레기통 상태 변환 가능
     // 우선 프론트에서 제보
@@ -116,7 +121,7 @@ public class TrashController {
     //쓰레기통 비움
     @DeleteMapping("/flush/{trash-id}")
     public ResponseEntity deleteTrashCanAlarm(@PathVariable("trash-id") long trashId) {
-        trashService.deleteTrashCanAlarm(trashId);
+        trashService.emptyTrashCan(trashId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
