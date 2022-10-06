@@ -15,7 +15,7 @@ const AnswerMap = ({item}) => {
   const location = useLocation();
   const [clickCommentId,setClickCommentId]=useState('');
   const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken)
-  const userName=useSelector(state=>state.LoginPageReducer.userinfo.userName)
+  const userId=useSelector(state=>state.LoginPageReducer.userinfo.userId)
   const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
   const [modalOn, setModalOn] = useState(false);
 
@@ -79,7 +79,7 @@ const answerDelete=(e)=>{
       <Head >
  
       <div>{item.userName}</div><div className='time'>{item.dateCreated}</div>
-      {item.userName===userName||role==="ROLE_ADMIN" ?<button onClick={(e) => {
+      {item.userId===userId||role==="ROLE_ADMIN" ?<button onClick={(e) => {
         setModalOn(!modalOn)
         // console.log('e가머여',e.target.name)
         setClickCommentId(e.target.name)
