@@ -96,6 +96,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                                 .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
 
+
         return http.build();
     }
 
@@ -115,8 +116,6 @@ public class SecurityConfig {
         return source;
 
     }
-
-
 
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
         @Override

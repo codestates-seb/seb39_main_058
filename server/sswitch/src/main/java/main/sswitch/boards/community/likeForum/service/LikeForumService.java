@@ -46,10 +46,9 @@ public class LikeForumService {
     }
 
     public void deleteLike(LikeForum likeForum) {
-        findVerifyLikeForum(likeForum);
+        LikeForum findLikeForum = findVerifyLikeForum(likeForum);
         forumService.hateForum(likeForum.getForum().getForumId());
-
-        likeForumRepository.delete(likeForum);
+        likeForumRepository.delete(findLikeForum);
     }
 
     public LikeForum findVerifyLikeForum(LikeForum likeForum) {

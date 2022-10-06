@@ -17,6 +17,7 @@ public class UserClassifiedResponseDto extends BaseEntity {
     private String userName;
     private String email;
     private int currentPoints;
+    private String role;
     private int totalPoints;
     private LocalDateTime dateCreated;
     private String profileImage;
