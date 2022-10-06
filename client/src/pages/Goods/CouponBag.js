@@ -163,7 +163,7 @@ border: 1px solid;
 width: 100%;
 justify-content: space-around;
 margin: 5px;
-flex-basis: 650px;
+flex-basis: 600px;
 @media (max-width: 1600px) {
   flex-basis: 1000px;
           
