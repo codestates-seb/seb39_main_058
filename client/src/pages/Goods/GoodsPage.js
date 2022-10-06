@@ -139,7 +139,7 @@ text-align : center;
   font-size: 5vmin;
   @media (max-width: 550px) {
      
-     font-size: 20px;
+     font-size: 17px;
      
     }
 }
