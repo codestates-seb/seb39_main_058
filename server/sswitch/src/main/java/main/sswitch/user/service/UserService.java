@@ -13,8 +13,11 @@ import main.sswitch.user.entity.User;
 import main.sswitch.user.mapper.UserMapper;
 import main.sswitch.user.repository.UserRepository;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

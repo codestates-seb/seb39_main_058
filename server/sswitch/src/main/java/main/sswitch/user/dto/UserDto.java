@@ -18,12 +18,14 @@ public class UserDto {
 
         private long userId;
 
+        @Pattern(regexp = "^[a-zA-Z0-9]*$",message = "사용자 아이디는 영어와 숫자의 조합으로만 이루어져야 합니다.")
         @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
         private String loginId;
 
         @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
         private String password;
 
+        @Pattern(regexp = "^[0-9a-zA-Zㄱ-ㅎ가-힣]*$",message = "사용자 이름은 한글,영어,숫자의 조합만 가능합니다")
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
         private String userName;
 
@@ -39,6 +41,7 @@ public class UserDto {
     @AllArgsConstructor
     @Builder
     public static class LoginDto {
+        @Pattern(regexp = "^[a-zA-Z0-9]*$",message = "사용자 아이디는 영어와 숫자의 조합으로만 이루어져야 합니다.")
         @NotBlank(message = "사용자 아이디는 공백이 아니어야 합니다.")
         private String loginId;
         @NotBlank(message = "비밀번호는 6자리 이상이여야 합니다.")
@@ -54,6 +57,7 @@ public class UserDto {
 
         private String loginId;
 
+        @Pattern(regexp = "^[0-9a-zA-Zㄱ-ㅎ가-힣]*$",message = "사용자 이름은 한글,영어,숫자의 조합만 가능합니다")
         @NotBlank(message = "사용자 이름은 공백이 아니어야 합니다.")
         private String userName;
 
@@ -66,8 +70,12 @@ public class UserDto {
 
         private int totalPoints;
 
+        @Pattern(regexp = "^[A-Z_]*$",message = "유저 권한은 영어와 _ 로 이루어져야 합니다.")
+        @NotBlank
         private String role;
 
+        @NotBlank(message = "사용자 이메일 주소는 공백이 아니어야 합니다.")
+        @Email
         private String email;
 
         private String profileImage;

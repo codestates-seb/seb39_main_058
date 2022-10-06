@@ -29,7 +29,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     }
 
     @Configuration
-    public class AppConfig{
+    public class AppConfig {
         @Bean
         public PasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder();

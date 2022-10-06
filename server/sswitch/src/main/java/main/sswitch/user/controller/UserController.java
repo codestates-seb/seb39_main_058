@@ -50,11 +50,6 @@ public class UserController {
         return "Main Page";
     }
 
-    @PostMapping("/main")
-    public String main() {
-        return "Home";
-    }
-
     @PostMapping("/signup")
     public String postUser(@Valid @RequestBody UserDto.PostDto requestBody) {
         User user = userMapper.userPostToUser(requestBody);

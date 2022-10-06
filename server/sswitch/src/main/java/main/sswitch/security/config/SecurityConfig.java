@@ -1,6 +1,6 @@
 package main.sswitch.security.config;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.jwt.JwtAccessDeniedHandler;
 import main.sswitch.security.jwt.JwtAuthenticationEntryPoint;
 import main.sswitch.security.oauth.filter.JwtVerificationFilter;
@@ -10,6 +10,7 @@ import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,6 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -70,21 +72,29 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomDsl())
                 .and()
-                .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/admin/**", "/news/notice/take/**", "/news/event/take/**", "/orders/delete/**", "/trash/admin/**")
-                        .hasRole("ROLE_ADMIN")
-                        .antMatchers("/users/**", "/community/forum/take/**", "/community/comment/take/**", "/trash/take/**")
-                        .hasRole("ROLE_USER")
-                        .anyRequest()
-                        .permitAll())
-                .oauth2Login(
-                        oauth2 -> oauth2
-//                .authorizationEndpoint()
-//                .baseUri("/oauth2/authorization")
-//                .and()
-//                .redirectionEndpoint()
-//                .baseUri("/oauth2/callback/*")
-//                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**","/trash/take/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE,"/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**","/trash/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PATCH,"/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**","/trash/take/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET,"/admin/**")
+                .access("hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET,"/users/**","/trash/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST,"/users/**","/take/**","/trash/flush/**","/orders/**","/take/like/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/orders/**","/take/like/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PATCH,"/users/**", "/community/forum/take/**", "/community/comment/take/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.GET,"/goods/**","/community/**", "/news/**")
+                .permitAll()
+                .anyRequest()
+                .permitAll()
+                .and()
+                .oauth2Login(oauth2 -> oauth2
                                 .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
 
         return http.build();
