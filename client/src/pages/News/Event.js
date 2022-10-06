@@ -75,7 +75,7 @@ const Event = () => {
     }
     
     const handleDeletClick = () => {
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/${eventId}`,{
+        fetch(`https://sswitch.ga/news/event/take/${eventId}`,{
             method: "DELETE",
             headers: { 
                 "Authorization": `Bearer ${userInfo.accessToken}`,

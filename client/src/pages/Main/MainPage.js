@@ -30,6 +30,8 @@ function MainPage(){
         boolean : false ,
         state : ''
     })
+    const [modal, setModal] = useState(false)
+    const [res, setRes] = useState(undefined)
 
     const [markerClick, setMarkerClick] = useState({
         boolean : false ,
@@ -70,13 +72,13 @@ function MainPage(){
     const trashTakeCreate = () => {
 
         const trashInfo = {
-            "userId" : userInfo.userId,
             "latitude" : markerClick.위도,
             "longitude" : markerClick.경도,
-            "trashStatus" : "TRASH_CAN_FULL"
+            "trashStatus" : "TRASH_CAN_FULL",
+            "address": markerClick.주소
         }
         
-        fetch("https://sswitch.ga/trash/take/create",{
+        fetch("https://sswitch.ga/trash/flush/create",{
             method : "POST",
             headers: { 
                 "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -84,7 +86,9 @@ function MainPage(){
             },
             body : JSON.stringify(trashInfo)
         })
-        .then(() => console.log("비워주세요"))
+        .then((data) => {
+            setRes(data.status)
+        })
         .catch(err => console.log(err))
     }
 
@@ -146,10 +150,30 @@ function MainPage(){
                         onClick={() => window.open(`https://map.kakao.com/link/to/${markerClick.주소},${markerClick.위도},${markerClick.경도}`)}
                         >길찾기</div>
                         <div className="empty" onClick={() => {
-                            trashTakeCreate()
+                            if(userInfo.accessToken){
+                                trashTakeCreate()
+                                setModal(true)
+                            }else{
+                                alert('로그인 이후 사용 가능합니다.')
+                            }
                         }}>비워주세요</div>
                         </>
                     </div> :
+                undefined}
+                {modal && res ?
+                <div className="roadview_modal_container" onClick={() => {
+                    setModal(false)
+                    setRes(undefined)
+                    }}>
+                    <div className="notice_modal_container" onClick={(e) => {
+                        e.stopPropagation()
+                        setModal(true)
+                    }}>
+                        {res === 500 ?
+                        <div>이미 다른 사용자가 비움 요청한 쓰레기통 입니다.</div> : 
+                        <div>정상적으로 접수 되었습니다. 100 포인트가 적립되었습니다.</div>}
+                    </div>
+                </div> :
                 undefined}
                 <MyLocationBtn onClick={() => {
                     handleMyLocation()
@@ -170,6 +194,24 @@ const MainStyle = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .notice_modal_container{
+        width: 50vw;
+        height: 25vh;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4vmin;
+        text-align: center;
+        border-radius: 20px;
+
+        @media screen and (max-width: 500px){
+            width: 70%;
+            padding: 0 5vw;
+            font-size: 110%;
+        }
+    }
 
     .my_location{
         margin-left: 45px;
