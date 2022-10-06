@@ -1,9 +1,6 @@
 package main.sswitch.trash.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import main.sswitch.help.audit.BaseEntity;
 import main.sswitch.user.entity.User;
 
@@ -14,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,21 +27,23 @@ public class TrashCan extends BaseEntity {
     @Column(length = 255, nullable = false)
     private String latitude;
 
+    @Column(length = 255, nullable = false, unique = true)
+    private String address;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne(mappedBy = "trashCan", cascade = CascadeType.ALL)
-    private TrashCanAlarm trashCanAlarm;
+//    @OneToOne(mappedBy = "trashCan", cascade = CascadeType.ALL)
+//    private TrashCanAlarm trashCanAlarm;
 
     @Enumerated(value = EnumType.STRING)
     @Column(length = 255, nullable = false)
-    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_FULL;
+    private TrashStatus trashStatus = TrashStatus.TRASH_CAN_EMPTY;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     //쓰레기통 상태
     public enum TrashStatus {

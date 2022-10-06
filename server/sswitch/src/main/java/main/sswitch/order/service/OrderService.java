@@ -48,10 +48,12 @@ public class OrderService {
                     .builder()
                     .user(user)
                     .goods(goods)
-                    .giftCode(UUID.randomUUID().toString())
+                    .giftCode(order.couponNum(1))
                     .build();
             orderGoods.addOrder(order);
             orderGoodsRepository.save(orderGoods);
+            order.setTotalPrice(goods.getPrice());
+            order.setGoodsName(goods.getGoodsName());
             userService.updatePoints(order.getUser(), order.getUser().getCurrentPoints(), (orderGoods.getGoods().getPrice()), order.getUser().getTotalPoints(),0);
         }
 

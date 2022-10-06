@@ -77,6 +77,16 @@ public class SecurityConfig {
                 .apply(new CustomDsl())
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET,"/goods/**","/community/forum/take/**", "/community/comment/take/**","/news/event/**","/news/notice/**")
+                .permitAll()
+                .antMatchers(HttpMethod.GET,"/users/**","/trash/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.POST,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/trash/flush/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/orders/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PATCH,"/users/**", "/community/forum/take/**", "/community/comment/take/**")
+                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.POST, "/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**","/trash/take/**")
                 .access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.DELETE,"/admin/**","/news/notice/take/**","/news/event/take/**","/goods/**","/trash/**")
@@ -85,21 +95,12 @@ public class SecurityConfig {
                 .access("hasRole('ROLE_ADMIN')")
                 .antMatchers(HttpMethod.GET,"/admin/**")
                 .access("hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.GET,"/users/**","/trash/take/**","/orders/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.POST,"/users/**","/take/**","/trash/flush/**","/orders/**","/take/like/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.DELETE,"/users/**", "/community/forum/take/**", "/community/comment/take/**","/orders/**","/take/like/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PATCH,"/users/**", "/community/forum/take/**", "/community/comment/take/**")
-                .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.GET,"/goods/**","/community/**", "/news/**")
-                .permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
-                .oauth2Login(oauth2 -> oauth2
-                                .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
+                .oauth2Login(
+                        oauth2 -> oauth2
+                    .successHandler(new Oauth2UserSuccessHandler(oauthJwtTokenizer, userService, userRepository)));
 
         return http.build();
     }
@@ -120,8 +121,6 @@ public class SecurityConfig {
         return source;
 
     }
-
-
 
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
         @Override
