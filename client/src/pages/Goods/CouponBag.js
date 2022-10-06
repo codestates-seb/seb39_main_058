@@ -131,15 +131,21 @@ export default CouponBag
 
 const Container=styled.div`
 display: flex;
-border: 1px solid;
+border: 1.5px solid;
+border-top: 0px;
 width: 100%;
-height: 400px;
-/* margin-bottom: 10px; */
-align-items: center;
+height: 300px;
+align-items: flex-start;
 
 flex-wrap: wrap;
 overflow-y: auto;
-justify-content: space-around;
+justify-content: space-between;
+@media (max-width: 1600px) {
+            justify-content: center;
+          
+            
+}
+
 @media (max-width: 550px) {
             
            
@@ -156,12 +162,19 @@ display: flex;
 border: 1px solid;
 width: 100%;
 justify-content: space-around;
-
-margin-top: 10px;
-flex-basis: 600px;
-@media (max-width: 550px) {
-            flex-basis: 0px;
+margin: 5px;
+flex-basis: 650px;
+@media (max-width: 1600px) {
+  flex-basis: 1000px;
           
+            
+}
+@media (max-width: 550px) {
+  border-left: 0px;
+  border-right: 0px;
+  flex-basis: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
             
 }
 
@@ -189,6 +202,17 @@ justify-content: center;
             
   width: 100%;
 }
+button{
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border: solid 0px;
+  border-radius: 5px;
+  :hover {
+        cursor: pointer;
+      }
+}
+
 `
 
 const CouponHead=styled.div`

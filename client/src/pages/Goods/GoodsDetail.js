@@ -148,14 +148,14 @@ const goodsBuyFetch=async()=>{
 
         }}  name={item.goodsId}
         >삭제</button> :''}
-         {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{SetBuyGoods(e.target.name)
+         {accesstoken&&item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
         setModalOn2(!modalOn2)}} name ={item.goodsName}>교환하기</button>:''} 
       </div>
     </GoodsInfo>
     <GoodsSelect>
 
       <div>상태:{item.goodsStatus}</div>
-      {accesstoken&&item.goodsStatus==='판매중' ?<button onClick={(e)=>{SetBuyGoods(e.target.name)
+      {accesstoken&&item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
          setModalOn2(!modalOn2) }}   name ={item.goodsName} >교환하기</button>:''} 
       {role==="ROLE_ADMIN" ?<button onClick={(e) => {
         setDeleteGoods(e.target.name)
@@ -229,6 +229,17 @@ margin-top: 10px;
 align-items: center;
 
 white-space: nowrap;
+
+ .buyButton{
+  background-color:rgb(71,182,181);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  border: solid 0px;
+  :hover {
+        cursor: pointer;
+      }
+ }
 `
 const GoodsImg=styled.div`
 width: 20%;
