@@ -64,7 +64,7 @@ function User() {
                         <p>이메일 : {userData.email}</p>
                         <p>현재 포인트 : {userData.currentPoints}</p>
                         <p>누적 포인트 : {userData.totalPoints}</p>
-                        <p>가입일 : {userData.dateCreated}</p>
+                        <p>가입일 : {userData.dateCreated?.slice(0,10)}</p>
                     </div>
                 </div>
             </div>
@@ -124,7 +124,7 @@ function User() {
                                 return(
                                     <div className='bords_list select' key={el.orderId}>
                                         <span className='his'>{el.goodsName}</span>
-                                        <span className='date'>{el.createdAt}</span>
+                                        <span className='date'>{el.createdAt?.slice(0,10)}</span>
                                         <span className="point minus">{el.totalPrice}</span>
                                     </div>
                                 )
