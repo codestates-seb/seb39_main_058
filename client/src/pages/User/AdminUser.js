@@ -46,6 +46,7 @@ function AdminUser() {
 
     const emptyConfirm = () => {
         console.log('처리완료!')
+        setProcessed(!processed)
     }
 
     console.log(trashTotal);
@@ -94,8 +95,7 @@ function AdminUser() {
                                 <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "가득찼습니다." : "비워졌습니다."}</div>
                             </div>
                             <ButtonContainer>
-                                {/* <button onClick={EmptyConfirm}>확인</button> */}
-                                <button className="empty_confirm" onClick={() => setProcessed(!processed)}>처리완료</button>
+                                <button className="empty_confirm" onClick={emptyConfirm}>처리완료</button>
                             </ButtonContainer>
                         </TrashInfo>)
                     })}
