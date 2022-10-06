@@ -44,7 +44,7 @@ public class TrashController {
 //    }
 
     //쓰레기통 등록
-    @PostMapping("/take/create")
+    @PostMapping("/flush/create")
     public ResponseEntity postTrashCan(@AuthenticationPrincipal PrincipalDetails principal, @Valid @RequestBody TrashPostDto trashPostDto) {
         User user = userService.findUserWithLoginId(principal.getUsername());
         TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto), user);
@@ -54,18 +54,7 @@ public class TrashController {
                 HttpStatus.CREATED);
     }
 
-//    @PostMapping("/flush/create/{trash-id}")
-//    public ResponseEntity createTrashCanAlarm(@PathVariable("trash-id") long trashId, @Valid @RequestBody TrashCanAlarmDto requestBody) {
-//        TrashCanAlarm trashCanAlarm = trashService.createTrashCanAlarm(requestBody, trashId);
-//        TrashCanAlarmDto.Response response = alarmMapper.alarmToTrashAlarmResponseDto(trashCanAlarm);
-//
-//        return new ResponseEntity<>(
-//                new SingleResponseDto<>(response),
-//                HttpStatus.CREATED);
-//    }
 
-    // 수정시 쓰레기통 상태 변환 가능
-    // 우선 프론트에서 제보
     @PatchMapping("/take/{trash-id}")
     public ResponseEntity patchTrashCan(@PathVariable("trash-id") @Positive long trashId,
                                         @Valid @RequestBody TrashPatchDto trashPatchDto) {
