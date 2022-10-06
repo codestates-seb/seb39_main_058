@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import styled from "styled-components";
 
 const REDIRECT_URI='https://seb39-main-058-tawny.vercel.app/login'
@@ -29,8 +29,10 @@ const googleback=`https://sswitch.ga/oauth2/authorization/google?redirect_uri=${
 
 const OauthLogin = () => {
   const [searchQ,setSearchQ] = useSearchParams()
-  const accessCode=searchQ.get('access_token')
+  const accessToken=searchQ.get('access_token')
 const dispatch=useDispatch()
+const navigate=useNavigate();
+const location=useLocation();
 
 
 
@@ -68,66 +70,53 @@ const dispatch=useDispatch()
 
 
 
-//////////구글
-// const getGoogleAccess=()=>{
-//   console.log('구글오우뜨',kakaoCode)
-//   if(kakaoCode){
-//     fetch(`${googleOauthUrl}?code=${kakaoCode}&client_id=${ClIENT_ID}&client_secret=${ClIENT_PWD_KEY}&redirect_uri=${REDIRECT_URI}&grant_type=authorization_code`,{
-//       method: 'POST',
-//       headers: {
-//         'Content-type': 'application/x-www-form-urlencoded'},
-     
-//     })
-//     .then((res) => res.json())
-//     .then((data)=>{
-//       console.log('구글엑세스',data)
-//       if(data.access_token){
-//         fetch(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${data.access_token}`,{
-//           headers: { 'Authorization': `Bearer ${data.access_token}`,}
-//         })
-//         .then((res) => res.json())
-//         .then((data2)=>{
-//           console.log('구글토큰정보불러오기',data2)
-
-//         })
-//       }
-
-//     })
-
-//   }
-  
-//   }
-
-
 
 
 
 
 // useEffect(()=>{
 //   kakaoOauth();
-//   // getGoogleAccess()
+//  
 // },[kakaoCode])
 
 
 
 
-//바로실행해볼곳
-// const loginAccess=()=>{
-//   if(accessCode){
-//     fetch(/* 유저정보받아오는곳*/,{
-//           headers: { 'Authorization': `Bearer ${accessCode}`,}
-//         })
-//         .then((res) => res.json())
-//         .then((data)=>{
-//                     console.log('구글토큰정보불러오기',data)
-          
-//                   })
-//   }
-// }
+// 바로실행해볼곳
+const loginAccess=()=>{
+  if(accessToken){
+    fetch('https://sswitch.ga/users/profile',{
+          headers: { 'Authorization': `Bearer ${accessToken}`,}
+        })
+        .then((res) => res.json())
+        .then((data)=>{
+                    console.log('백엔드소셜정보받기',data)
+                    let abc=data.data
+                    abc.accessToken=accessToken;
+                    if(data.data){
+                      if(location.state?.path){
+                        dispatch({type:'USERINFO',payload:{userInfo:abc}})
+                        navigate(`${location.state.path}`)
+                      }else{
+                        dispatch({type:'USERINFO',payload:{userInfo:abc}})
+                          navigate(`/`)
+                         
+                      
+                          // window.location.reload()
+                        }
+                    }
+                  })
+                }
+              }
+              
+           
 
-// useEffect(()=>{
-//   loginAccess()
-// },[accessCode])
+
+
+
+useEffect(()=>{
+  loginAccess()
+},[accessToken])
 
 
 
@@ -138,7 +127,7 @@ const dispatch=useDispatch()
         <Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div>
       </KakaoLoginButton>
     </LinkStyle>
-{console.log('쿼리토큰',accessCode)}
+
 
    <LinkStyle href={googleback}>
 
