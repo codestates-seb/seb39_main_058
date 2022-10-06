@@ -57,7 +57,7 @@ function CommunityDetail() {
         setUserId(data.data.userId);
         setLike(data.data.forumLike);
         setSecret(data.data.secret);
-        setTag(data.data.tag.split(',').slice(1));
+        setTag(data.data.tag.split(',').slice());
         setDateCreated(data.data.dateCreated);
       })
       .catch(err => console.log(err))
@@ -139,7 +139,10 @@ function CommunityDetail() {
   }
   
   // 게시글 수정(모달창) 취소
-  const cancelRevise = () => setRevise(!revise);
+  const cancelRevise = () => {
+    setRevise(false);
+    setTag([]);
+  }
 
   // 게시글 삭제 및 삭제 확인 버튼
   const deleteBoard = () => setRemove(!remove); 
@@ -222,9 +225,12 @@ function CommunityDetail() {
                 <div className="secret">
                   <span><FcLock className="lock"/>해당 글은 비밀글입니다.</span>
                 </div>}
+                {/* 특정 게시글에서 보여지는 태그 */}
                 { !tag.join().length ? undefined : 
                   !revise && <div className="tag-container"> 
-                  {tag.map(item => <span key={item} className="tag">{item}</span>)}
+                  {!tag[0] ? 
+                  tag.slice(1).map(item => <span key={item} className="tag">{item}</span>) :
+                  tag.map(item => <span key={item} className="tag">{item}</span>)}
                 </div>}
               </UserInfo>
           </div>
@@ -244,9 +250,14 @@ function CommunityDetail() {
           { revise && <SelectedTag>
               {!tag.join().length ? undefined : 
               <div className="selected-tags">
-                  { tag.map( el =>
-                    <span className="tag" key={el}>{el} 
-                        <span className="tag delete-tag" onClick={() => deleteTag(el)}>X</span>
+                  { !tag[0] ? 
+                    tag.slice(1).map(item =>
+                      <span className="tag" key={item}>{item} 
+                          <span className="tag delete-tag" onClick={() => deleteTag(item)}>X</span>
+                      </span>) :
+                    tag.map(item =>
+                    <span className="tag" key={item}>{item} 
+                        <span className="tag delete-tag" onClick={() => deleteTag(item)}>X</span>
                     </span>)
                   }
               </div>}    
@@ -269,6 +280,7 @@ function CommunityDetail() {
           </Secret> }
           
           {/* 게시글 수정 버튼 및 좋아요 등록/취소 버튼 */}
+          {/* // revise가 true면,(수정 버튼을 눌러서 상태값이 변경되었을때) */}
           { revise ? 
             <RevisedButtonWrapper>
               <button className="writer-submit" onClick={confirmRevise}> 수정하기 </button>
@@ -276,9 +288,9 @@ function CommunityDetail() {
             </RevisedButtonWrapper> :
             <ButtonContainer>
               {/* 'like'로 판별하면 안되고, 'userId'로 판단해야함. */}
-              {/* {console.log(data.data)} */}
+              {console.log(data.data)}
               {/* {console.log(userInfo)} */}
-              {console.log(userInfo.accessToken)}
+              {/* {console.log(userInfo.accessToken)} */}
               {/* {console.log(data) // 게시글 작성자 데이터} */}
               {/* {data.data?.likeForumResponses.map(el => {
                 (el.userId !== userInfo.userId) ?
@@ -350,6 +362,7 @@ const Main = styled.main`
   @media (max-width: 550px) {
     width: 85vw;
     margin: 7px;
+    margin-top: 4rem;
     padding-left: 2rem;
   }
 
