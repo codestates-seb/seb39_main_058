@@ -3,6 +3,7 @@ package main.sswitch.security.config;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.jwt.JwtAccessDeniedHandler;
 import main.sswitch.security.jwt.JwtAuthenticationEntryPoint;
+import main.sswitch.security.jwt.TokenProvider;
 import main.sswitch.security.oauth.filter.JwtVerificationFilter;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.security.handler.Oauth2UserSuccessHandler;
@@ -37,14 +38,17 @@ public class SecurityConfig {
     private final OauthJwtTokenizer oauthJwtTokenizer;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
 
     private final CorsFilter corsFilter;
 
     public SecurityConfig(OauthJwtTokenizer oauthJwtTokenizer,
                           UserService userService,
                           UserRepository userRepository,
+                          TokenProvider tokenProvider,
                           CorsFilter corsFilter) {
         this.userRepository = userRepository;
+        this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.userService = userService;
         this.oauthJwtTokenizer = oauthJwtTokenizer;
@@ -122,7 +126,7 @@ public class SecurityConfig {
     public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(oauthJwtTokenizer);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(oauthJwtTokenizer,tokenProvider);
 
             builder.addFilter(corsFilter)
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);

@@ -83,7 +83,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         }
         user.setEmail(email);
         user.setUserName(given_name);
-        user.setLoginId(provider + given_name);
+        user.setLoginId(given_name);
         user.setPassword(given_name + provider);
         user.setCurrentPoints(10000);
         user.setTotalPoints(10000);
