@@ -3,22 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaQuestionCircle } from "react-icons/fa";
-import { FcLike } from 'react-icons/fc';
-import { BsPencilSquare } from 'react-icons/bs';
 import { ImWarning } from 'react-icons/im';
 import { HiPencil } from "react-icons/hi";
-import InfiniteScroll from 'react-infinite-scroll-component';
+import PageNation from '../../components/PageNation';
 
 
 
 function AdminUser() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
     
+    const [ trashTotal, setTrashTotal ] = useState();
+    // const [ trashData, setTrashData ] = useState();
     const [ userData, setUserData ] = useState({});
+    const [ emptyRequest, setEmptyRequest ] = useState([]);
+    const [ processed, setProcessed ] = useState(false);
     
     const navigate = useNavigate();
     
+    // 관리자 마이페이지 정보
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
             headers: {
@@ -31,6 +33,23 @@ function AdminUser() {
             .catch(err => console.log(err))
     },[])
 
+    // '비워주세요' 요청 정보
+    useEffect(() => {
+        fetch(`https://sswitch.ga/trash?page=1&size=10`)
+        .then(res => res.json())
+        .then(data => {
+            setTrashTotal(data.pageInfo);
+            setEmptyRequest(data.data);
+        })
+        .catch(err => console.log(err))
+    },[])
+
+    const emptyConfirm = () => {
+        console.log('처리완료!')
+    }
+
+    console.log(trashTotal);
+
     // console.log(userData)
     // console.log(userInfo)
 
@@ -39,59 +58,65 @@ function AdminUser() {
     <Main>
         <div className='wrapper'>
         <TopBackground/>
-        <div className='user_info'>
-            <AdminInfo>
-                <div>
-                    <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
-                        <img src={ userData.profileImage === null ? '/profile.png' : userData.profileImage}/>
-                        <HiPencil className='edit'/>
-                    </div>
-                    <div className='flex'>
-                        <div className='nickName'>{`${userInfo.userName}(관리자)`}</div>
-                    </div>
-                </div>
-                <div className='detail'>
-                    <div className='detail_content'>
-                        <p>이메일 : {userData.email}</p>
-                        <p>현재 포인트 : {userData.currentPoints}</p>
-                        <p>누적 포인트 : {userData.totalPoints}</p>
-                        <p>가입일 : {userData.dateCreated}</p>
-                    </div>
-                    <ButtonWrapper>
-                        <button className='all_users_btn'
-                            onClick={() => navigate("/admin-users/all-users")}>
-                            전체 회원정보 조회하기
-                        </button>
-                    </ButtonWrapper>
-                </div>
-            </AdminInfo>
-            <div className='rank_container'>
-                <div className='flex_box icons'>
-                    <span>글 쓴 횟수</span>
-                    <BsPencilSquare className='icon'/>
-                    <span>3회</span>
-                </div>
-               
-                <div className='flex_box icons'>
-                    <span>누적 좋아요 수</span>
-                    <FcLike className='icon' />
-                    <span>3회</span>
-                </div>
-            </div>
-            <div className='etc'>
-                <div className='history'>
-                    <div className='bords_container'>
-                        <div className='bords_list header'>
-                            <span className='his'>내역</span>
-                            <span className='date'>날짜</span>
-                            <span className='point'>포인트</span>
+            <div className='user_info'>
+                <AdminInfo>
+                    <div>
+                        <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
+                            <img src={ userData.profileImage === null ? '/profile.png' : userData.profileImage}/>
+                            <HiPencil className='edit'/>
                         </div>
-                        
+                        <div className='flex'>
+                            <div className='nickName'>{`${userInfo.userName}(관리자)`}</div>
+                        </div>
                     </div>
+                    <div className='detail'>
+                        <div className='detail_content'>
+                            <p>이메일 : {userData.email}</p>
+                            <p>현재 포인트 : {userData.currentPoints}</p>
+                            <p>누적 포인트 : {userData.totalPoints}</p>
+                            <p>가입일 : {userData.dateCreated}</p>
+                        </div>
+                        <ButtonWrapper>
+                            <button className='all_users_btn'
+                                onClick={() => navigate("/admin-users/all-users")}>
+                                전체 회원정보 조회하기
+                            </button>
+                        </ButtonWrapper>
+                    </div>
+                </AdminInfo>
+                <EmptyRequest>   
+                    {emptyRequest.map(trash => {
+                        return (
+                        <TrashInfo key={trash.trashId}>
+                            <div className='info_wrapper'>
+                                <div className='address'>주소: {trash?.address}</div>
+                                <div className='request_date'>요청일자: {trash?.dateCreated}</div>
+                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "가득찼습니다." : "비워졌습니다."}</div>
+                            </div>
+                            <ButtonContainer>
+                                {/* <button onClick={EmptyConfirm}>확인</button> */}
+                                <button className="empty_confirm" onClick={() => setProcessed(!processed)}>처리완료</button>
+                            </ButtonContainer>
+                        </TrashInfo>)
+                    })}
+                </EmptyRequest>
+                <div className='pagenation_wrapper'>
+                    <PageNation emptyRequest={emptyRequest} trashTotal={trashTotal?.totalElements} />
                 </div>
             </div>
 
-        </div>
+            {/* 쓰레기통 비움요청 확인 모달창 */}
+            {processed && <RemoveModal>
+                    <div className="delete-warning">
+                    <ImWarning className="delete-warning-icon"/>
+                    <div>쓰레기통 '비워주세요' 요청에 대해</div>
+                    <div>처리 완료하시겠습니까?</div>
+                    <div className="confirm-wrapper">
+                        <div className="confirm" onClick={emptyConfirm}>확인</div>
+                        <div className="cancel" onClick={() => setProcessed(!processed)}>취소</div>
+                    </div>
+                    </div>
+                </RemoveModal>}
         </div>
 
         
@@ -145,9 +170,12 @@ const Main = styled.main`
 
     .edit{
         position: absolute;
-        top: 13%;
+        top: 9%;
         font-size: 200%;
         display: none;
+        @media (max-width: 550px) {
+            top: 6%;
+        }
     }
 
     @keyframes identifier {
@@ -168,75 +196,8 @@ const Main = styled.main`
         }
     }
 
-    .rank_container{
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        height: 40vh;
-        
-        img{
-            width: 35vw;
-            height: 30vh;
-        }
 
-        .icon{
-            font-size: 7vmin;
-            padding: 3vh 0;
-        }
-    }
-
-    .flex_box{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        img{
-            margin-bottom: -3vh;
-        }
-    }
-
-    .icons{
-        margin-top: 10vh;
-    }
-
-    .bords_container{
-        width: 100%;
-        overflow-y: scroll;
-        font-size: 80%;
-        margin-bottom: 5vh;
-        border: 0.1rem solid black;
-        height: 30vh
-    }
-
-    .bords_list{
-        display: flex;
-        border: 1px solid black;
-        padding: .3vh .5vw;
-        white-space: nowrap;
-    }
-
-    .header{
-        background-color: lightgray;
-        font-weight: bold;
-    }
-
-    .his{
-        width: 40%;
-    }
-
-    .minus{
-        color: red;
-    }
-
-    .plus{
-        color: blue;
-    }
-
-    .date, .point{
-        width: 30%;
-        text-align: center;
-    }
-
+    
 
        
 
@@ -290,7 +251,7 @@ export const TopBackground = styled.div`
     @media screen and (max-width: 500px){
         display: none;
     }
-`
+`;
 
 const AdminInfo = styled.div`
     /* height: 40vh; */
@@ -319,6 +280,57 @@ const AdminInfo = styled.div`
     }
 `;
 
+const EmptyRequest = styled.div`
+    /* border: 1px solid black; // 삭제 */
+
+    padding: 1rem;
+    font-size: 2.5vmin;
+`;
+
+const TrashInfo = styled.div`
+    /* border: 1px solid red; // 삭제 */
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+
+    @media (max-width: 550px) {
+        flex-direction: column;
+    }
+    
+    .info_wrapper {
+        padding: .5rem .2rem;
+        div {
+            padding: .3rem 0;
+        }
+    }
+`;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+
+   .empty_confirm {
+        margin: 1rem;
+        padding: 1vmin 4vmin;
+        border-radius: 1rem;
+        border: 1px solid gray;
+        background-color: rgb(71,182,181);
+        color: white;
+        font-size: 2vmin;
+        cursor: pointer;
+        &:hover {
+            color: white;
+            background-color: #38d9a9;
+            border: 1px solid gray;
+        }
+        @media (max-width: 800px) {
+
+        }
+    }
+`;
+
 export const UserContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -332,7 +344,27 @@ export const UserContainer = styled.div`
     padding: 2rem;
 `;
 
-// 회원탈퇴 모달창
+const ButtonWrapper = styled.div`
+    .all_users_btn {
+        margin: 1rem;
+        padding: 1vmin 4vmin;
+        border-radius: 1rem;
+        border: 1px solid gray;
+        background-color: rgb(71,182,181);
+        color: white;
+        font-size: 2vmin;
+        cursor: pointer;
+        &:hover {
+            color: white;
+            background-color: #38d9a9;
+            border: 1px solid gray;
+        }
+        @media (max-width: 800px) {
+
+        }
+    }
+`;
+
 const RemoveModal = styled.div`
   position: fixed;
   display: flex;
@@ -359,11 +391,11 @@ const RemoveModal = styled.div`
     justify-content: space-evenly;
     align-items: center;
     background-color: white;
-    width: 55vw;
-    height: 30vh;
+    width: 70vw;
+    height: 45vh;
     border-radius: 10px;
     font-family: Jua, serif;
-    font-size: 3vmin;
+    font-size: 4vmin;
   }
 
   .confirm-wrapper {
@@ -379,25 +411,4 @@ const RemoveModal = styled.div`
       }
     }
   }
-`;
-
-const ButtonWrapper = styled.div`
-    .all_users_btn {
-        margin: 1rem;
-        padding: 1vmin 4vmin;
-        border-radius: 1rem;
-        border: 1px solid gray;
-        background-color: rgb(71,182,181);
-        color: white;
-        font-size: 2vmin;
-        cursor: pointer;
-        &:hover {
-            color: white;
-            background-color: #38d9a9;
-            border: 1px solid gray;
-        }
-        @media (max-width: 800px) {
-
-        }
-    }
 `;
