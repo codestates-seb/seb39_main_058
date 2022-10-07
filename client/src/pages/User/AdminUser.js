@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ImWarning } from 'react-icons/im';
 import { HiPencil } from "react-icons/hi";
@@ -12,14 +12,14 @@ import PageNation from '../../components/PageNation';
 function AdminUser() {
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo);
     
-    const [ trashTotal, setTrashTotal ] = useState();
-    // const [ trashData, setTrashData ] = useState();
     const [ userData, setUserData ] = useState({});
     const [ emptyRequest, setEmptyRequest ] = useState([]);
+    const [ trashId, setTrashId ] = useState([]);
     const [ processed, setProcessed ] = useState(false);
     
     const navigate = useNavigate();
     
+
     // 관리자 마이페이지 정보
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
@@ -33,27 +33,50 @@ function AdminUser() {
             .catch(err => console.log(err))
     },[])
 
-    // '비워주세요' 요청 정보
+
+    // '비워주세요' 요청 정보 조회
     useEffect(() => {
         fetch(`https://sswitch.ga/trash?page=1&size=10`)
         .then(res => res.json())
-        .then(data => {
-            setTrashTotal(data.pageInfo);
-            setEmptyRequest(data.data);
-        })
+        .then(data => setEmptyRequest(data.data))
         .catch(err => console.log(err))
     },[])
 
+    // 처리완료(버튼)
+    const processedBtn = () => {
+        setTrashId(emptyRequest.map(ele => ele.trashId))
+        setProcessed(!processed);
+    };
+    // 처리완료 -> 모달창(확인 버튼)
     const emptyConfirm = () => {
-        console.log('처리완료!')
+        console.log('확인!');
+        setProcessed(!processed);
+        
+
+        // trashId.filter(el => {})
+       
+        
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/$17`,{
+            method: "DELETE",
+            headers: { 
+            "Authorization": `Bearer ${userInfo.accessToken}`,
+            "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.log(err))
+        
+        // fliter사용
     }
 
-    console.log(trashTotal);
+    // 관리자가 '처리완료' 버튼을 클릭한 trashId가 
 
+    // console.log(emptyRequest.map(el => el.trashId));
     // console.log(userData)
-    // console.log(userInfo)
-
-
+    // console.log(userInfo.accessToken)
+    // console.log(trashId)
+    // console.log('trashId', trashId)
     return (
     <Main>
         <div className='wrapper'>
@@ -74,7 +97,7 @@ function AdminUser() {
                             <p>이메일 : {userData.email}</p>
                             <p>현재 포인트 : {userData.currentPoints}</p>
                             <p>누적 포인트 : {userData.totalPoints}</p>
-                            <p>가입일 : {userData.dateCreated}</p>
+                            <p>가입일 : {userData.dateCreated?.slice(0, 10)}</p>
                         </div>
                         <ButtonWrapper>
                             <button className='all_users_btn'
@@ -87,22 +110,18 @@ function AdminUser() {
                 <EmptyRequest>   
                     {emptyRequest.map(trash => {
                         return (
-                        <TrashInfo key={trash.trashId}>
+                        <TrashInfo key={trash?.trashId}>
                             <div className='info_wrapper'>
                                 <div className='address'>주소: {trash?.address}</div>
-                                <div className='request_date'>요청일자: {trash?.dateCreated}</div>
-                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "가득찼습니다." : "비워졌습니다."}</div>
+                                <div className='request_date'>요청일자: {`${trash.dateCreated?.slice(0,10)} / ${trash.dateCreated?.slice(11,16)} `}</div>
+                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "FULL" : "EMPTY"}</div>
                             </div>
                             <ButtonContainer>
-                                {/* <button onClick={EmptyConfirm}>확인</button> */}
-                                <button className="empty_confirm" onClick={() => setProcessed(!processed)}>처리완료</button>
+                                <button className="empty_confirm" onClick={processedBtn}>처리완료</button>
                             </ButtonContainer>
                         </TrashInfo>)
                     })}
                 </EmptyRequest>
-                <div className='pagenation_wrapper'>
-                    <PageNation emptyRequest={emptyRequest} trashTotal={trashTotal?.totalElements} />
-                </div>
             </div>
 
             {/* 쓰레기통 비움요청 확인 모달창 */}
@@ -118,8 +137,6 @@ function AdminUser() {
                     </div>
                 </RemoveModal>}
         </div>
-
-        
     </Main>
     )
 }
@@ -145,7 +162,7 @@ const Main = styled.main`
         flex-direction: column;
         background-color: white;
         position: absolute;
-        width: 80%;
+        width: 70vw;
         top: 10vh;
         border-radius: 2%;
         padding: 2rem;
@@ -154,18 +171,6 @@ const Main = styled.main`
         @media screen and (max-width: 500px){
             border: none;
         }
-    }
-
-
-
-
-    .rank_img{
-        width: 30vw;
-        height: 20vh;
-    }
-
-    .more{
-        cursor: pointer;
     }
 
     .edit{
@@ -177,31 +182,7 @@ const Main = styled.main`
             top: 6%;
         }
     }
-
-    @keyframes identifier {
-        0%{
-            padding: 0;
-            opacity: 0;
-        }
-
-        20% {
-            padding-left: 20vw;
-            padding-right: 20vw;
-        }
-
-        100%{
-            padding-left: 20vw;
-            padding-right: 20vw;
-            opacity: 1;
-        }
-    }
-
-
-    
-
-       
-
-    .img_container{
+   .img_container{
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -254,11 +235,14 @@ export const TopBackground = styled.div`
 `;
 
 const AdminInfo = styled.div`
-    /* height: 40vh; */
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom: .3rem solid rgb(64,156,155);
+    @media (max-width: 550px) {
+        display: flex;
+        flex-direction: column;
+    }
 
     img{
         width: 15vw;
