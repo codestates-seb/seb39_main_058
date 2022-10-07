@@ -102,7 +102,7 @@ function CommunityDetail() {
     // 만약 like가 0이 아니라면, like수 하나 줄이고, like가 0이라면 그 상태 그대로 0으로 두기 
     like ? setLike(like - 1) : setLike(0);
 
-    fetch(`https://sswitch.ga/community/forum/take/like/`, {
+    fetch(`https://sswitch.ga/community/forum/take/like`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -288,10 +288,18 @@ function CommunityDetail() {
             </RevisedButtonWrapper> :
             <ButtonContainer>
               {/* 'like'로 판별하면 안되고, 'userId'로 판단해야함. */}
-              {console.log(data.data)}
+              {/* {console.log(data.data?.likeForumResponses.map(el => el.userId).includes(userInfo.userId))} */}
               {/* {console.log(userInfo)} */}
               {/* {console.log(userInfo.accessToken)} */}
               {/* {console.log(data) // 게시글 작성자 데이터} */}
+              {/* {data.data?.likeForumResponses.map(ele => ele.userId).includes(userInfo.userid) ?
+                <button className="like-btn" onClick={addLike}>
+                  <FcLikePlaceholder className="like-btn"/>
+                </button> :
+                <button className="like-btn" onClick={disLike}>
+                  <FcLike className="like-btn"/>
+                </button>
+              } */}
               {/* {data.data?.likeForumResponses.map(el => {
                 (el.userId !== userInfo.userId) ?
                   <button className="like-btn" key={el.likeForumId} onClick={addLike}>
