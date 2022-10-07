@@ -16,9 +16,10 @@ function AdminUser() {
     const [ emptyRequest, setEmptyRequest ] = useState([]);
     const [ trashId, setTrashId ] = useState([]);
     const [ processed, setProcessed ] = useState(false);
+    const [ success, setSuccess ] = useState(false);
     
     const navigate = useNavigate();
-    
+    const { id } = useParams()
 
     // 관리자 마이페이지 정보
     useEffect(() => {
@@ -34,7 +35,7 @@ function AdminUser() {
     },[])
 
 
-    // '비워주세요' 요청 정보 조회
+    // 자체 DB '비워주세요' 요청 정보 조회
     useEffect(() => {
         fetch(`https://sswitch.ga/trash?page=1&size=10`)
         .then(res => res.json())
@@ -47,25 +48,28 @@ function AdminUser() {
         setTrashId(emptyRequest.map(ele => ele.trashId))
         setProcessed(!processed);
     };
+
     // 처리완료 -> 모달창(확인 버튼)
     const emptyConfirm = () => {
-        console.log('확인!');
+        // console.log('확인!');
         setProcessed(!processed);
-        
+        setSuccess(!success);
 
         // trashId.filter(el => {})
        
+        // 관리자(내)가 누른 쓰레기통 '비워주세요'요청의 trashId
+        // 
         
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/$17`,{
-            method: "DELETE",
-            headers: { 
-            "Authorization": `Bearer ${userInfo.accessToken}`,
-            "Content-Type": "application/json"
-            }
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => console.log(err))
+        // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/${}`,{
+        //     method: "DELETE",
+        //     headers: { 
+        //     "Authorization": `Bearer ${userInfo.accessToken}`,
+        //     "Content-Type": "application/json"
+        //     }
+        // })
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
+        //     .catch(err => console.log(err))
         
         // fliter사용
     }
@@ -74,6 +78,7 @@ function AdminUser() {
 
     // console.log(emptyRequest.map(el => el.trashId));
     // console.log(userData)
+    
     // console.log(userInfo.accessToken)
     // console.log(trashId)
     // console.log('trashId', trashId)
@@ -133,6 +138,17 @@ function AdminUser() {
                     <div className="confirm-wrapper">
                         <div className="confirm" onClick={emptyConfirm}>확인</div>
                         <div className="cancel" onClick={() => setProcessed(!processed)}>취소</div>
+                    </div>
+                    </div>
+                </RemoveModal>}
+
+            {/* 쓰레기통 비움처리 완료 모달창 */}
+            { success && <RemoveModal>
+                    <div className="delete-warning">
+                    <ImWarning className="delete-warning-icon"/>
+                    <div>처리완료 되었습니다.</div>
+                    <div className="confirm-wrapper">
+                        <div className="cancel" onClick={() => setSuccess(!success)}>확인</div>
                     </div>
                     </div>
                 </RemoveModal>}
