@@ -1,8 +1,7 @@
 package main.sswitch.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
@@ -10,18 +9,21 @@ import main.sswitch.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+@Slf4j
+@Service
 public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final OauthJwtTokenizer oauthJwtTokenizer;
     private final UserService userService;
@@ -42,39 +44,42 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException{
+
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String given_name = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
-        String email = String.valueOf(oAuth2User.getAttributes().get("email"));
-//        Optional<String> email = Optional.ofNullable(String.valueOf(oAuth2User.getAttributes().get("email")));
-//        if (email.isPresent()) {
-//            email = Optional.of(given_name + "@" + provider + ".com");
-//        }
-        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
+//        System.out.println(oAuth2User);
+        String lastname = "lastname";
+        String email = "email";
+        String name = "name";
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+//        System.out.println(kakaoAccount);
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+//        System.out.println(properties);
+        if(provider == "google") {
+             lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
+             email = String.valueOf(oAuth2User.getAttributes().get("email"));
+             name = String.valueOf(oAuth2User.getAttributes().get("name"));
+        }else{
+            lastname = String.valueOf(properties.get("nickname"));
+             email = lastname + "@kakao.com";
+        }
         String authorities = "ROLE_USER";
-        Optional<User> optionalUser = userRepository.findByUsername(given_name);
+        Optional<User> optionalUser = userRepository.findByUsername(lastname);
         if(optionalUser.isEmpty()){
-            saveUser(email, name, given_name, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
+            saveUser(email, lastname, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
         }
 
-        HelloData data = new HelloData();
-        data.setProvider(provider);
-        data.setUsername(given_name);
-        String result = objectMapper.writeValueAsString(data);
-        response.getWriter().write(result);
-
-        Cookie cookie = new Cookie("provider", provider);
-        response.addCookie(cookie);
-        String accessToken = delegateAccessToken(given_name, authorities);    //현재 작성하는 access토큰과 일치시켜야함
 
 
-        response.setHeader("email", email);
-        response.setHeader("accessToken", accessToken);
-
-        redirect(request, response, name, authorities);
+//        Cookie cookie = new Cookie("provider", provider);
+//        response.addCookie(cookie);
+//        String accessToken = delegateAccessToken(lastname);    //현재 작성하는 access토큰과 일치시켜야함
+//
+        redirect(request, response, lastname, authorities);
     }
 
-    private void saveUser(String email,String name,String given_name,String provider) {
+    private void saveUser(String email,String lastname,String provider) {
         User user = new User();
         if (provider.equals("google")) {
             user.setProviders(User.Providers.PROVIDER_GOOGLE);
@@ -82,9 +87,9 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             user.setProviders(User.Providers.PROVIDER_KAKAO);
         }
         user.setEmail(email);
-        user.setUserName(given_name);
-        user.setLoginId(given_name);
-        user.setPassword(given_name + provider);
+        user.setUserName(lastname);
+        user.setLoginId(lastname);
+        user.setPassword(lastname + provider);
         user.setCurrentPoints(10000);
         user.setTotalPoints(10000);
         user.setRole("ROLE_USER");
@@ -92,19 +97,19 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response,
-                          String name, String authorities) throws IOException {
-        String accessToken = delegateAccessToken(name, authorities);    //현재 작성하는 access토큰과 일치시켜야함
-        String refreshToken = delegateRefreshToken(name);
+                          String lastname, String authorities) throws IOException {
+        String accessToken = delegateAccessToken(lastname, authorities);    //현재 작성하는 access토큰과 일치시켜야함
+        String refreshToken = delegateRefreshToken(lastname + authorities);
 
         String uri = createURI(accessToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String delegateAccessToken(String username, String authorities) {
+    private String delegateAccessToken(String lastname, String authorities) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("auth", authorities);
+        claims.put("auth",authorities);
 
-        String subject = username;
+        String subject = lastname;
         Date expiration = oauthJwtTokenizer.getTokenExpiration(oauthJwtTokenizer.getAccessTokenExpirationMinutes());
 
         String base64EncodedSecretKey = oauthJwtTokenizer.encodeBase64SecretKey(oauthJwtTokenizer.getSecretKey());
@@ -140,12 +145,5 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 .queryParams(queryParams)
                 .build()
                 .toUri();
-    }
-
-    @Getter
-    @Setter
-    private class HelloData {
-        private String username;
-        private String provider;
     }
 }
