@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 
@@ -11,7 +11,7 @@ const OauthLoadingPage = () => {
 const dispatch=useDispatch()
 const navigate=useNavigate();
 const location=useLocation();
-
+const statePath=useSelector(state=>state.LoginPageReducer.path)
 const loginAccess=()=>{
   if(accessToken){
     fetch('https://sswitch.ga/users/profile',{
@@ -23,9 +23,9 @@ const loginAccess=()=>{
                     let abc=data.data
                     abc.accessToken=accessToken;
                     if(data.data){
-                      if(location.state?.path){
+                      if(statePath){
                         dispatch({type:'USERINFO',payload:{userInfo:abc}})
-                        navigate(`${location.state.path}`)
+                        navigate(`${statePath}`)
                       }else{
                         dispatch({type:'USERINFO',payload:{userInfo:abc}})
                           navigate(`/`)
@@ -38,7 +38,7 @@ const loginAccess=()=>{
                 }
               }
 
-              
+
  useEffect(()=>{
   loginAccess()
 },[accessToken])
@@ -47,6 +47,7 @@ const loginAccess=()=>{
 
   return (
     <Container>
+      {/* {console.log('스테이트팻쓰',statePath)} */}
       <LoadingStyle>
         <div className="container">
             <span data-back="Sswitch">Sswitch</span>
