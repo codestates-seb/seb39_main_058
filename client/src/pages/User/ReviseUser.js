@@ -44,8 +44,10 @@ function ReviseUser() {
     "userName" : !userName.value ? userData.userName: userName.value,
     "password" : password.value,
     "email": !email.value ? userData.email : email.value,
+    "role": userData.role,
     "profileImage": profileImg.value,
   }
+console.log(userInfo.accessToken)
 
   // 회원정보 수정
   const handleSubmit = (e) => {
@@ -77,6 +79,7 @@ function ReviseUser() {
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
+      window.location.reload()
     }
 
     // 이미지 링크와 비밀번호가 모두 빈칸인 경우(위 상황의 여사건),
@@ -93,7 +96,7 @@ function ReviseUser() {
   };
   
   // console.log(userInfo)
-console.log(userData);
+// console.log(userData);
 
   // 회원정보 수정 취소
   const confirmCancel = () => { 

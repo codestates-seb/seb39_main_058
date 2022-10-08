@@ -135,7 +135,7 @@ function CommunityDetail() {
       .then(data => console.log(data))
       .catch(err => console.log(err))
     navigate("/community/forum");
-    // window.location.reload();
+    window.location.reload();
   }
   
   // 게시글 수정(모달창) 취소
@@ -272,10 +272,11 @@ function CommunityDetail() {
                 )}
             </select>
           </BoardTag>}
-
+{console.log(data.data)}
           {/* 비밀글 수정 */}
           { revise && <Secret>
-            <input type="checkbox" name="secret" onClick={handleSecret}/>
+            <input type="checkbox" name="secret" onClick={handleSecret} 
+                defaultChecked={data.data.secret === "SECRET" ? "checked" : "unchecked"} />
             <label htmlFor="secret">비밀글</label>
           </Secret> }
           
