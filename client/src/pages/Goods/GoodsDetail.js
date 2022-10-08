@@ -70,7 +70,8 @@ const goodsDeleteFetch=async()=>{
 //상품구매 함수
 const goodsBuy=()=>{
   if (!accesstoken){
-    alert('로그인 후 이용 가능 합니다')
+    setAlertMsg('로그인 후 이용 가능 합니다')
+    setModalOn3(!modalOn3)
     navigate('/login',{state: {path:location.pathname}})
   }else if(accesstoken){
  
@@ -148,14 +149,14 @@ const goodsBuyFetch=async()=>{
 
         }}  name={item.goodsId}
         >삭제</button> :''}
-         {accesstoken&&item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
+         {item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
         setModalOn2(!modalOn2)}} name ={item.goodsName}>교환하기</button>:''} 
       </div>
     </GoodsInfo>
     <GoodsSelect>
 
       <div>상태:{item.goodsStatus}</div>
-      {accesstoken&&item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
+      {item.goodsStatus==='판매중' ?<button className='buyButton' onClick={(e)=>{SetBuyGoods(e.target.name)
          setModalOn2(!modalOn2) }}   name ={item.goodsName} >교환하기</button>:''} 
       {role==="ROLE_ADMIN" ?<button onClick={(e) => {
         setDeleteGoods(e.target.name)
