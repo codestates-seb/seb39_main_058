@@ -383,11 +383,19 @@ const EventStyle = styled.div`
         padding: 13vh 5vw;
         position: absolute;
         top: 22vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         img{
             width: 330px;
             height: 170px;
             opacity: 1;
+
+            @media screen and (max-width: 500px){
+                width: 100%;
+                height: 170px;
+            }
         }
 
         .title{
@@ -412,7 +420,14 @@ const EventStyle = styled.div`
         background-color: #EEEEEE;
         padding: 0 15px;
         margin-top: 10vh;
+
+        @media screen and (max-width: 500px){
+            width: 70%;
+            height: 50px;
+        }
     }
+
+
 
     .confirm{
         background-color: #179FFB;
@@ -425,6 +440,11 @@ const EventStyle = styled.div`
         justify-content: center;
         align-items: center;
         cursor: pointer;
+
+        @media screen and (max-width: 500px){
+            width: 70%;
+            height: 50px;
+        }
     }
 
     .logo{
