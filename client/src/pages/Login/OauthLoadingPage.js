@@ -23,7 +23,7 @@ const loginAccess=()=>{
                     let abc=data.data
                     abc.accessToken=accessToken;
                     if(data.data){
-                      if(statePath){
+                      if(typeof(statePath)==='string'){
                         dispatch({type:'USERINFO',payload:{userInfo:abc}})
                         navigate(`${statePath}`)
                       }else{
@@ -47,7 +47,7 @@ const loginAccess=()=>{
 
   return (
     <Container>
-      {/* {console.log('스테이트팻쓰',statePath)} */}
+      {/* {console.log('스테이트팻쓰',statePath,'무슨타입',typeof(statePath))} */}
       <LoadingStyle>
         <div className="container">
             <span data-back="Sswitch">Sswitch</span>
