@@ -93,7 +93,7 @@ function MainPage(){
     }
 
     return (
-        <MainStyle guide>
+        <MainStyle>
         {click && !loading ? <Loading /> : undefined }
         <Map
             center={{ lat: initLoc.center.lat, lng: initLoc.center.lng }}

@@ -153,6 +153,7 @@ const Main = styled.main`
         font-size: 2vmin;
         text-align: center;
         color: red;
+        white-space: pre;
     }
 
     .back{
