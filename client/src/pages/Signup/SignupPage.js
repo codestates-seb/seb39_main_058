@@ -41,6 +41,9 @@ function SignupPage() {
 
   const [modalOn, setModalOn] = useState(false);
   const [nonPwd,setNonPwd]=useState(false)
+  const [modalMsg,setModalMsg]=useState('')
+  const [confirmOn,setConfirmOn]=useState(false)
+
 
 const click =(event)=>{
  if(event){
@@ -311,12 +314,17 @@ const signupPostFunc=async()=>{
   
     // console.log(res)
     if(res.ok===true){
+      setModalMsg('회원가입에 성공 했습니다!')
+      setConfirmOn(false)
       setModalOn(!modalOn)
       setTimeout(() => {
         navigate('/login')
       }, 1000);
     }else if(res.ok===false){
-        alert('작성하신 회원정보를 다시 확인해 주세요.')
+      setModalMsg('회원정보를 다시 확인해 주세요.')
+      setConfirmOn(true)
+      setModalOn(!modalOn)
+      
     }
 
   }).catch((err) => {
@@ -385,7 +393,7 @@ const signupPostFunc=async()=>{
 
 
       </SignUpForm>
-      <SignUpButton onClick={signupPostFunc}>회원가입</SignUpButton>      
+      <SignUpButton onClick={()=>{overlapConfirm();signupPostFunc()}}>회원가입</SignUpButton>      
        
 
        {/* 삭제 모달창 */}
@@ -395,8 +403,12 @@ const signupPostFunc=async()=>{
           <ModalItem>
              
               <div className='modalHead'>쓰위치</div>
-              <div className='modalInfo'>회원가입에 성공했습니다!</div>
-              
+              <div className='modalInfo'>{modalMsg}</div>
+             {confirmOn ?
+             <div className="confirm" onClick={() => setModalOn(!modalOn)}>확인</div>
+             :''
+            }
+
 
           </ModalItem>
         </AnswerModal>
@@ -505,7 +517,7 @@ font-family: Jua, serif;
 font-size: x-large;
  display: flex;
 flex-direction: column;
-
+align-items: center;
  
  
  .modalHead{
@@ -514,8 +526,22 @@ flex-direction: column;
     font-size: xx-large;
     font-weight: bold;
     margin-bottom: 20px;
+
 }
 
 .modalInfo{
+ text-overflow: clip;
 }
+
+.confirm {
+      width: 40px;
+      margin: 0.2rem;
+      padding: 0.3rem;
+      border: 3px solid black;
+      border-radius: 5px;
+      :hover {
+        cursor: pointer;
+        background-color: lightgray;
+      }
+    }
 `
