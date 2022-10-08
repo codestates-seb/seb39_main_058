@@ -124,13 +124,17 @@ const tabKey2=(event)=>{
    }
   }
 
+const saveState=()=>{
+  dispatch({type:'STATE',payload:{statePath:location.state.path}})
+
+}
 
 
   return (
     <Container onKeyDown={tabKey} onMouseDown={loginAlertFunc}>
         <LoginForm onSubmit={(event)=>loginFunc(event)}>
           <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
-          <input id="id" name="id" type='text' placeholder="아이디"  autocomplete="off" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)}/>
+          <input id="id" name="id" type='text' placeholder="아이디"  autoComplete="off" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)}/>
           <AlertMsg>{alertId}</AlertMsg>
           <input id="password" name="password" type="password" placeholder="비밀번호" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setPassword(e.target.value)}/>
           <AlertMsg>{alertPwd}</AlertMsg>
@@ -140,14 +144,14 @@ const tabKey2=(event)=>{
           
         </LoginForm>
        
-    <LinkStyle href ={kakaoback} >
+    <LinkStyle href ={kakaoback} onClick={()=>{saveState()}} >
       <KakaoLoginButton >
         <Logo src='https://cdn-icons-png.flaticon.com/512/3991/3991999.png' alt='카카오로고'></Logo><div>카카오로 로그인하기</div>
       </KakaoLoginButton>
     </LinkStyle>
 
 
-    <LinkStyle href={googleback}>
+    <LinkStyle href={googleback}  onClick={()=>{saveState()}}>
       <KakaoLoginButton >
         <Logo src='https://cdn-icons-png.flaticon.com/512/2702/2702602.png' alt='구글로고'></Logo><div>구글로 로그인하기</div>
       </KakaoLoginButton>
