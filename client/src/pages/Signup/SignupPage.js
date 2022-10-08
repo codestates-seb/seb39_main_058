@@ -334,7 +334,7 @@ const signupPostFunc=async()=>{
       <SignUpForm >
         <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
         <p>회원정보를 입력해 주세요</p>
-        <input id="id" name="id" type='text' placeholder="아이디" autocomplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
+        <input id="id" name="id" type='text' placeholder="아이디" autoComplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
         {
           alertSpaceId ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
@@ -344,7 +344,7 @@ const signupPostFunc=async()=>{
         }
         <InfoMsg>아이디는 영문과 숫자만 가능 합니다.</InfoMsg>
 
-        <input id="name" name="name" type='text' placeholder="닉네임" autocomplete="off" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
+        <input id="name" name="name" type='text' placeholder="닉네임" autoComplete="off" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
         {
           alertSpaceName ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
@@ -373,7 +373,7 @@ const signupPostFunc=async()=>{
         </PwdOverlapForm>
          }
 
-        <input id="email" name="email" type='text' placeholder="이메일" autocomplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
+        <input id="email" name="email" type='text' placeholder="이메일" autoComplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
         {
           alertSpaceEmail ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
