@@ -20,7 +20,7 @@ import Event from './pages/News/Event';
 import EventCreate from './pages/News/EventCreate';
 import FAQ from './pages/CS/FAQ';
 import OperationPolicy from './pages/CS/OperationPolicy';
-
+import OauthLoadingPage from './pages/Login/OauthLoadingPage';
 function App() {
   
   const [welcome, setWelcome] = useState(sessionStorage.getItem('welcome'));
@@ -60,6 +60,8 @@ function App() {
           <Route path='/news/event/create' element={<EventCreate/>}/>
           <Route path='/cs/faq' element={<FAQ/>}/>
           <Route path='/cs/operationpolicy' element={<OperationPolicy/>}/>
+          <Route path='/oauthloading' element={<OauthLoadingPage/>}/>
+
         </Routes>
     </div>  
   );

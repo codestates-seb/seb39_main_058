@@ -32,6 +32,7 @@ function SignupPage() {
   const [alertSpaceId,setAlertSpaceId]=useState(false);
   const [alertSpaceName,setAlertSpaceName]=useState(false);
   const [alertSpacePwd,setAlertSpacePwd]=useState(false);
+  const [alertSpaceRePwd,setAlertSpaceRePwd]=useState(false);
   const [alertSpaceEmail,setAlertSpaceEmail]=useState(false);
 
   const [alertOverlapId,setAlertOverlapId]=useState('')
@@ -39,7 +40,7 @@ function SignupPage() {
   const [alertOverlapEmail,setAlertOverlapEmail]=useState('')
 
   const [modalOn, setModalOn] = useState(false);
-
+  const [nonPwd,setNonPwd]=useState(false)
 
 const click =(event)=>{
  if(event){
@@ -89,9 +90,11 @@ const overlapConfirm=()=>{
   }
   if(clickEmail){
       if(emailInfo.length===0){
+        setAlertOverlapEmail('')
         setAlertEmail('이메일을 입력해 주세요')
       }
       else if ( ! email_check(emailInfo) ) {
+        setAlertOverlapEmail('')
         setAlertEmail('이메일을 올바르게 입력해주세요.');
       }
       else if(email_check(emailInfo)===true&&spaceCheck(emailInfo)){
@@ -191,16 +194,20 @@ function koEng(txt){
 
 useEffect(()=>{
   passwordConfirmFunc()
-},[password])
+},[password,rePassword])
 
 const passwordConfirmFunc=()=>{
+  setNonPwd(false)
   if(password.length===0 ||spaceCheck(password)===true){
     setAlertSpacePwd(false)
+  }
+  if(spaceCheck(rePassword)===true||rePassword.length===0){
+    setAlertSpaceRePwd(false)
   }
   if(!password.trim()){
     setPassworMsg(true)
     setAlertPwd(false)
-  
+    
   }
   if(password.trim()){
     if(password.length<6){
@@ -253,13 +260,40 @@ const tabKey2=(event)=>{
 const spaceKey=(event)=>{
   if(event.key===" "){
     setAlertSpacePwd(true)
+   
+   }
+   else if(event.key==='Backspace' || 'Delete'){
+   passwordConfirmFunc()
+  }
+}
+const spaceKey2=(event)=>{
+  if(event.key===" "){
+  
+    setAlertSpaceRePwd(true)
    }
    else if(event.key==='Backspace' || 'Delete'){
    passwordConfirmFunc()
   }
 }
 
+
 const signupPostFunc=async()=>{
+  if(id.length===0){
+    setAlertId('아이디를 입력해 주세요.')
+  } 
+  if(name.length===0){
+   
+    setAlertName('닉네임을 입력해 주세요.')
+  }
+  if(emailInfo.length===0){
+    setAlertEmail('이메일을 입력해 주세요')
+  }
+  if(password.length===0){
+    setNonPwd(true)
+  }
+  if(password!==rePassword){
+    setRePassworMsg(false)
+  }
   if (spaceCheck(id)===true&& onlyEng(id)===true&&spaceCheck(name)===true&& koEng(name)===true&& email_check(emailInfo)===true&&spaceCheck(emailInfo)===true && password===rePassword &&spaceCheck(password)===true&& password.length>=6 ){
     
     const signupInfo ={
@@ -300,7 +334,7 @@ const signupPostFunc=async()=>{
       <SignUpForm >
         <span className='title-style'><Link className='link-style' to='/'>쓰위치</Link></span>
         <p>회원정보를 입력해 주세요</p>
-        <input id="id" name="id" type='text' placeholder="아이디" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
+        <input id="id" name="id" type='text' placeholder="아이디" autoComplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setId(e.target.value)} />
         {
           alertSpaceId ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
@@ -310,7 +344,7 @@ const signupPostFunc=async()=>{
         }
         <InfoMsg>아이디는 영문과 숫자만 가능 합니다.</InfoMsg>
 
-        <input id="name" name="name" type='text' placeholder="닉네임" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
+        <input id="name" name="name" type='text' placeholder="닉네임" autoComplete="off" onKeyDown={tabKey2} onMouseDown={(event)=>click(event)} onChange={(e) => setName(e.target.value)}/>
         {
           alertSpaceName ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
@@ -326,16 +360,20 @@ const signupPostFunc=async()=>{
           <PwdOverlapForm>
           {alertPwd ?<CorrectMsg>사용 가능한 비밀번호 입니다.</CorrectMsg>:''}
           {passwordMsg ?<InfoMsg>비밀번호는 6자리 이상 이어야 합니다.</InfoMsg>: <AlertMsg>비밀번호는 6자리 이상이어야 합니다.</AlertMsg>}
+          {nonPwd ?<AlertMsg>비밀번호를 입력해 주세요</AlertMsg>:''}
         </PwdOverlapForm>
         }
 
-        <input id="repassword" name="repassword" type="password" placeholder="비밀번호확인" onChange={(e) => setRePassword(e.target.value)}/>
+        <input id="repassword" name="repassword" type="password" placeholder="비밀번호확인" onKeyDown={spaceKey2} onChange={(e) => setRePassword(e.target.value)}/>
+        {
+          alertSpaceRePwd ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
         <PwdOverlapForm>
           {alertRePwd ?<CorrectMsg>비밀번호가 일치합니다.</CorrectMsg>:''}
           {rePasswordMsg ?<InfoMsg>확인을 위해 설정한 비밀번호를 다시 입력해주세요.</InfoMsg>: <AlertMsg>비밀번호가 일치하지 않습니다.</AlertMsg>}
         </PwdOverlapForm>
+         }
 
-        <input id="email" name="email" type='text' placeholder="이메일" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
+        <input id="email" name="email" type='text' placeholder="이메일" autoComplete="off" onKeyDown={tabKey2}  onMouseDown={(event)=>click(event)} onChange={(e) => setEmailInfo(e.target.value)} /> 
         {
           alertSpaceEmail ? <AlertMsg>사용할 수 없는 문자가 포함되어 있습니다.</AlertMsg> :
           <OverlapForm>
