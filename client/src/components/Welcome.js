@@ -27,8 +27,6 @@ export default Welcome
 const WelcomeStyle = styled.div`
   user-select: none;
 
-  margin: -10px 0px 0px -10px;
-
   img{
     width: 100vw;
     height: 100vh;
