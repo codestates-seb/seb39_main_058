@@ -24,6 +24,8 @@ public class TrashPatchDto {
 
     private long userId;
 
+    private String address;
+
     public void setTrashId(long trashId) {
         this.trashId = trashId;
     }

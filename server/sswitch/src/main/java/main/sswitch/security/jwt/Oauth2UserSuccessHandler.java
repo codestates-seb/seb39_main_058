@@ -47,6 +47,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                                         Authentication authentication) throws IOException, ServletException{
 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
 //        System.out.println(oAuth2User);
         String lastname = "lastname";
@@ -67,7 +68,8 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String authorities = "ROLE_USER";
         Optional<User> optionalUser = userRepository.findByUsername(lastname);
         if(optionalUser.isEmpty()){
-            saveUser(email, lastname, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
+
+            saveUser(email, name, lastname, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
         }
 
 
@@ -79,7 +81,8 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         redirect(request, response, lastname, authorities);
     }
 
-    private void saveUser(String email,String lastname,String provider) {
+
+    private void saveUser(String email,String name,String lastname,String provider) {
         User user = new User();
         if (provider.equals("google")) {
             user.setProviders(User.Providers.PROVIDER_GOOGLE);

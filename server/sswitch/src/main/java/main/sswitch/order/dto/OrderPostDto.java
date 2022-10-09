@@ -16,6 +16,8 @@ public class OrderPostDto {
 
     private String userName;
 
+    private String goodsName;
+
     @Valid
     private List<OrderGoodsDto> orderGoodsList;
 
