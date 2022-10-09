@@ -37,7 +37,6 @@ public class CommentController {
     @PostMapping("/take/create")
     public ResponseEntity postComment(@Valid @RequestBody CommentPostDto commentPostDto) {
         Comment comment = commentService.createComment(mapper.CommentPostDtoToComment(commentPostDto));
-
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.commentToCommentReturnDto(comment)),
                 HttpStatus.CREATED);

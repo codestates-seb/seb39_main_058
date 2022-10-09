@@ -1,12 +1,8 @@
 package main.sswitch.security.config;
 
 import lombok.extern.slf4j.Slf4j;
-import main.sswitch.security.jwt.JwtAccessDeniedHandler;
-import main.sswitch.security.jwt.JwtAuthenticationEntryPoint;
-import main.sswitch.security.jwt.TokenProvider;
+import main.sswitch.security.jwt.*;
 import main.sswitch.security.oauth.filter.JwtVerificationFilter;
-import main.sswitch.security.jwt.OauthJwtTokenizer;
-import main.sswitch.security.handler.Oauth2UserSuccessHandler;
 import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.context.annotation.Bean;

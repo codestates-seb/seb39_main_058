@@ -1,6 +1,7 @@
-package main.sswitch.security.handler;
+package main.sswitch.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.oauth2.sdk.util.MapUtils;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.user.entity.User;
@@ -53,14 +54,13 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String name = "name";
         Map<String, Object> attributes = oAuth2User.getAttributes();
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-//        System.out.println(kakaoAccount);
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
-//        System.out.println(properties);
-        if(provider == "google") {
+//        System.out.println("kakaoAccount" + kakaoAccount);
+        if(MapUtils.isEmpty(kakaoAccount)) {
              lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
              email = String.valueOf(oAuth2User.getAttributes().get("email"));
              name = String.valueOf(oAuth2User.getAttributes().get("name"));
         }else{
+            Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
             lastname = String.valueOf(properties.get("nickname"));
              email = lastname + "@kakao.com";
         }
@@ -141,7 +141,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 .scheme("https")
                 .host("seb39-main-058-tawny.vercel.app")
 //                .port(8080)
-                .path("/login")
+                .path("/oauthloading")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
