@@ -19,18 +19,22 @@ const navigate=useNavigate();
 
 ///쿠폰정보불러오기
   const getCouponData=async()=>{
-    await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
-      headers: { 'Authorization': `Bearer ${accesstoken}`}
-    })
-    .then(res => res.json())
-    .then((data)=>{
-    
-    //  console.log('쿠폰리스트',data.data)
-  
-     setCoupon(data.data)
-    
+    if(userId){
 
-  })
+      await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
+        headers: { 'Authorization': `Bearer ${accesstoken}`}
+      })
+      .then(res => res.json())
+      .then((data)=>{
+        
+        //  console.log('쿠폰리스트',data.data)
+        
+        setCoupon(data.data)
+        
+        
+      })
+    }
+
 }
 
   useEffect(()=>{

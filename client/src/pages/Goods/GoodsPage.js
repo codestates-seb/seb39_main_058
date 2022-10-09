@@ -14,9 +14,10 @@ const [userInfo,setUserInfo]=useState({
 });
 const [goodsList,setGoodsList]=useState([])
 const [seeCoupon,setSeeCoupon]=useState(false)
+const [couponNum,setCouponNum]=useState([])
 const accesstoken=useSelector(state=>state.LoginPageReducer.userinfo.accessToken);
 const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
-
+const userId=useSelector(state=>state.LoginPageReducer.userinfo.userId)
 
 //유저정보 불러오기
   const getUserInfo=async()=>{
@@ -56,6 +57,28 @@ await fetch('https://sswitch.ga/goods?page=1&size=10')
 
 }
 
+///쿠폰정보불러오기
+const getCouponData=async()=>{
+  if(userId){
+
+    await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
+      headers: { 'Authorization': `Bearer ${accesstoken}`}
+    })
+    .then(res => res.json())
+    .then((data)=>{
+      
+      //  console.log('쿠폰리스트',data.data)
+      if(data.data){
+        
+        setCouponNum(data.data)
+      }
+      
+      
+      
+    })
+  }
+
+}
 
 
 
@@ -64,7 +87,7 @@ await fetch('https://sswitch.ga/goods?page=1&size=10')
 useEffect(()=>{
     getGoodsList();
     getUserInfo();
-   
+    getCouponData()
   },[])
 
 
@@ -88,13 +111,13 @@ useEffect(()=>{
 
   <CouponBagContainer>
     <CouponBagHead >
-      <div>쿠폰함</div> <button className='open' onClick={() => setSeeCoupon(!seeCoupon)}>펼치기</button> 
+      <div>쿠폰함<span>{`(${couponNum?.length})`}</span></div> <button className='open' onClick={() => setSeeCoupon(!seeCoupon)}>펼치기</button> 
     </CouponBagHead>
 
       {seeCoupon ? <CouponBag/> :''}
   </CouponBagContainer>
   <GoodsList>
-  <div className='goodsLi'>상품리스트</div>
+  <div className='goodsLi'>상품리스트{`(${goodsList.length})`}</div>
 
 
     
