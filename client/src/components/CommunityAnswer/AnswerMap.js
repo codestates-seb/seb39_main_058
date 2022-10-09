@@ -65,13 +65,6 @@ const answerDelete=(e)=>{
 }
 
 
-// onClick={() => setSignup(!signup)
-  // onClick={(e)=>answerDelete(e)} name={item.commnetId}
-
-// useEffect(()=>{
-//   answerDeleteFetch()
-// },[clickCommentId])
-
 
   return (
     <>
