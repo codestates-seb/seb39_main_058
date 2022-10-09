@@ -57,8 +57,8 @@ public class CommentController {
     //댓글 조회
     @GetMapping
     public ResponseEntity getComments(
-//            @Positive @RequestParam int page,
-//                                      @Positive @RequestParam int size,
+            @Positive @RequestParam int page,
+                                      @Positive @RequestParam int size,
             @Valid @RequestBody CommentGetDto commentGetDto) {
 //        Page<Comment> pageComments = commentService.findComments(page - 1, size, forumId);
         List<Comment> comments = commentService.findComments(mapper.CommentGetDtoToComment(commentGetDto));

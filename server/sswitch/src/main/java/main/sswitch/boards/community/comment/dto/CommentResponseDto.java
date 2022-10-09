@@ -25,10 +25,6 @@ public class CommentResponseDto {
 
     private LocalDateTime dateCreated;
 
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
     public void setUser(User user) {
         this.userId = user.getUserId();
         this.userName = user.getUserName();
