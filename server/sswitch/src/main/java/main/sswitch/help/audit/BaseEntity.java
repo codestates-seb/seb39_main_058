@@ -20,12 +20,11 @@ import java.time.ZonedDateTime;
 public abstract class BaseEntity {
     @CreatedDate
     @Column(updatable = false, name = "date_created")
-    protected LocalDateTime dateCreated;
+    protected LocalDateTime dateCreated = LocalDateTime.now().plusHours(9);
     @Getter
     @Setter
     @LastModifiedDate
     @Column(name = "date_modified")
-    protected LocalDateTime dateModified;
-
+    protected LocalDateTime dateModified = LocalDateTime.now().plusHours(9);
 
 }
