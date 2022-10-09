@@ -30,7 +30,7 @@ function NavBar({welcome}) {
     {welcome !== null ?
     <MobileNavBar>
         <div className='search_bar'>
-            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars/></div>
+            <div className='menu_icon' onClick={() => setMenu(true)}><FaBars/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
                     setMenu(false)
