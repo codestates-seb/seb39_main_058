@@ -25,14 +25,14 @@ function NavBar({welcome}) {
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
-    console.log(menu)
-
   return (
     <>
     {welcome !== null ?
     <MobileNavBar>
         <div className='search_bar'>
-            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars onClick={() => setMenu(!menu)}/></div>
+            <div className='menu_icon' onClick={() => {
+                menu ? setMenu(false) : setMenu(true)
+            }}><FaBars/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
                     setMenu(false)
@@ -290,10 +290,6 @@ const MobileSideBar = styled.div`
         }
     }
 
-    @media screen and (min-width: 500px){
-        display: none;
-    }
-
 `
 
 const LogoutStyle = styled.div`
@@ -543,7 +539,7 @@ const MobileNavBar = styled.div`
         background-color: #3F4E4F;
     }
 
-    @media screen and (max-width: 500px){
+    @media screen and (max-width: 600px){
         display: block;
     }
 `
