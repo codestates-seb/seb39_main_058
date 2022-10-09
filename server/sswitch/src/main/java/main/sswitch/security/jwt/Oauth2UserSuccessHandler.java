@@ -1,4 +1,4 @@
-package main.sswitch.security.handler;
+package main.sswitch.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
