@@ -14,7 +14,8 @@
 //public class TrashCanAlarmDto {
 //    private Long trashId;
 //    private Long userId;
-//    private String userName;
+//    private String address;
+//    private LocalDateTime createdAt;
 //
 //    @Getter
 //    @Builder
@@ -24,10 +25,7 @@
 //        private Long trashCanAlarmId;
 //        private Long trashId;
 //        private Long userId;
-//        private String userName;
+//        private String address;
 //        private LocalDateTime createdAt;
-//        private int currentPoints;
-//        private int totalPoints;
-//
 //    }
 //}

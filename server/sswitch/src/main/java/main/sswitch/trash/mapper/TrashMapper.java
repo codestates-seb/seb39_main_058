@@ -1,6 +1,6 @@
 package main.sswitch.trash.mapper;
 
-import main.sswitch.trash.dto.TrashStatusDto;
+//import main.sswitch.trash.dto.TrashStatusDto;
 import main.sswitch.trash.dto.TrashPatchDto;
 import main.sswitch.trash.dto.TrashPostDto;
 import main.sswitch.trash.dto.TrashResponseDto;
@@ -15,7 +15,7 @@ public interface TrashMapper {
 
     TrashCan trashPatchDtoToTrash(TrashPatchDto trashPatchDto);
 
-    TrashCan trashStatusChangeDtoToTrash(TrashStatusDto trashStatusDto);
+//    TrashCan trashStatusChangeDtoToTrash(TrashStatusDto trashStatusDto);
 
     default TrashResponseDto trashToTrashResponseDto(TrashCan trashCan) {
 
@@ -25,7 +25,7 @@ public interface TrashMapper {
         trashResponseDto.setLatitude(trashCan.getLatitude());
         trashResponseDto.setUserId(trashCan.getUser().getUserId());
         trashResponseDto.setAddress(trashCan.getAddress());
-        trashResponseDto.setTrashStatus(trashCan.getTrashStatus());
+//        trashResponseDto.setTrashStatus(trashCan.getTrashStatus());
         trashResponseDto.setDateCreated(trashCan.getDateCreated());
         trashResponseDto.setDateModified(trashCan.getDateModified());
 

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.oauth.PrincipalDetails;
 
-import main.sswitch.trash.dto.TrashStatusDto;
+//import main.sswitch.trash.dto.TrashStatusDto;
 import main.sswitch.trash.entity.TrashCan;
 import main.sswitch.trash.mapper.TrashMapper;
 import main.sswitch.trash.service.TrashService;
@@ -34,7 +34,6 @@ import java.util.List;
 public class TrashController {
     private TrashService trashService;
     private TrashMapper mapper;
-
     private UserService userService;
 
 //    public TrashController(TrashService trashService, TrashMapper mapper, TrashAlarmMapper alarmMapper) {
@@ -47,7 +46,9 @@ public class TrashController {
     @PostMapping("/flush/create")
     public ResponseEntity postTrashCan(@AuthenticationPrincipal PrincipalDetails principal, @Valid @RequestBody TrashPostDto trashPostDto) {
         User user = userService.findUserWithLoginId(principal.getUsername());
-        TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto), user);
+        String address = trashPostDto.getAddress();
+        TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto), user, address);
+        trashCan.setTrashStatus(trashPostDto.getTrashStatus());
         userService.updatePoints(user,user.getCurrentPoints(),0,user.getTotalPoints(),100);
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
@@ -113,5 +114,6 @@ public class TrashController {
         trashService.emptyTrashCan(trashId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }

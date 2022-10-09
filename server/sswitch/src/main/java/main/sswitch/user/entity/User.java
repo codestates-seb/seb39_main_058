@@ -17,6 +17,7 @@ import main.sswitch.order.entity.OrderGoods;
 import main.sswitch.trash.entity.TrashCan;
 
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;

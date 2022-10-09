@@ -21,7 +21,7 @@ public class TrashResponseDto {
 
     private LocalDateTime dateModified;
 
-    private TrashCan.TrashStatus trashStatus;
+//    private TrashCan.TrashStatus trashStatus;
 
     private String address;
 
@@ -35,7 +35,7 @@ public class TrashResponseDto {
     public void getDateModified(LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
-    public String getTrashStatus() {
-        return trashStatus.getStatus();
-    }
+//    public String getTrashStatus() {
+//        return trashStatus.getStatus();
+//    }
 }
