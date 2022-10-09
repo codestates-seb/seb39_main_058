@@ -30,7 +30,7 @@ function NavBar({welcome}) {
     {welcome !== null ?
     <MobileNavBar>
         <div className='search_bar'>
-            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars/></div>
+            <div className='menu_icon' onClick={() => setMenu(true)}><FaBars/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
                     setMenu(false)
@@ -129,34 +129,37 @@ function NavBar({welcome}) {
         <div className='header'>
             <div>커뮤니티
                 <div className='drop community'>
-                    <li><Link to = '/community/forum'>자유게시판</Link></li>
+                    <li onClick={() => navigate('/community/forum')}>자유게시판</li>
                 </div>
             </div>
             <div>고객센터
                 <div className='drop'>
-                    <li><a href='http://pf.kakao.com/_puDuxj/chat' target='_black'>채팅상담</a></li>
-                    <li><Link to='/cs/faq'>FAQ</Link></li>
-                    <li><Link to='/cs/operationpolicy'>운영정책</Link></li>
+                    <a href='http://pf.kakao.com/_puDuxj/chat' target='_black'><li>채팅상담</li></a>
+                    <li onClick={() => navigate('/cs/faq')}>FAQ</li>
+                    <li onClick={() => navigate('/cs/operationpolicy')}>운영정책</li>
                     <li onClick={() => setGuide(1)}>가이드</li>
                 </div>
             </div>
             <div>포인트 교환
                 <div className='drop'>
-                    <li><Link to='/goods'>쿠폰교환</Link></li>
+                    <li onClick={() => navigate('/goods')}>쿠폰교환</li>
                 </div>
             </div>
             <div>소식
                 <div className='drop news'>
-                    <li><Link to= '/news/notice'>공지사항</Link></li>
-                    <li><Link to= '/news/event'>이벤트</Link></li>
+                    <li onClick={() => navigate('/news/notice')}>공지사항</li>
+                    <li onClick={() => navigate('/news/event')}>이벤트</li>
                 </div>
             </div>
             {!userInfo.accessToken ?
             <Link to='/login' onClick={clear}>로그인</Link> :
             <div>마이페이지
                 <div className='drop'>
-                    <li><Link to='/users/profile' onClick={clear}>내정보</Link></li>
-                    {userInfo.role === "ROLE_ADMIN" ? <li><Link to='/admin-users/profile'>관리자</Link></li> : undefined}
+                    <li onClick={() => {
+                        navigate('/users/profile')
+                        clear()
+                    }}>내정보</li>
+                    {userInfo.role === "ROLE_ADMIN" ? <li onClick={() => navigate('/admin-users/profile')}>관리자</li> : undefined}
                 </div>
             </div>}
             {!userInfo.accessToken ?

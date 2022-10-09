@@ -264,6 +264,7 @@ const CommunityPageStyle = styled.div`
 
     .list{
       background-color: white;
+      cursor: pointer;
       :hover{
         font-weight: bold;
         font-size: 105%;
@@ -273,6 +274,7 @@ const CommunityPageStyle = styled.div`
     .write{
       background-color: #413F42;
       color: white;
+      cursor: pointer;
       :hover{
         font-weight: bold;
         font-size: 105%;
