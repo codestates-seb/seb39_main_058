@@ -79,11 +79,11 @@ public class TrashService {
     }
 
     public void emptyTrashCan(long trashId){
-
         TrashCan findTrashCan = findTrashCan(trashId);
-        changeTrashCanStatus(findTrashCan);
+
         trashRepository.delete(findTrashCan);
     }
+
 
 
     public TrashCan findVerifiedTrashCan(long trashId) {
