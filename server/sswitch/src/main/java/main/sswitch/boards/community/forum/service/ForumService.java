@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.forum.service;
 
+import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.boards.community.forum.repository.ForumRepository;
@@ -52,6 +53,23 @@ public class ForumService {
         return forumRepository.save(findForum);
     }
 
+    public Forum countPlus(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long count = findForum.getCommentCount();
+        count++;
+        findForum.setCommentCount(count);
+
+        return forumRepository.save(findForum);
+    }
+
+    public Forum countMinus(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long count = findForum.getCommentCount();
+        if (count > 0) { count--; }
+        findForum.setCommentCount(count);
+
+        return forumRepository.save(findForum);
+    }
     //게시글 좋아요 버튼 구현
     //우선 해당글 따봉누른 유저 목록을 불러옴
     //없으면 넣어줌 있으면 빼줌
@@ -73,7 +91,6 @@ public class ForumService {
         return forumRepository.save(findForum);
     }
 
-    //추천수 음수 안되게 처리함
     public Forum hateForum(long forumId) {
         Forum findForum = findVerifiedForum(forumId);
         long hateforum = findForum.getForumLike();
@@ -82,8 +99,10 @@ public class ForumService {
 
         return forumRepository.save(findForum);
     }
+    //추천수 음수 안되게 처리함
 
     public Forum findForum(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
         return findVerifiedForum(forumId);
     }
 

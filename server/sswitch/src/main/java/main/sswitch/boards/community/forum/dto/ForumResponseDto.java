@@ -33,6 +33,7 @@ public class ForumResponseDto {
         private LocalDateTime dateCreated;
 
         private LocalDateTime dateModified;
+        private long commentCount;
 
         public List<CommentResponseDto> commentResponses;
 
@@ -67,6 +68,8 @@ public class ForumResponseDto {
         private Forum.Secret secret;
 
         private long userId;
+
+        private long commentCount;
 
         private String userName;
 
