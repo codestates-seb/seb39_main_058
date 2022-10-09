@@ -1,8 +1,8 @@
-package main.sswitch.security.handler;
+package main.sswitch.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
-import lombok.Setter;
+import com.nimbusds.oauth2.sdk.util.MapUtils;
+import lombok.extern.slf4j.Slf4j;
 import main.sswitch.security.jwt.OauthJwtTokenizer;
 import main.sswitch.user.entity.User;
 import main.sswitch.user.repository.UserRepository;
@@ -10,18 +10,21 @@ import main.sswitch.user.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+@Slf4j
+@Service
 public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final OauthJwtTokenizer oauthJwtTokenizer;
     private final UserService userService;
@@ -42,18 +45,30 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException{
+
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
-        String email = String.valueOf(oAuth2User.getAttributes().get("email"));
-//        Optional<String> email = Optional.ofNullable(String.valueOf(oAuth2User.getAttributes().get("email")));
-//        if (email.isPresent()) {
-//            email = Optional.of(given_name + "@" + provider + ".com");
-//        }
-        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
+//        System.out.println(oAuth2User);
+        String lastname = "lastname";
+        String email = "email";
+        String name = "name";
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+//        System.out.println("kakaoAccount" + kakaoAccount);
+        if(MapUtils.isEmpty(kakaoAccount)) {
+             lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
+             email = String.valueOf(oAuth2User.getAttributes().get("email"));
+             name = String.valueOf(oAuth2User.getAttributes().get("name"));
+        }else{
+            Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+            lastname = String.valueOf(properties.get("nickname"));
+             email = lastname + "@kakao.com";
+        }
         String authorities = "ROLE_USER";
         Optional<User> optionalUser = userRepository.findByUsername(lastname);
         if(optionalUser.isEmpty()){
+
             saveUser(email, name, lastname, provider); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
         }
 
@@ -65,6 +80,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 //
         redirect(request, response, lastname, authorities);
     }
+
 
     private void saveUser(String email,String name,String lastname,String provider) {
         User user = new User();
@@ -128,16 +144,9 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 .scheme("https")
                 .host("seb39-main-058-tawny.vercel.app")
 //                .port(8080)
-                .path("/login")
+                .path("/oauthloading")
                 .queryParams(queryParams)
                 .build()
                 .toUri();
-    }
-
-    @Getter
-    @Setter
-    private class HelloData {
-        private String username;
-        private String provider;
     }
 }

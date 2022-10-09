@@ -28,3 +28,4 @@ public abstract class BaseEntity {
     protected LocalDateTime dateModified = LocalDateTime.now().plusHours(9);
 
 }
+

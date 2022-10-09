@@ -41,6 +41,7 @@ public interface ForumMapper {
         forumResponseDto.setSecret(forum.getSecret());
         forumResponseDto.setDateCreated(forum.getDateCreated());
         forumResponseDto.setDateModified(forum.getDateModified());
+        forumResponseDto.setCommentCount(forum.getCommentCount());
         forumResponseDto.setCommentResponses(
                 commentsToForumResponseDto(comments)
         );
@@ -72,6 +73,7 @@ public interface ForumMapper {
                         .forumId(forum.getForumId())
                         .forumTitle(forum.getForumTitle())
                         .tag(forum.getTag())
+                        .commentCount(forum.getCommentCount())
                         .secret(forum.getSecret())
                         .userId(forum.getUser().getUserId())
                         .userName(forum.getUser().getUserName())
