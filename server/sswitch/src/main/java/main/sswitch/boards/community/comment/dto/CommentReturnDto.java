@@ -26,7 +26,6 @@ public class CommentReturnDto {
 
     private LocalDateTime dateModified;
 
-
     public void getUser(User user) {
         this.userId = user.getUserId();
     }
