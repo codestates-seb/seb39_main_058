@@ -28,6 +28,7 @@ public interface EventMapper {
         eventResponseDto.setEventId(event.getEventId());
         eventResponseDto.setEventTitle(event.getEventTitle());
         eventResponseDto.setEventText(event.getEventText());
+        eventResponseDto.setImagePath(event.getImagePath());
 //        eventResponseDto.setDateCreated(event.getDateCreated());
         eventResponseDto.setDateCreated(event.getDateCreated());
 
