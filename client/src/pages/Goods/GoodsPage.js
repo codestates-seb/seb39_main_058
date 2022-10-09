@@ -88,7 +88,7 @@ useEffect(()=>{
 
   <CouponBagContainer>
     <CouponBagHead >
-      <div>쿠폰함</div> {accesstoken?<button className='open' onClick={() => setSeeCoupon(!seeCoupon)}>펼치기</button> :''}
+      <div>쿠폰함</div> <button className='open' onClick={() => setSeeCoupon(!seeCoupon)}>펼치기</button> 
     </CouponBagHead>
 
       {seeCoupon ? <CouponBag/> :''}

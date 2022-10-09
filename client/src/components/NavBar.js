@@ -25,12 +25,14 @@ function NavBar({welcome}) {
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
+    console.log(menu)
+
   return (
     <>
     {welcome !== null ?
     <MobileNavBar>
         <div className='search_bar'>
-            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars/></div>
+            <div className='menu_icon' onClick={() => setMenu(!menu)}><FaBars onClick={() => setMenu(!menu)}/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
                     setMenu(false)
@@ -222,6 +224,10 @@ const MobileSideBar = styled.div`
         bottom: 0;
         left: 0;
         right: 0;
+
+        li{
+            cursor: pointer;
+        }
     }
 
     *{
