@@ -2,6 +2,7 @@ package main.sswitch.boards.community.comment.service;
 
 import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.comment.repository.CommentRepository;
+import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.forum.service.ForumService;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
@@ -16,15 +17,17 @@ public class CommentService {
 
     private ForumService forumService;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          ForumService forumService) {
+        this.forumService = forumService;
         this.commentRepository = commentRepository;
     }
 
     public Comment createComment(Comment comment) {
-        //Forum있는지 확인해줌
-//        verifyForum(comment);
-        Comment savedComment = commentRepository.save(comment);
 
+        Comment savedComment = commentRepository.save(comment);
+        long forumId = savedComment.getForum().getForumId();
+        forumService.countPlus(forumId);
         return savedComment;
     }
 
@@ -58,6 +61,9 @@ public class CommentService {
 
     public void deleteComment(long commentId) {
         Comment comment = findVerifiedComment(commentId);
+
+        long forumId = comment.getForum().getForumId();
+        forumService.countMinus(forumId);
         commentRepository.delete(comment);
     }
 
@@ -69,8 +75,11 @@ public class CommentService {
         return comments;
     }
 
-    public void verifyForum(Comment comment) {
-        forumService.findVerifiedForum(comment.getForum().getForumId());
-
+    public void verifyExistComment(Comment comment) {
+        long forumId = comment.getForum().getForumId();
+        Optional<Comment> optionalComment = commentRepository.findById(comment.getCommentId());
+        if (optionalComment.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.COMMENT_EXIST);
+        }
     }
 }

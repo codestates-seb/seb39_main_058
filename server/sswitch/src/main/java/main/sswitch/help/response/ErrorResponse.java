@@ -1,6 +1,7 @@
 package main.sswitch.help.response;
 
 import lombok.Getter;
+import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -48,6 +49,17 @@ public class ErrorResponse {
         return new ErrorResponse(httpStatus.value(), message);
     }
 
+//    public static class BusinessLogicException extends RuntimeException {
+//        @Getter
+//        private ExceptionCode exceptionCode;
+//
+//        public BusinessLogicException(ExceptionCode exceptionCode) {
+//            super(exceptionCode.getMessage());
+//            this.exceptionCode = exceptionCode;
+//        }
+//
+//        public static
+//    }
     @Getter
     public static class FieldError {
         private String field;

@@ -1,5 +1,6 @@
 package main.sswitch.boards.community.forum.service;
 
+import main.sswitch.boards.community.comment.entity.Comment;
 import main.sswitch.boards.community.forum.entity.Forum;
 import main.sswitch.boards.community.likeForum.entity.LikeForum;
 import main.sswitch.boards.community.forum.repository.ForumRepository;
@@ -52,9 +53,25 @@ public class ForumService {
         return forumRepository.save(findForum);
     }
 
+    //댓글 개수 확인 메서드
+    public Forum countPlus(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long count = findForum.getCommentCount();
+        count++;
+        findForum.setCommentCount(count);
+
+        return forumRepository.save(findForum);
+    }
+
+    public Forum countMinus(long forumId) {
+        Forum findForum = findVerifiedForum(forumId);
+        long count = findForum.getCommentCount();
+        if (count > 0) { count--; }
+        findForum.setCommentCount(count);
+
+        return forumRepository.save(findForum);
+    }
     //게시글 좋아요 버튼 구현
-    //우선 해당글 따봉누른 유저 목록을 불러옴
-    //없으면 넣어줌 있으면 빼줌
     public Forum likeForum(long forumId, long userId) {
         Forum findForum = findVerifiedForum(forumId);
         long likeforum = findForum.getForumLike();
@@ -84,6 +101,17 @@ public class ForumService {
     }
 
     public Forum findForum(long forumId) {
+//            ,long userId) {
+        Forum findForum = findVerifiedForum(forumId);
+//        String secret = String.valueOf(findForum.getSecret());
+//        long writer = findForum.getUser().getUserId();
+//        User user = new User();
+//        String role = user.getRole();
+//        if (secret.equals("SECRET")) {
+//            if (writer != userId || role != "ROLE_ADMIN") {
+//                new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+//            }
+//        }
         return findVerifiedForum(forumId);
     }
 

@@ -43,19 +43,6 @@ public class ForumController {
                 HttpStatus.CREATED);
     }
 
-    //게시글 따봉
-//    @PatchMapping("/take/like/{forum-id}")
-//    public ResponseEntity likeForum(@Positive @PathVariable("{forum-id}") long forumId,
-//                                    @Valid @RequestBody ForumPatchDto forumPatchDto) {
-//        forumPatchDto.setForumId(forumId);
-//        Forum forum =
-//                forumService.likeForum(mapper.ForumPatchDtoToForum(forumPatchDto));
-//
-//        return new ResponseEntity<>(
-//                new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),
-//                HttpStatus.OK);
-//    }
-
     //게시글 수정
     @PatchMapping("/take/{forum_id}")
     public ResponseEntity patchForum(@Positive @PathVariable("forum_id") long forumId,
@@ -72,6 +59,8 @@ public class ForumController {
     //게시글 조회
     @GetMapping("/{forum-id}")
     public ResponseEntity getForum(@Positive @PathVariable("forum-id") long forumId) {
+//            ,@RequestHeader long userId) {
+//        Forum forum = forumService.findForum(forumId, userId);
         Forum forum = forumService.findForum(forumId);
 
         return new ResponseEntity<>(

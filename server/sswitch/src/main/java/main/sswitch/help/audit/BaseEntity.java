@@ -27,3 +27,4 @@ public abstract class BaseEntity {
     @Column(name = "date_modified")
     protected LocalDateTime dateModified;
 }
+

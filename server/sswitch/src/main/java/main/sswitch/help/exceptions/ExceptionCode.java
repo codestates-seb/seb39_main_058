@@ -15,10 +15,11 @@ public enum ExceptionCode {
     EVETN_EXISTS(409, "Event Already Exist"),
     FORUM_NOT_FOUND(404, "Forum Not Exist"),
     LIKE_FORUM_NOT_FOUND(404, "LikeForum Not Exist"),
-    LIKE_FORUM_EXIST(409, "LikeForum Exist"),
+    LIKE_FORUM_EXIST(409, "LikeForum Exists"),
 
     FORUM_EXISTS(409, "Forum Exists"),
     COMMENT_NOT_FOUND(404, "Comment Not Found"),
+    COMMENT_EXIST(404, "Comment Exists"),
 
     RESULT_NOT_FOUND(404, "Result Not Exist"),
 
