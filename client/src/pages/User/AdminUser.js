@@ -49,19 +49,17 @@ function AdminUser() {
         setProcessed(!processed);
         setSuccess(!success);
         
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/${trashId}`,{
+        fetch(`https://sswitch.ga/trash/flush/${trashId}`,{
             method: "DELETE",
             headers: { 
             "Authorization": `Bearer ${userInfo.accessToken}`,
             "Content-Type": "application/json"
             }
         })
-            // .then(res => res.json())
-            .then(() => {
-                window.location.reload()
-            })
-            .catch(err => console.log(err))
-        // window.location.reload()
+        .then(() => {
+            window.location.reload()
+        })
+        .catch(err => console.log(err))
     }
 
     // 관리자가 '처리완료' 버튼을 클릭한 trashId가 
