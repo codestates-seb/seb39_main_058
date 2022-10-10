@@ -216,8 +216,8 @@ function CommunityDetail() {
               <img className='user-profile' src="/profile.png" alt='profile'/>
               <ul>
                 <li>{userName}</li>
-                <li>{year}년 {month}월 {(hours + 9) > 24 ? date + 1 : date}일 {(hours + 9) > 24 ? today[createdDate.getDay() + 1 ] : today[createdDate.getDay()]}</li>
-                <li>{(hours + 9) > 24 ? hours - 15 : hours + 9}시 {minutes}분</li>
+                <li>{year}년 {month}월 {date}일 {today[createdDate.getDay()]}</li>
+                <li>{hours}시 {minutes}분</li>
               </ul>
               
               {/* 비밀글 여부 : secret === "SECRET"을 secret === "OPEN"으로 바꾸기 */}
