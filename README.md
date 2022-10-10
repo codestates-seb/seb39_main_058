@@ -51,3 +51,5 @@
 ## Back-End
 |<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white">|<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">|<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">|<img src="https://img.shields.io/badge/SrpingSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">|<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">|
 |-----|-----|-----|-----|-----|
+
+# [39기-Team058-쓰위치(Sswitch)-발표문서](https://www.notion.so/codestates/39-Team058-Sswitch-8e071090b6024c42bdfd9c009178768c#8a93ffa842c24e26bcee98b920ddd325)
