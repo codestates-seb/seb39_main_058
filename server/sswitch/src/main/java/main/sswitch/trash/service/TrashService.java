@@ -69,9 +69,11 @@ public class TrashService {
                 Sort.by("trashId").ascending()));
     }
 
-    public void deleteTrashCanAlarm(long trashAlarmId) {
+    public void deleteTrashCanAlarm(long trashAlarmId, User user) {
         TrashCanAlarm trashCanAlarm = findVerifiedAlarm(trashAlarmId);
-        alarmRepository.delete(trashCanAlarm);
+        if (user.getUserId() == trashCanAlarm.getUser().getUserId() || user.getRole().equals("ROLE_ADMIN")) {
+            alarmRepository.delete(trashCanAlarm);
+        }
     }
 
     public void emptyTrashCan(long trashId, long userId){
