@@ -67,12 +67,20 @@ const goodsDeleteFetch=async()=>{
 
 }
 
+const goLogin=()=>{
+  if(!accesstoken){
+
+    navigate('/login',{state: {path:location.pathname}})
+  }
+}
+
 //상품구매 함수
 const goodsBuy=()=>{
   if (!accesstoken){
+    setModalOn2(!modalOn2)
     setAlertMsg('로그인 후 이용 가능 합니다')
     setModalOn3(!modalOn3)
-    navigate('/login',{state: {path:location.pathname}})
+    
   }else if(accesstoken){
  
     goodsBuyFetch()
@@ -206,7 +214,7 @@ const goodsBuyFetch=async()=>{
               <div>{alertMsg}</div>
               <div className="confirm-wrapper">
                 
-                <div className="cancel" onClick={() => setModalOn3(!modalOn3)}>확인</div>
+                <div className="cancel" onClick={() => {setModalOn3(!modalOn3);goLogin()}}>확인</div>
               </div>
 
           </ModalItem>
@@ -259,6 +267,7 @@ width: 65%;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid;
+    overflow: auto;
   }
   .goodsDetail{
     overflow: auto;

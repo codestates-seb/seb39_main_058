@@ -30,7 +30,9 @@ function NavBar({welcome}) {
     {welcome !== null ?
     <MobileNavBar>
         <div className='search_bar'>
-            <div className='menu_icon' onClick={() => setMenu(true)}><FaBars/></div>
+            <div className='menu_icon' onClick={() => {
+                menu ? setMenu(false) : setMenu(true)
+            }}><FaBars/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
                     setMenu(false)
@@ -222,6 +224,10 @@ const MobileSideBar = styled.div`
         bottom: 0;
         left: 0;
         right: 0;
+
+        li{
+            cursor: pointer;
+        }
     }
 
     *{
@@ -282,10 +288,6 @@ const MobileSideBar = styled.div`
             list-style: none;
             padding: 1vh 0;
         }
-    }
-
-    @media screen and (min-width: 500px){
-        display: none;
     }
 
 `
@@ -537,7 +539,7 @@ const MobileNavBar = styled.div`
         background-color: #3F4E4F;
     }
 
-    @media screen and (max-width: 500px){
+    @media screen and (max-width: 600px){
         display: block;
     }
 `
