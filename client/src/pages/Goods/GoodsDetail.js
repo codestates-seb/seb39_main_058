@@ -267,6 +267,7 @@ width: 65%;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid;
+    overflow: auto;
   }
   .goodsDetail{
     overflow: auto;

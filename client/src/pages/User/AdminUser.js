@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 import { useSelector} from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,13 +13,13 @@ function AdminUser() {
     
     const [ userData, setUserData ] = useState({});
     const [ emptyRequest, setEmptyRequest ] = useState([]);
-    const [ trashId, setTrashId ] = useState([]);
+    const [ trashId, setTrashId ] = useState(null);
     const [ processed, setProcessed ] = useState(false);
     const [ success, setSuccess ] = useState(false);
     
     const navigate = useNavigate();
     const { id } = useParams()
-
+    console.log(userData)
     // 관리자 마이페이지 정보
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
@@ -43,35 +42,26 @@ function AdminUser() {
         .catch(err => console.log(err))
     },[])
 
-    // 처리완료(버튼)
-    const processedBtn = () => {
-        setTrashId(emptyRequest.map(ele => ele.trashId))
-        setProcessed(!processed);
-    };
-
+   
     // 처리완료 -> 모달창(확인 버튼)
     const emptyConfirm = () => {
         // console.log('확인!');
         setProcessed(!processed);
         setSuccess(!success);
-
-        // trashId.filter(el => {})
-       
-        // 관리자(내)가 누른 쓰레기통 '비워주세요'요청의 trashId
-        // 
         
-        // fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/${}`,{
-        //     method: "DELETE",
-        //     headers: { 
-        //     "Authorization": `Bearer ${userInfo.accessToken}`,
-        //     "Content-Type": "application/json"
-        //     }
-        // })
-        //     .then(res => res.json())
-        //     .then(data => console.log(data))
-        //     .catch(err => console.log(err))
-        
-        // fliter사용
+        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/trash/flush/${trashId}`,{
+            method: "DELETE",
+            headers: { 
+            "Authorization": `Bearer ${userInfo.accessToken}`,
+            "Content-Type": "application/json"
+            }
+        })
+            // .then(res => res.json())
+            .then(() => {
+                window.location.reload()
+            })
+            .catch(err => console.log(err))
+        // window.location.reload()
     }
 
     // 관리자가 '처리완료' 버튼을 클릭한 trashId가 
@@ -82,6 +72,7 @@ function AdminUser() {
     // console.log(userInfo.accessToken)
     // console.log(trashId)
     // console.log('trashId', trashId)
+
     return (
     <Main>
         <div className='wrapper'>
@@ -112,6 +103,7 @@ function AdminUser() {
                         </ButtonWrapper>
                     </div>
                 </AdminInfo>
+                
                 <EmptyRequest>   
                     {emptyRequest.map(trash => {
                         return (
@@ -119,10 +111,12 @@ function AdminUser() {
                             <div className='info_wrapper'>
                                 <div className='address'>주소: {trash?.address}</div>
                                 <div className='request_date'>요청일자: {`${trash.dateCreated?.slice(0,10)} / ${trash.dateCreated?.slice(11,16)} `}</div>
-                                <div className='address'>쓰레기통 상태: {trash.trashStatus === "FULL" ? "FULL" : "EMPTY"}</div>
                             </div>
                             <ButtonContainer>
-                                <button className="empty_confirm" onClick={processedBtn}>처리완료</button>
+                                <button className="empty_confirm" onClick={() => {
+                                    setProcessed(!processed);
+                                    setTrashId(trash.trashId)
+                                    }}>처리완료</button>
                             </ButtonContainer>
                         </TrashInfo>)
                     })}
