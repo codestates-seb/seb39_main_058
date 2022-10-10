@@ -46,6 +46,8 @@ public class EventService {
                 .ifPresent(eventTitle -> findEvent.setEventTitle(eventTitle));
         Optional.ofNullable(event.getEventText())
                 .ifPresent(eventText -> findEvent.setEventText(eventText));
+        Optional.ofNullable(event.getImagePath())
+                .ifPresent(imagePath-> findEvent.setImagePath(imagePath));
 
         return eventRepository.save(findEvent);
     }

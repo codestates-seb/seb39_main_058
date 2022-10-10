@@ -219,7 +219,6 @@ public class UserService {
         {
             throw  new BusinessLogicException(ExceptionCode.NOT_ENOUGH_POINTS);
         }
-
         findUser.setCurrentPoints(currentPoints-usedPoints+addedPoints);
         findUser.setTotalPoints(totalPoints+addedPoints);
         return userRepository.save(findUser);

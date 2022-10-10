@@ -47,6 +47,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                                         Authentication authentication) throws IOException, ServletException{
 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
 //        System.out.println(oAuth2User);
         String lastname = "lastname";

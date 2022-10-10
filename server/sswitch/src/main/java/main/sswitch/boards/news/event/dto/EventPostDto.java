@@ -3,6 +3,7 @@ package main.sswitch.boards.news.event.dto;
 import lombok.Getter;
 import lombok.Setter;
 import main.sswitch.user.entity.User;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
 
@@ -17,6 +18,9 @@ public class EventPostDto {
 
     @NotBlank
     private String eventText;
+
+    @Nullable
+    private String imagePath;
 
     public User getUser() {
         User user = new User();
