@@ -138,7 +138,9 @@ return (
                     setModalInfo({title : el.eventTitle , content : el.eventText})
                     }}>
                     {el.imagePath ? <img src={el.imagePath} /> : undefined}
-                    <span>{el.eventTitle}</span>
+                    <div className="slider_title_box">
+                        <h1 className="slider_title">{el.eventTitle}</h1>
+                    </div>
                 </div>
             )
         })}
@@ -315,6 +317,10 @@ const EventStyle = styled.div`
                 :hover{
                     background-color: lightgrey;
                     cursor: pointer;
+                }
+
+                @media screen and (max-height: 770px){
+                    margin: -2vh 15vw 2vh 15vw;
                 }
             }
         }
@@ -541,6 +547,37 @@ span{
     white-space: pre-wrap;
     word-break: keep-all;
     text-align: center;
+    color: #F1C164;
+    text-shadow: 5px 5px #2D63A7;
+    background: #16345A;
+    padding: 3vh 0;
+}
+
+.slider_title_box{
+    position: absolute;
+    z-index: 2;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 30vh;
+    width: 98.5vw;
+}
+
+.slider_title{
+    font-size: 6vmin;
+    background: #16345A;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    padding: 1vh 2vw;
+    font-family: 'Staatliches', cursive;
+    text-align: center;
+    color: #F1C164;
+    text-shadow: 0.4vw 0.8vh #2D63A7;
+    border-radius: 20px;
+    border: 0.3rem solid #F1C164;
+    margin: 0;
+    /* font-weight: 100; */
 }
 
 .slick-list {  //슬라이드 스크린

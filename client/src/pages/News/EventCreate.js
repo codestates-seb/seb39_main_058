@@ -32,7 +32,7 @@ function EventCreate({edit, setEdit, eventId}) {
     }
 
     if(edit){
-        fetch(`http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/${eventId}`,{
+        fetch(`https://sswitch.ga/news/event/take/${eventId}`,{
             method : "PATCH",
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -47,7 +47,7 @@ function EventCreate({edit, setEdit, eventId}) {
     }
 
     if(!edit){
-        fetch("http://ec2-43-200-66-53.ap-northeast-2.compute.amazonaws.com:8080/news/event/take/create",{
+        fetch("https://sswitch.ga/news/event/take/create",{
             method : "POST",
             headers: {
                 "Authorization": `Bearer ${userInfo.accessToken}`,
@@ -74,7 +74,7 @@ function EventCreate({edit, setEdit, eventId}) {
                 <div className="writer-title">
                     <form id="board" onSubmit={handleSubmit}>
                         <label htmlFor="title">제목</label>
-                        <input type="text" id="title" placeholder="제목을 입력해주세요." 
+                        <textarea type="text" id="title" placeholder="제목을 입력해주세요." 
                             onChange={(e) => {
                                 setNewEdit({title : e.target.value , content : newEdit.content, img : newEdit.img})
                             }}/>
@@ -177,7 +177,7 @@ const BoardWrite = styled.div`
             width: 15vw;
         }
 
-        input {
+        #title {
             width: 60vw;
             height: 4vh;
             padding: 0 15px;
