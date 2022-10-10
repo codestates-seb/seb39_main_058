@@ -29,6 +29,8 @@ const Event = () => {
     const [edit, setEdit] = useState(false)
     const [eventId, setEventId] = useState(null)
     const [modalInfo, setModalInfo] = useState(undefined)
+    const [coupon, setCoupon] = useState('')
+    const [getPoint, setGetPoint] = useState(false)
 
     const navigate = useNavigate();
 
@@ -70,8 +72,29 @@ const Event = () => {
       }
 
     const handleConfirmButton = () => {
-        console.log('hi')
-        //쿠폰
+        fetch(`https://sswitch.ga/orders/coupon`,{
+            method : "POST",
+            headers: { 
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body : JSON.stringify({
+                "coupon" : coupon
+            })
+        })
+        .then(res => {
+            // window.location.reload()
+            if(res.status === 500){
+                alert("잘못된 쿠폰 번호 입니다.")
+            }
+            if(res.status === 200){
+                setGetPoint(true)
+            }
+            else{
+                console.log(res.status)
+            }
+        })
+        .catch(err => console.log(err))
     }
     
     const handleDeletClick = () => {
@@ -127,12 +150,19 @@ return (
                 <img src={random[randomIndex]} />
             </div>
             <div className="title">쿠폰 입력</div>
-            <input type='text' placeholder="쿠폰번호 입력" />
+            <input type='text' placeholder="쿠폰번호 입력" onChange={(e) => setCoupon(e.target.value)}/>
             <div className="confirm" onClick={() => {
                 userInfo.accessToken ? handleConfirmButton() : alert("로그인 후 이용 가능합니다.")
             }}>확인</div>
             <p>* 쿠폰 입력은 로그인 이후 사용 가능합니다.</p>
         </div>
+        {getPoint && 
+        <div className="back">
+            <div className="modal_view">
+                <div className="get_point">50,000 포인트가 적립 되었습니다.</div>
+                <div className="confirm" onClick={() => navigate('/users/profile')}>확인</div>
+            </div>
+        </div>}
     </div> : click === 3 ?
     <div className="edit_container">
         <div className="header">
@@ -191,6 +221,12 @@ const EventStyle = styled.div`
         margin-top: 6vh;
     }
 
+    .get_point{
+        font-size: 4vmin;
+        white-space: nowrap;
+        word-break: keep-all;
+    }
+
     .final{
         display: flex;
         div{
@@ -216,6 +252,13 @@ const EventStyle = styled.div`
         height: 30vh;
         border-radius: 1rem;
         font-size: 6vmin;
+
+        .confirm{
+            font-size: 4vmin;
+            :hover{
+                font-weight: bold;
+            }
+        }
     }
 
     .view{
