@@ -154,16 +154,17 @@ function CommunityDetail() {
         "Content-Type": "application/json"
       }
     })
-      .then(res => res.json())
       .then((data)=>{
         if(data.error === 'Unauthorized') {
           alert('세션이 만료되었습니다.')
           navigate('/login',{state: {path:location.pathname}})
         }
+
+        navigate("/community/forum");
+        window.location.reload();
       })
       .catch(err => console.log(err))
-    navigate("/community/forum");
-    window.location.reload();
+    
   }
 
   // 태그 삭제(게시글 작성 및 수정 시)
