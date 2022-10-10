@@ -1,4 +1,4 @@
-# 👏  [39기-Team058-쓰위치(Sswitch)-최종 발표문서](https://www.notion.so/codestates/39-Team058-Sswitch-8e071090b6024c42bdfd9c009178768c#8a93ffa842c24e26bcee98b920ddd325) 👏
+# 👏  [39기-Team058-쓰위치(Sswitch)-최종 발표문서](https://www.notion.so/codestates/39-Team058-Sswitch-8e071090b6024c42bdfd9c009178768c) 👏
 
 # Members
 
