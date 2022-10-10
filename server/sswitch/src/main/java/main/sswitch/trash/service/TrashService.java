@@ -1,14 +1,14 @@
 package main.sswitch.trash.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import main.sswitch.help.exceptions.BusinessLogicException;
 import main.sswitch.help.exceptions.ExceptionCode;
 import main.sswitch.trash.entity.TrashCan;
 
+import main.sswitch.trash.entity.TrashCanAlarm;
+import main.sswitch.trash.repository.TrashCanAlarmRepository;
 import main.sswitch.trash.repository.TrashRepository;
 import main.sswitch.user.entity.User;
-import main.sswitch.user.repository.UserRepository;
 import main.sswitch.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,19 +23,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TrashService {
     private final TrashRepository trashRepository;
-//    private final TrashCanAlarmRepository alarmRepository;
-//    private final TrashAlarmMapper alarmMapper;
+    private final TrashCanAlarmRepository alarmRepository;
+
     private final UserService userService;
 
 
     @Transactional
     public TrashCan createTrashCan(TrashCan trashCan, User user, String address) {
         trashCan.setUser(user);
-//        TrashCanAlarm alarm = new TrashCanAlarm();
-//        alarm.setUser(user);
-//        alarm.setAddress(address);
-//        alarm.setTrashStatus(alarm.getTrashStatus());
-//        alarmRepository.save(alarm);
+        TrashCanAlarm alarm = new TrashCanAlarm();
+        alarm.setUser(user);
+        alarm.setAddress(address);
+        alarmRepository.save(alarm);
         return trashRepository.save(trashCan);
     }
 
@@ -51,17 +50,9 @@ public class TrashService {
         return trashRepository.save(findTrashCan);
     }
 
-//    public TrashCanAlarm changeTrashCanStatus(long trashCanId) {
-//        TrashCan findTrashCans = findTrashCan(trashCanId);
-//        long userId = findTrashCans.getUser().getUserId();
-//        TrashCanAlarm findAlarm = findVerifiedAlarmWithUserId(userId);
-//        TrashCanAlarm changeAlarm = findVerifiedAlarm(findAlarm);
-//
-//        if(findAlarm.getTrashStatus() == TrashCanAlarm.TrashStatus.TRASH_CAN_FULL) {
-//            Optional.ofNullable(findAlarm.getTrashStatus())
-//                    .ifPresent(trashStatus -> changeAlarm.setTrashStatus(TrashCanAlarm.TrashStatus.TRASH_CAN_EMPTY));
-//        }
-//        return alarmRepository.save(findAlarm);
+//    public TrashCanAlarm changeTrashCanStatus(long userId, String address) {
+//        List<TrashCanAlarm> findAllAlarms = alarmRepository.findAllByUserIdAndAddress(userId, address);
+//        findAllAlarms.forEach(trashCanAlarm -> trashCanAlarm.setTrashStatus(TrashCanAlarm.TrashAlarmStatus.TRASH_CAN_EMPTY));
 //    }
 
 
@@ -78,15 +69,23 @@ public class TrashService {
                 Sort.by("trashId").ascending()));
     }
 
-    public void deleteTrashCan(long trashId) {
-        TrashCan trashCan = findVerifiedTrashCan(trashId);
-        trashRepository.delete(trashCan);
+    public void deleteTrashCanAlarm(long trashAlarmId, User user) {
+        TrashCanAlarm trashCanAlarm = findVerifiedAlarm(trashAlarmId);
+        if (user.getUserId() == trashCanAlarm.getUser().getUserId() || user.getRole().equals("ROLE_ADMIN")) {
+            alarmRepository.delete(trashCanAlarm);
+        }
     }
 
-    public void emptyTrashCan(long trashId){
+    public void emptyTrashCan(long trashId, long userId){
         TrashCan findTrashCan = findTrashCan(trashId);
-//        changeTrashCanStatus(trashId);
+        String address = findTrashCan.getAddress();
+        List<TrashCanAlarm> findAllAlarms = alarmRepository.findAllByUserIdAndAddress(userId, address);
+        findAllAlarms.forEach(trashCanAlarm -> trashCanAlarm.setTrashStatus(0));
         trashRepository.delete(findTrashCan);
+    }
+
+    public List<TrashCanAlarm> findAlarmsWithUserIdAndStatus(long userId, int status){
+        return alarmRepository.findAllByUserIdAndStatus(userId, status);
     }
 
 
@@ -100,21 +99,19 @@ public class TrashService {
         return findTrashCan;
     }
 
-//    public TrashCanAlarm findVerifiedAlarm(TrashCanAlarm trashCanAlarm) {
-//        long userId = trashCanAlarm.getUser().getUserId();
-//        String address = trashCanAlarm.getAddress();
-//        Optional<TrashCanAlarm> optionalTrashCan = alarmRepository.findByUserIdAndAddress(userId, address);
-//        TrashCanAlarm findAlarm =
-//                optionalTrashCan.orElseThrow(() ->
-//                        new BusinessLogicException(ExceptionCode.TRASHCAN_NOT_FOUND));
+    public TrashCanAlarm findVerifiedAlarm(long trashCanAlarmId) {
+        Optional<TrashCanAlarm> optionalTrashCan = alarmRepository.findByAlarmId(trashCanAlarmId);
+        TrashCanAlarm findAlarm =
+                optionalTrashCan.orElseThrow(() ->
+                        new BusinessLogicException(ExceptionCode.TRASHCAN_NOT_FOUND));
+
+        return findAlarm;
+    }
 //
-//        return findAlarm;
-//    }
-//
-//    public List<TrashCanAlarm> findVerifiedAlarmWithUserId(long userId) {
-//        List<TrashCanAlarm> findAlarms = alarmRepository.findAllByUserId(userId);
-//        return findAlarms;
-//    }
+    public List<TrashCanAlarm> findVerifiedAlarmWithUserIdAndStatus(long userId, int trashStatus) {
+        System.out.println(trashStatus);
+        return alarmRepository.findAllByUserIdAndStatus(userId, trashStatus);
+    }
 
     public void verifyExistTrashCan(long trashId) {
         Optional<TrashCan> trashCan = trashRepository.findById(trashId);

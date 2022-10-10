@@ -7,6 +7,8 @@ import main.sswitch.security.oauth.PrincipalDetails;
 
 //import main.sswitch.trash.dto.TrashStatusDto;
 import main.sswitch.trash.entity.TrashCan;
+import main.sswitch.trash.entity.TrashCanAlarm;
+import main.sswitch.trash.mapper.TrashAlarmMapper;
 import main.sswitch.trash.mapper.TrashMapper;
 import main.sswitch.trash.service.TrashService;
 import main.sswitch.help.response.dto.MultiResponseDto;
@@ -36,13 +38,15 @@ public class TrashController {
     private TrashMapper mapper;
     private UserService userService;
 
+    private TrashAlarmMapper alarmMapper;
+
 //    public TrashController(TrashService trashService, TrashMapper mapper, TrashAlarmMapper alarmMapper) {
 //        this.trashService = trashService;
 //        this.mapper = mapper;
 //        this.alarmMapper = alarmMapper;
 //    }
 
-    //쓰레기통 등록
+    //쓰레기통 비움 요청 등록
     @PostMapping("/flush/create")
     public ResponseEntity postTrashCan(@AuthenticationPrincipal PrincipalDetails principal, @Valid @RequestBody TrashPostDto trashPostDto) {
         User user = userService.findUserWithLoginId(principal.getUsername());
@@ -67,17 +71,6 @@ public class TrashController {
                 HttpStatus.OK);
     }
 
-    //쓰레기통 비움 기능(상황에 맞게 패치와 합침 가능)
-//    @PatchMapping("/take/{trash-id}")
-//    public ResponseEntity TrashCan(@PathVariable("trash-id") @Positive long trashId,
-//                                   @Valid @RequestBody TrashStatusDto trashStatusDto) {
-//        trashStatusDto.setTrashId(trashId);
-//        TrashCan trashCan = trashService.changeTrashCanStatus(mapper.trashStatusChangeDtoToTrash(trashStatusDto));
-//
-//        return new ResponseEntity<>(
-//                new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
-//                HttpStatus.OK);
-//    }
 
     //쓰레기통 조회
     @GetMapping("/{trash-id}")
@@ -100,18 +93,27 @@ public class TrashController {
                 new MultiResponseDto<>(mapper.trashesToTrashResponseDto(trashCans),
                         pageTrashCans), HttpStatus.OK);
     }
+    //유저 아이디에 따른 비워진 쓰레기통 알림 목록 가져오기
+    @GetMapping("/alarms/list")
+    public ResponseEntity getAllTrashAlarm(@AuthenticationPrincipal PrincipalDetails principal) {
+        User findUser = userService.findUserWithLoginId(principal.getUsername());
+        List< TrashCanAlarm> trashCanAlarms = trashService.findVerifiedAlarmWithUserIdAndStatus(findUser.getUserId(), 0);
+        return new ResponseEntity<>(new SingleResponseDto<>(alarmMapper.alarmsToAlarmResponseDto(trashCanAlarms)),HttpStatus.OK);
 
-    //쓰레기통 삭제
-    @DeleteMapping("/take/{trash-id}")
-    public ResponseEntity deleteTrashCans(@PathVariable("trash-id") long trashId) {
-        trashService.deleteTrashCan(trashId);
+    }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+    //쓰레기통 알림 삭제
+    @DeleteMapping("/alarms/{trash-alarm-id}")
+    public ResponseEntity deleteTrashCans(@AuthenticationPrincipal PrincipalDetails principal, @PathVariable("trash-alarm-id") long trashCanAlarmId) {
+        User findUser = userService.findUserWithLoginId(principal.getUsername());
+        trashService.deleteTrashCanAlarm(trashCanAlarmId, findUser);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     //쓰레기통 비움
     @DeleteMapping("/flush/{trash-id}")
-    public ResponseEntity deleteTrashCanAlarm(@PathVariable("trash-id") long trashId) {
-        trashService.emptyTrashCan(trashId);
+    public ResponseEntity deleteTrashCanAlarm(@AuthenticationPrincipal PrincipalDetails principal, @PathVariable("trash-id") long trashId) {
+        User findUser = userService.findUserWithLoginId(principal.getUsername());
+        trashService.emptyTrashCan(trashId, findUser.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

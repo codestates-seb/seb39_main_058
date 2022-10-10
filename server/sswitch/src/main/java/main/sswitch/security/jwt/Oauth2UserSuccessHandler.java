@@ -47,7 +47,6 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                                         Authentication authentication) throws IOException, ServletException{
 
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
         String provider = String.valueOf(oAuth2User.getAttributes().get("registrationId"));
 //        System.out.println(oAuth2User);
         String lastname = "lastname";
@@ -57,14 +56,14 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 //        System.out.println("kakaoAccount" + kakaoAccount);
         if(MapUtils.isEmpty(kakaoAccount)) {
-             lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
-             email = String.valueOf(oAuth2User.getAttributes().get("email"));
+            lastname = String.valueOf(oAuth2User.getAttributes().get("given_name"));
+            email = String.valueOf(oAuth2User.getAttributes().get("email"));
             image = String.valueOf(oAuth2User.getAttributes().get("profile_image"));
         }else{
             Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
             lastname = String.valueOf(properties.get("nickname"));
             image = String.valueOf(properties.get("profile_image"));
-             email = lastname + "@kakao.com";
+            email = lastname + "@kakao.com";
         }
         String authorities = "ROLE_USER";
         Optional<User> optionalUser = userRepository.findByLoginId(lastname);
