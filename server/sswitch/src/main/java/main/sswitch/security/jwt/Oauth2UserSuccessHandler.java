@@ -51,7 +51,6 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 //        System.out.println(oAuth2User);
         String lastname = "lastname";
         String email = "email";
-        String name = "name";
         String image = "";
         Map<String, Object> attributes = oAuth2User.getAttributes();
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
@@ -67,7 +66,7 @@ public class Oauth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
              email = lastname + "@kakao.com";
         }
         String authorities = "ROLE_USER";
-        Optional<User> optionalUser = userRepository.findByUsername(lastname);
+        Optional<User> optionalUser = userRepository.findByLoginId(lastname);
         if(optionalUser.isEmpty()){
             saveUser(email, lastname, provider, image); // oauth2로 등록한 유저의 최소한 정보를 저장하기 위해 저장함
         }
