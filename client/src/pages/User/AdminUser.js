@@ -19,7 +19,7 @@ function AdminUser() {
     
     const navigate = useNavigate();
     const { id } = useParams()
-    console.log(userData)
+    
     // 관리자 마이페이지 정보
     useEffect(() => {
         fetch(`https://sswitch.ga/users/profile`, {
@@ -78,7 +78,7 @@ function AdminUser() {
             <div className='user_info'>
                 <AdminInfo>
                     <div>
-                        <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
+                        <div className='img_container'>
                             <img src={ userData.profileImage === null ? '/profile.png' : userData.profileImage}/>
                             <HiPencil className='edit'/>
                         </div>
@@ -196,16 +196,6 @@ const Main = styled.main`
         align-items: center;
         width: 30vw;
         height: 20vh;
-        cursor: pointer;
-
-        :hover{
-            img{
-                opacity: 0.5;
-            }
-            .edit{
-                display: block;
-            }
-        }
     }
 
     .nickName{
