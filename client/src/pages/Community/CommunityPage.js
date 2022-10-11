@@ -39,11 +39,7 @@ function CommunityPage() {
   },[page])
 
   const filteredTag = (value) => {
-    // if(tags.includes(value) === true || value === '태그를 선택해주세요'){
-    //   setTags(tags)
-    // }else{
-    //   setTags([...tags, value])
-    // }
+
     if(value === "태그를 선택해주세요"){
       setTags([])
     }
@@ -136,7 +132,7 @@ function CommunityPage() {
       </div>
         <div className='tag_search' onClick={handleTagSearch}> <AiOutlineSearch/> 태그 검색</div>
         <div className='bords_container'>
-          <div className='bords_list'>
+          <div className='bords_list top'>
             <span className='id'>번호</span>
             <span className='title'>제목</span>
             <span className='user'>글쓴이</span>
@@ -149,10 +145,13 @@ function CommunityPage() {
               <div key={el.forumId} className="bords_list">
                 <span className='id'>{el.forumId}</span>
                 {el.secret === "OPEN" ?
-                <span className='title pointer' onClick={() => {
-                  navigate(`/community/${el.forumId}`)
-                }}>{el.forumTitle}</span> :
-                <span className='title pointer' onClick={() => {
+                <div className='title pointer'>
+                  <span onClick={() => {
+                    navigate(`/community/${el.forumId}`)
+                  }}>{el.forumTitle}</span>
+                  <span>{`(${el.commentCount})`}</span>
+                </div> :
+                <span className='title pointer secret' onClick={() => {
                   userInfo.role === "ROLE_ADMIN" || (el.userName === userInfo.userName) ?
                   navigate(`/community/${el.forumId}`) :
                   alert("비밀글은 본인과 관리자 이외엔 확인할 수 없습니다.")
@@ -387,9 +386,16 @@ const CommunityPageStyle = styled.div`
     align-items: center;
     height: 2vh;
     padding: 1vh 0;
+    border-top: none;
 
     .pointer{
       cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .secret{
+      display: initial;
     }
     
     span{
@@ -397,6 +403,10 @@ const CommunityPageStyle = styled.div`
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+
+  .top{
+    border-top: 1px solid black;
   }
 
   .id{

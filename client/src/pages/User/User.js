@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaQuestionCircle } from "react-icons/fa";
-import { FcLike } from 'react-icons/fc';
-import { BsPencilSquare } from 'react-icons/bs';
 import { HiPencil } from "react-icons/hi";
 
 
@@ -43,6 +41,8 @@ function User() {
         })
         .catch(err => console.log(err))
     },[])
+
+    console.log(userData)
 
     return (
     <Main>
