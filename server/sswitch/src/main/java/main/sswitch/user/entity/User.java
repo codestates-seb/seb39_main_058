@@ -58,7 +58,7 @@ public class User extends BaseEntity implements Serializable {
     @Column(nullable = false, name = "STATUS")
     private UserStatus userStatus = UserStatus.USER_EXIST;
 
-    private String profileImage;
+    private String profileImage = "https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg";
 
     @Column(nullable = false, name = "ROLE")
     private String role;
