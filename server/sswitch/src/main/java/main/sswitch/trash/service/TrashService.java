@@ -76,11 +76,14 @@ public class TrashService {
         }
     }
 
-    public void emptyTrashCan(long trashId, long userId){
+    public void emptyTrashCan(long trashId){
         TrashCan findTrashCan = findTrashCan(trashId);
         String address = findTrashCan.getAddress();
+        long userId = findTrashCan.getUser().getUserId();
         List<TrashCanAlarm> findAllAlarms = alarmRepository.findAllByUserIdAndAddress(userId, address);
-        findAllAlarms.forEach(trashCanAlarm -> trashCanAlarm.setTrashStatus(0));
+        findAllAlarms.forEach(trashCanAlarm -> trashCanAlarm.setTrashAlarmStatus(0));
+        alarmRepository.saveAll(findAllAlarms);
+        System.out.println(findAllAlarms);
         trashRepository.delete(findTrashCan);
     }
 

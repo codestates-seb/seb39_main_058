@@ -21,7 +21,7 @@ public class TrashResponseDto {
 
     private LocalDateTime dateModified;
 
-//    private TrashCan.TrashStatus trashStatus;
+    private TrashCan.TrashStatus trashStatus;
 
     private String address;
 

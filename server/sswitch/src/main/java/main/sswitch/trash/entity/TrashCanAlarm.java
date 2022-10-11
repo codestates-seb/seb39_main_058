@@ -23,12 +23,11 @@ public class TrashCanAlarm extends BaseEntity {
 
     private String address;
 
-
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "TRASH_ID")
 //    private TrashCan trashCan;
 
-    private int trashStatus = 1;
+    private int trashAlarmStatus = 1;
 
 
     public void setUser(User user) {
@@ -39,17 +38,5 @@ public class TrashCanAlarm extends BaseEntity {
 //        this.trashCan = trashCan;
 //    }
 
-    public enum TrashAlarmStatus {
-        TRASH_CAN_FULL("FULL"),
-        TRASH_CAN_EMPTY("EMPTY"),
-        ;
 
-        @Getter
-        @Setter
-        private String status;
-
-        TrashAlarmStatus(String status) {
-            this.status = status;
-        }
-    }
 }

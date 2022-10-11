@@ -49,7 +49,7 @@ public class UserService {
         user.setEmail(user.getEmail());
         user.setUserName(user.getUserName());
         user.setRole("ROLE_USER");
-        user.setProfileImage("https://riverlegacy.org/wp-content/uploads/2021/07/blank-profile-photo.jpeg");
+        user.setProfileImage(user.getProfileImage());
         user.setUserStatus(User.UserStatus.USER_EXIST);
         user.setCurrentPoints(10000);
         user.setTotalPoints(10000);

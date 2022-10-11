@@ -52,7 +52,7 @@ public class TrashController {
         User user = userService.findUserWithLoginId(principal.getUsername());
         String address = trashPostDto.getAddress();
         TrashCan trashCan = trashService.createTrashCan(mapper.trashPostDtoToTrash(trashPostDto), user, address);
-        trashCan.setTrashStatus(trashPostDto.getTrashStatus());
+//        trashCan.setTrashStatus(trashPostDto.getTrashStatus());
         userService.updatePoints(user,user.getCurrentPoints(),0,user.getTotalPoints(),100);
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.trashToTrashResponseDto(trashCan)),
@@ -111,9 +111,8 @@ public class TrashController {
     }
     //쓰레기통 비움
     @DeleteMapping("/flush/{trash-id}")
-    public ResponseEntity deleteTrashCanAlarm(@AuthenticationPrincipal PrincipalDetails principal, @PathVariable("trash-id") long trashId) {
-        User findUser = userService.findUserWithLoginId(principal.getUsername());
-        trashService.emptyTrashCan(trashId, findUser.getUserId());
+    public ResponseEntity deleteTrashCanAlarm(@PathVariable("trash-id") long trashId) {
+        trashService.emptyTrashCan(trashId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

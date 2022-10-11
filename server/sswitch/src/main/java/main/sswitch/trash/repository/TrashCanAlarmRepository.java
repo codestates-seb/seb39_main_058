@@ -12,11 +12,13 @@ public interface TrashCanAlarmRepository extends JpaRepository<TrashCanAlarm, Lo
     @Query(value = "SELECT * FROM trashcan_alarm WHERE user_Id = :userId", nativeQuery = true)
     List<TrashCanAlarm> findAllByUserId(long userId);
 //
-    @Query(value = "SELECT * FROM trashcan_alarm WHERE user_Id = :userId and trash_status = :trashStatus", nativeQuery = true)
-    List<TrashCanAlarm> findAllByUserIdAndStatus(long userId, int trashStatus);
+    @Query(value = "SELECT * FROM trashcan_alarm WHERE user_Id = :userId and trash_alarm_status = :trashAlarmStatus", nativeQuery = true)
+    List<TrashCanAlarm> findAllByUserIdAndStatus(long userId, int trashAlarmStatus);
 //
     @Query(value = "SELECT * FROM trashcan_alarm WHERE user_Id = :userId and address = :address", nativeQuery = true)
     List<TrashCanAlarm> findAllByUserIdAndAddress(long userId, String address);
+    @Query(value = "SELECT * FROM trashcan_alarm WHERE user_Id = :userId and address = :address", nativeQuery = true)
+    Optional<TrashCanAlarm> findByUserIdAndAddress(long userId, String address);
     @Query(value = "SELECT t FROM TrashCanAlarm t WHERE t.trashCanAlarmId= :trashAlarmId")
     Optional<TrashCanAlarm> findByAlarmId(long trashAlarmId);
 }
