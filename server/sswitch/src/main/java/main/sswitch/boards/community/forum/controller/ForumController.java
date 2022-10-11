@@ -58,10 +58,11 @@ public class ForumController {
 
     //게시글 조회
     @GetMapping("/{forum-id}")
-    public ResponseEntity getForum(@Positive @PathVariable("forum-id") long forumId) {
+    public ResponseEntity getForum(@Positive @PathVariable("forum-id") long forumId,
+                                   @RequestParam(value = "SECRET", required = false) long userId) {
 //            ,@RequestHeader long userId) {
 //        Forum forum = forumService.findForum(forumId, userId);
-        Forum forum = forumService.findForum(forumId);
+        Forum forum = forumService.findForum(forumId,userId);
 
         return new ResponseEntity<>(
                 new SingleResponseDto<>(mapper.ForumToForumResponseDto(forum)),

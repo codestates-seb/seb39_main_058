@@ -100,18 +100,18 @@ public class ForumService {
         return forumRepository.save(findForum);
     }
 
-    public Forum findForum(long forumId) {
-//            ,long userId) {
+    public Forum findForum(long forumId
+            ,long userId) {
         Forum findForum = findVerifiedForum(forumId);
-//        String secret = String.valueOf(findForum.getSecret());
-//        long writer = findForum.getUser().getUserId();
-//        User user = new User();
-//        String role = user.getRole();
-//        if (secret.equals("SECRET")) {
-//            if (writer != userId || role != "ROLE_ADMIN") {
-//                new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
-//            }
-//        }
+        String secret = String.valueOf(findForum.getSecret());
+        long writer = findForum.getUser().getUserId();
+        User user = new User();
+        String role = user.getRole();
+        if (secret.equals("SECRET")) {
+            if (writer != userId || role != "ROLE_ADMIN") {
+                new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+            }
+        }
         return findVerifiedForum(forumId);
     }
 
