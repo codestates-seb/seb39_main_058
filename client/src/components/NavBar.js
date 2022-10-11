@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AiOutlineBell, AiFillGithub } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { SiNotion } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux"
+import { BsTrash } from "react-icons/bs";
 import Guide from './Guide'
-
 
 function NavBar({welcome}) {
 
@@ -14,6 +14,7 @@ function NavBar({welcome}) {
     const [logout, setLogout] = useState(false)
     const [guide, setGuide] = useState(0)
     const [menu, setMenu] = useState(false)
+    const [alarms, setAlarms] = useState([])
 
     const navigate = useNavigate();
 
@@ -24,6 +25,47 @@ function NavBar({welcome}) {
     const dispatch = useDispatch()
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
+
+
+    useEffect(() => {
+        fetch(`https://sswitch.ga/trash/alarms/list`,{
+            method : "GET",
+            headers : {
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            setAlarms(res.data)
+        })
+        .catch(err => console.log(err))
+    },[])
+
+    const handleDelete = (id) => {
+        fetch(`https://sswitch.ga/trash/alarms/${id}`,{
+            method: "DELETE",
+            headers: { 
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(() => {
+            fetch(`https://sswitch.ga/trash/alarms/list`,{
+            method : "GET",
+            headers : {
+                "Authorization": `Bearer ${userInfo.accessToken}`,
+                "Content-Type": "application/json"
+            }
+            })
+            .then(res => res.json())
+            .then(res => {
+                setAlarms(res.data)
+            })
+        })
+        .catch((err) => console.log(err))
+        
+    }
 
   return (
     <>
@@ -195,7 +237,20 @@ function NavBar({welcome}) {
     undefined}
 
     {noticeOn ?
-    <Notification>현재 알림이 없습니다.</Notification> :
+    <Notification>
+        {alarms.map(el => {
+            return (
+                <div className='flex' key={el.trashCanAlarmId}>
+                    <div className='container'>
+                        <div className='notice'>비움 요청이 처리되었습니다.</div>
+                        <div className='content'>{el.address}</div>
+                        <div className='date'>{el.createdAt?.slice(0,10)}</div>
+                    </div>
+                    <div className='delete' onClick={() => handleDelete(el.trashCanAlarmId)}><BsTrash /></div>
+                </div>
+            )
+        })}
+    </Notification> :
     undefined}
     </>
   )
@@ -485,11 +540,49 @@ const NavBarStyle = styled.div`
 const Notification = styled.div`
     position: absolute;
     border: 1px solid black;
-    width: 20vw;
+    width: 320px;
     height: 50vh;
     right: 0;
     background-color: white;
     z-index: 2;
+    white-space: nowrap;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    .flex{
+        display: flex;
+    }
+
+    .container{
+        border: 1px solid black;
+        margin: 1vh 1vw;
+        padding: 0.5vh 0.5vw;
+        width: 250px;
+        div{
+            margin: 0.5vh 0;
+        }
+    }
+
+    .notice{
+        font-size: 20px;
+    }
+
+    .content{
+        font-size: 13px;
+    }
+
+    .delete{
+        border: 1px solid red;
+        display: flex;
+        align-items: center;
+        margin: 1vh 0;
+        margin-left: -1vw;
+        cursor: pointer;
+
+        :hover{
+            background-color: red;
+        }
+    }
 `
 
 const MobileNavBar = styled.div`

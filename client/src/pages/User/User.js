@@ -42,8 +42,6 @@ function User() {
         .catch(err => console.log(err))
     },[])
 
-    console.log(userData)
-
     return (
     <Main>
         <div className='wrapper'>

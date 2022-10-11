@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk";
 import { BiCurrentLocation } from "react-icons/bi";
-import { GiCancel } from "react-icons/gi";
 import Loading from "../../components/Loading";
 import { useSelector } from "react-redux";
 
