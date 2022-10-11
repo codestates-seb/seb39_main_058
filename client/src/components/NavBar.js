@@ -213,9 +213,9 @@ function NavBar({welcome}) {
             }}>로그아웃</div>}
             <div className='drop_container'></div>
         </div>
-            <div className='notice' onClick={() => {
+            <div className={alarms.length !== 0 ? "red notice" : 'notice'} onClick={() => {
                 setNoticeOn(!noticeOn)
-            }}><AiOutlineBell/></div>
+            }}><AiOutlineBell/>{alarms.length !== 0 ? alarms.length : undefined}</div>
     </NavBarStyle>
     {logout ?
     <LogoutStyle>
@@ -522,6 +522,10 @@ const NavBarStyle = styled.div`
         align-items: center;
         cursor: pointer;
         padding-right: 2vw;
+    }
+
+    .red{
+        color: red;
     }
 
     .search{
