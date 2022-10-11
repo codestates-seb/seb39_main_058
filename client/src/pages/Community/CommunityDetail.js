@@ -273,7 +273,7 @@ function CommunityDetail() {
                 )}
             </select>
           </BoardTag>}
-{console.log(data.data)}
+
           {/* 비밀글 수정 */}
           { revise && <Secret>
             <input type="checkbox" name="secret" onClick={handleSecret} 

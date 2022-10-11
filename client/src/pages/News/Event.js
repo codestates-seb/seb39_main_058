@@ -31,12 +31,18 @@ const Event = () => {
     const [modalInfo, setModalInfo] = useState(undefined)
     const [coupon, setCoupon] = useState('')
     const [getPoint, setGetPoint] = useState(false)
+    const [imgLink, setImgLink] = useState('')
 
     const navigate = useNavigate();
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
     
-    const randomIndex = Math.floor(Math.random() * random.length)
+    
+    useEffect(() => {
+        const randomIndex = Math.floor(Math.random() * random.length)
+
+        setImgLink(random[randomIndex])
+    },[])
 
     const settings = {
         dots: true,
@@ -83,7 +89,6 @@ const Event = () => {
             })
         })
         .then(res => {
-            // window.location.reload()
             if(res.status === 500){
                 alert("잘못된 쿠폰 번호 입니다.")
             }
@@ -149,7 +154,7 @@ return (
         <div className="logo">쓰위치</div>
         <div className="border">
             <div>
-                <img src={random[randomIndex]} />
+                <img src={imgLink} />
             </div>
             <div className="title">쿠폰 입력</div>
             <input type='text' placeholder="쿠폰번호 입력" onChange={(e) => setCoupon(e.target.value)}/>

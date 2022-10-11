@@ -47,7 +47,6 @@ function ReviseUser() {
     "role": userData.role,
     "profileImage": profileImg.value,
   }
-console.log(userInfo.accessToken)
 
   // 회원정보 수정
   const handleSubmit = (e) => {
@@ -152,7 +151,7 @@ console.log(userInfo.accessToken)
             </div>
             <div className="password_wrapper">
               <label htmlFor="password">비밀번호</label>
-              <input type="text" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword({ state: true, value: e.target.value })}/>
+              <input type="password" id="password" name="password"placeholder="변경할 비밀번호를 입력하세요." onChange={ e => setPassword({ state: true, value: e.target.value })}/>
             </div>
           </ReviseForm>
             <div className="withdrawal_btn" onClick={() => setWithdrawal(!withdrawal)}>회원탈퇴</div>
