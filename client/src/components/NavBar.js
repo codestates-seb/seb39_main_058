@@ -582,8 +582,6 @@ const Notification = styled.div`
     white-space: nowrap;
     overflow-y: scroll;
     overflow-x: hidden;
-    display: flex;
-    justify-content: center;
 
     .unlogin{
         border: 5px solid #F1C164;
