@@ -1,3 +1,5 @@
+# 👏  [39기-Team058-쓰위치(Sswitch)-최종 발표문서](https://www.notion.so/codestates/39-Team058-Sswitch-8e071090b6024c42bdfd9c009178768c) 👏
+
 # Members
 
 |         김야긴(FE)         |         박세현(FE)         |         홍석민(FE)         |         한성민(BE)         |          서성민(BE)         |
@@ -9,12 +11,13 @@
 ## 🌟프로젝트 명 
 🗑️  "쓰레기통의 위치가 궁금해?, 쓰위치(Sswitch)" 🚯 🗑️ 
 
+## 배포링크: https://seb39-main-058-tawny.vercel.app
+
 ## ❗프로젝트 목표
 사용자가 편리하게 근처 쓰레기통을 찾을 수 있도록 한다.
 
 ## 💡서비스 설명
 - 사용자의 현위치를 기반으로 근처에 위치한 쓰레기통을 편리하게 찾을 수 있다.
-- 특정 지역을 검색하면 쓰레기통 위치를 알 수 있다.
 - 쓰레기통 관련 문제발생 시, 문제제기를 할 수 있고 그에 대한 해결방안 마련할 수 있다.
     - 예시) 쓰레기통 파손 - “동작구 장승배기역 8번 출구 쓰레기통이 파손되었어요. 조치해주세요!”
     - 예시) 쓰레기통 위치정보 - “강남역 11번 출구 앞 쓰레기통 있다고 나와있는데 정해진 위치에 없어요. 추가해주세요!”
@@ -22,7 +25,7 @@
 - 적립한 포인트로 기프티콘을 교환할 수 있다.
 - 공지사항을 통해 유저들에게 공지할 내용을 제공한다.
 - 자유게시판을 통해 유저들끼리 자유롭게 소통할 수 있다.
-- 이벤트를 통해 유저들이 포인트를 획득할 수 있다.
+- 회원가입 및 쓰레기통 '비워주세요' 제보를 통해 유저들이 포인트를 획득할 수 있다.
 - 실시간 채팅(카카오톡)을 통해 긴급한 문제해결이 필요하거나, 게시판으로 해결하기 어려운 내용을 상담할 수 있다.
     - 예시) “몇일째 마포구 지하철역 쓰레기통이 비워져 있지 않아 악취가 나네요. 치워주세요”
     - 예시) “강남 XXX워터밤 끝났더니 역 근처에 쓰레기가 넘쳐나요! 빠른 처리부탁드려요!”
@@ -48,5 +51,5 @@
 |-----|-----|-----|-----|-----|
 
 ## Back-End
-|<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white">|<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">|<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">|<img src="https://img.shields.io/badge/SrpingSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">|<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">|
-|-----|-----|-----|-----|-----|
+|<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">|<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">|<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">|<img src="https://img.shields.io/badge/Srping Security-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white">|<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">|<img src="https://img.shields.io/badge/amazon ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">|<img src="https://img.shields.io/badge/amazon rds-FF9900?style=for-the-badge&logo=amazonrds&logoColor=white">|<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json web tokens&logoColor=white">|<img src="https://img.shields.io/badge/oauth2.0-EB5424?style=for-the-badge&logo=auth0&logoColor=white">|
+|-----|-----|-----|-----|-----|-----|-----|-----|-----|
