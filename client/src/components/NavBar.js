@@ -42,7 +42,7 @@ function NavBar({welcome}) {
             })
             .catch(err => console.log(err))
         }
-    },[])
+    },[userInfo])
 
     const handleDelete = (id) => {
         fetch(`https://sswitch.ga/trash/alarms/${id}`,{
@@ -254,6 +254,7 @@ function NavBar({welcome}) {
                 navigate('/')
                 setLogout(false)
                 clear()
+                setAlarms([])
             }}>확인</div>
             <div onClick={() => {
                 setLogout(false)
@@ -591,7 +592,6 @@ const Notification = styled.div`
         justify-content: center;
         font-size: 2vmin;
         margin-top: 2vh;
-        width: 85%;
     }
 
     .flex{
