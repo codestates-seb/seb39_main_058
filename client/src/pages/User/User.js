@@ -50,7 +50,7 @@ function User() {
             <div className='user'>
                 <div>
                     <div className='img_container' onClick={() => navigate('/users/profile/revise')}>
-                        <img src={ !userData.profileImage ? '/profile.png' : userData.profileImage}/>
+                        <img src={ !userData.profileImage || (userData.profileImage === "null") ? '/profile.png' : userData.profileImage}/>
                         <HiPencil className='edit'/>
                     </div>
                     <div className='flex'>
