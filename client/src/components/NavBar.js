@@ -20,26 +20,28 @@ function NavBar({welcome}) {
 
     const clear = () => {
         setNoticeOn(false)
+        setMenu(false)
     }
 
     const dispatch = useDispatch()
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 
-
     useEffect(() => {
-        fetch(`https://sswitch.ga/trash/alarms/list`,{
-            method : "GET",
-            headers : {
-                "Authorization": `Bearer ${userInfo.accessToken}`,
-                "Content-Type": "application/json"
-            }
-        })
-        .then(res => res.json())
-        .then(res => {
-            setAlarms(res.data)
-        })
-        .catch(err => console.log(err))
+        if(userInfo.accessToken){
+            fetch(`https://sswitch.ga/trash/alarms/list`,{
+                method : "GET",
+                headers : {
+                    "Authorization": `Bearer ${userInfo.accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                setAlarms(res.data)
+            })
+            .catch(err => console.log(err))
+        }
     },[])
 
     const handleDelete = (id) => {
@@ -67,6 +69,7 @@ function NavBar({welcome}) {
         
     }
 
+
   return (
     <>
     {welcome !== null ?
@@ -77,31 +80,31 @@ function NavBar({welcome}) {
             }}><FaBars/></div>
             <div className='main_title'>
                 <Link to='/' onClick={() => {
-                    setMenu(false)
+                    clear()
                     window.scrollTo(0, 0);
                     }}>쓰위치</Link>
             </div>
         {userInfo.accessToken ?
         <div className='login' onClick={() => {
-            setMenu(false)
+            clear()
             navigate('/users/profile')
         }}>내정보</div> :
         <div className='login' onClick={() => {
-            setMenu(false)
+            clear()
             navigate('/login')
         }}>로그인</div> }
         </div>
     </MobileNavBar> : undefined}
     {menu ?
     <MobileSideBar>
-        <div className='side_bar_back' onClick={() => setMenu(false)}>
+        <div className='side_bar_back' onClick={() => clear()}>
             <div className='side_bar_view' onClick={(e) => e.stopPropagation()}>
                 <div className='section first'>
                     <div className='title'>커뮤니티</div>
                     <div>
                         <li onClick={() => {
                             navigate('/community/forum')
-                            setMenu(false)
+                            clear()
                             }}>자유게시판</li>
                     </div>
                 </div>
@@ -111,15 +114,15 @@ function NavBar({welcome}) {
                         <li><a target='_black' href='http://pf.kakao.com/_puDuxj/chat'>채팅상담</a></li>
                         <li onClick={() => {
                             navigate('/cs/faq')
-                            setMenu(false)
+                            clear()
                         }}>FAQ</li>
                         <li onClick={() => {
                             navigate('/cs/operationpolicy')
-                            setMenu(false)
+                            clear()
                         }}>운영정책</li>
                         <li onClick={() => {
                             setGuide(1)
-                            setMenu(false)
+                            clear()
                             }}>가이드</li>
                     </div>
                 </div>
@@ -128,7 +131,7 @@ function NavBar({welcome}) {
                     <div>
                         <li onClick={() => {
                             navigate('/goods')
-                            setMenu(false)
+                            clear()
                             }}>쿠폰교환</li>
                     </div>
                 </div>
@@ -137,11 +140,11 @@ function NavBar({welcome}) {
                     <div>
                         <li onClick={() => {
                             navigate('/news/notice')
-                            setMenu(false)
+                            clear()
                             }}>공지사항</li>
                         <li onClick={() => {
                             navigate('news/event')
-                            setMenu(false)
+                            clear()
                         }}>이벤트</li>
                     </div>
                 </div>
@@ -173,26 +176,47 @@ function NavBar({welcome}) {
         <div className='header'>
             <div>커뮤니티
                 <div className='drop community'>
-                    <li onClick={() => navigate('/community/forum')}>자유게시판</li>
+                    <li onClick={() => {
+                        navigate('/community/forum')
+                        clear()
+                        }}>자유게시판</li>
                 </div>
             </div>
             <div>고객센터
                 <div className='drop'>
                     <a href='http://pf.kakao.com/_puDuxj/chat' target='_black'><li>채팅상담</li></a>
-                    <li onClick={() => navigate('/cs/faq')}>FAQ</li>
-                    <li onClick={() => navigate('/cs/operationpolicy')}>운영정책</li>
-                    <li onClick={() => setGuide(1)}>가이드</li>
+                    <li onClick={() => {
+                        navigate('/cs/faq')
+                        clear()
+                        }}>FAQ</li>
+                    <li onClick={() => {
+                        navigate('/cs/operationpolicy')
+                        clear()
+                        }}>운영정책</li>
+                    <li onClick={() => {
+                        setGuide(1)
+                        clear()
+                        }}>가이드</li>
                 </div>
             </div>
             <div>포인트 교환
                 <div className='drop'>
-                    <li onClick={() => navigate('/goods')}>쿠폰교환</li>
+                    <li onClick={() => {
+                        navigate('/goods')
+                        clear()
+                        }}>쿠폰교환</li>
                 </div>
             </div>
             <div>소식
                 <div className='drop news'>
-                    <li onClick={() => navigate('/news/notice')}>공지사항</li>
-                    <li onClick={() => navigate('/news/event')}>이벤트</li>
+                    <li onClick={() => {
+                        navigate('/news/notice')
+                        clear()
+                        }}>공지사항</li>
+                    <li onClick={() => {
+                        navigate('/news/event')
+                        clear()
+                        }}>이벤트</li>
                 </div>
             </div>
             {!userInfo.accessToken ?
@@ -203,7 +227,10 @@ function NavBar({welcome}) {
                         navigate('/users/profile')
                         clear()
                     }}>내정보</li>
-                    {userInfo.role === "ROLE_ADMIN" ? <li onClick={() => navigate('/admin-users/profile')}>관리자</li> : undefined}
+                    {userInfo.role === "ROLE_ADMIN" ? <li onClick={() => {
+                        navigate('/admin-users/profile')
+                        clear()
+                        }}>관리자</li> : undefined}
                 </div>
             </div>}
             {!userInfo.accessToken ?
@@ -226,7 +253,7 @@ function NavBar({welcome}) {
                 dispatch({type:'LOGOUT'})
                 navigate('/')
                 setLogout(false)
-                setMenu(false)
+                clear()
             }}>확인</div>
             <div onClick={() => {
                 setLogout(false)
@@ -238,7 +265,8 @@ function NavBar({welcome}) {
 
     {noticeOn ?
     <Notification>
-        {alarms.map(el => {
+        {userInfo.accessToken && alarms.length !== 0 ? 
+        alarms.map(el => {
             return (
                 <div className='flex' key={el.trashCanAlarmId}>
                     <div className='container'>
@@ -249,7 +277,9 @@ function NavBar({welcome}) {
                     <div className='delete' onClick={() => handleDelete(el.trashCanAlarmId)}><BsTrash /></div>
                 </div>
             )
-        })}
+        }) : userInfo.accessToken && alarms.length === 0 ?
+           <div className='unlogin'>현재 알림이 없습니다.</div> :
+        <div className='unlogin'>로그인이 필요한 기능입니다.</div>}
     </Notification> :
     undefined}
     </>
@@ -548,6 +578,19 @@ const Notification = styled.div`
     white-space: nowrap;
     overflow-y: scroll;
     overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+
+    .unlogin{
+        border: 5px solid #F1C164;
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2vmin;
+        margin-top: 2vh;
+        width: 85%;
+    }
 
     .flex{
         display: flex;
