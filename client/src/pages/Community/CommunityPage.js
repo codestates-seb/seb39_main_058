@@ -9,7 +9,6 @@ import { FaSearch } from "react-icons/fa";
 
 const tag = ["구로구","강남구","관악구","동작구","마포구"]
 
-// 커뮤니티 게시판 리스트가 나오는 메인페이지
 function CommunityPage() {
 
   const [tags, setTags] = useState([])
