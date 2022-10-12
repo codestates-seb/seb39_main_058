@@ -149,7 +149,7 @@ function CommunityPage() {
                   <span onClick={() => {
                     navigate(`/community/${el.forumId}`)
                   }}>{el.forumTitle}</span>
-                  {el.commentCount !== 0 ? <span>{`(${el.commentCount})`}</span> : undefined}
+                  {el.commentCount ? <span>{`(${el.commentCount})`}</span> : undefined}
                 </div> :
                 <span className='title pointer secret' onClick={() => {
                   userInfo.role === "ROLE_ADMIN" || (el.userName === userInfo.userName) ?
