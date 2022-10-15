@@ -20,10 +20,10 @@ const AnswerMap = ({item}) => {
   const [modalOn, setModalOn] = useState(false);
 
 // 댓글삭제 요청 fetch
-const answerDeleteFetch=async()=>{
+const answerDeleteFetch=()=>{
   if(clickCommentId!==''){
 
-    await fetch(`https://sswitch.ga/community/comment/take/${clickCommentId}`, {
+     fetch(`https://sswitch.ga/community/comment/take/${clickCommentId}`, {
       method: "DELETE",
       headers: { 'Authorization': `Bearer ${accesstoken}`}
 
