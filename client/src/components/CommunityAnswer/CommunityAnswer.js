@@ -46,7 +46,7 @@ function spaceCheck(txt){
 
 
 //댓글 포스트함수
-const submitFunc=async(event)=>{
+const submitFunc=(event)=>{
   event.preventDefault()
  
   if(!accesstoken){
@@ -63,7 +63,7 @@ const submitFunc=async(event)=>{
           "userId": userid,
 
       }
-        await fetch('https://sswitch.ga/community/comment/take/create', {
+         fetch('https://sswitch.ga/community/comment/take/create', {
         
             method: 'POST',
             headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`,},

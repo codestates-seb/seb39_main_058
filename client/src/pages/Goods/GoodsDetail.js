@@ -42,10 +42,10 @@ const goodsDelete=()=>{
 }
 }
 
-const goodsDeleteFetch=async()=>{
+const goodsDeleteFetch=()=>{
   if(deleteGoods!==''){
 
-    await fetch(`https://sswitch.ga/goods/admin/${deleteGoods}`, {
+     fetch(`https://sswitch.ga/goods/admin/${deleteGoods}`, {
       method: "DELETE",
       headers: { 'Authorization': `Bearer ${accesstoken}`}
 
@@ -88,7 +88,7 @@ const goodsBuy=()=>{
   }
 }
 
-const goodsBuyFetch=async()=>{
+const goodsBuyFetch=()=>{
   if(buyGoods!==''){
     const buyInfo={
       
@@ -103,7 +103,7 @@ const goodsBuyFetch=async()=>{
     
     }
     
-    await fetch(`https://sswitch.ga/orders`, {
+     fetch(`https://sswitch.ga/orders`, {
       method: "POST",
       headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`},
       body: JSON.stringify(buyInfo)
