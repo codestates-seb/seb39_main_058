@@ -71,10 +71,10 @@ const tabKey2=(event)=>{
 }
 
 
-  const loginPost = async()=>{
+  const loginPost = ()=>{
 
 
-    await fetch('https://sswitch.ga/login', {
+     fetch('https://sswitch.ga/login', {
 
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},

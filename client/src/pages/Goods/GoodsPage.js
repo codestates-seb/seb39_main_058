@@ -20,10 +20,10 @@ const role=useSelector(state=>state.LoginPageReducer.userinfo.role)
 const userId=useSelector(state=>state.LoginPageReducer.userinfo.userId)
 
 //유저정보 불러오기
-  const getUserInfo=async()=>{
+  const getUserInfo=()=>{
     if(accesstoken){
 
-      await fetch(`https://sswitch.ga/users/profile`, {
+       fetch(`https://sswitch.ga/users/profile`, {
         headers: {
           "Authorization": `Bearer ${accesstoken}`,
           "Content-Type": "application/json"
@@ -46,8 +46,8 @@ const userId=useSelector(state=>state.LoginPageReducer.userinfo.userId)
 
 
 //상품정보 불러오기 
-const getGoodsList=async()=>{
-await fetch('https://sswitch.ga/goods?page=1&size=10')
+const getGoodsList=()=>{
+ fetch('https://sswitch.ga/goods?page=1&size=10')
 .then(res => res.json())
 .then((data)=>{
 //  console.log('상품리스트',data)
@@ -58,10 +58,10 @@ await fetch('https://sswitch.ga/goods?page=1&size=10')
 }
 
 ///쿠폰정보불러오기
-const getCouponData=async()=>{
+const getCouponData=()=>{
   if(userId){
 
-    await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
+     fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
       headers: { 'Authorization': `Bearer ${accesstoken}`}
     })
     .then(res => res.json())

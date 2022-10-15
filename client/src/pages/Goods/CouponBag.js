@@ -18,10 +18,10 @@ const navigate=useNavigate();
 
 
 ///쿠폰정보불러오기
-  const getCouponData=async()=>{
+  const getCouponData=()=>{
     if(userId){
 
-      await fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
+       fetch(`https://sswitch.ga/orders/orderGoods/list/${userId}`,{
         headers: { 'Authorization': `Bearer ${accesstoken}`}
       })
       .then(res => res.json())
@@ -56,10 +56,10 @@ couponDeleteFetch()
 
 }
 
-const couponDeleteFetch=async()=>{
+const couponDeleteFetch=()=>{
   if(deleteCoupon!==''){
 
-    await fetch(`https://sswitch.ga/orders/orderGoods/${deleteCoupon}`, {
+     fetch(`https://sswitch.ga/orders/orderGoods/${deleteCoupon}`, {
       method: "DELETE",
       headers: { 'content-Type' : 'application/json','Authorization': `Bearer ${accesstoken}`}
 

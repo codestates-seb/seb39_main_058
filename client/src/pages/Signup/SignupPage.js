@@ -280,7 +280,7 @@ const spaceKey2=(event)=>{
 }
 
 
-const signupPostFunc=async()=>{
+const signupPostFunc=()=>{
   if(id.length===0){
     setAlertId('아이디를 입력해 주세요.')
   } 
@@ -305,7 +305,7 @@ const signupPostFunc=async()=>{
       "password": password,
       "email": emailInfo
     }
-   await fetch(`https://sswitch.ga/signup`, {
+    fetch(`https://sswitch.ga/signup`, {
 
     method: 'POST',
     headers: { 'content-Type' : 'application/json'},
