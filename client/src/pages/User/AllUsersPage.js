@@ -33,9 +33,13 @@ function AllUsersPage() {
     <Main>
       <TopBackground/>
       <AllUsersWrapper>
+        {console.log(allUsers[0]?.profileImage)}
         {allUsers.map((allUser) => 
           <EachUser key={allUser?.userId}>
-            <img src={allUser?.profileImage ? allUser?.profileImage : "/profile.png" } /> 
+            <img src={ 
+              (allUser?.profileImage === "null" && "/profile.png") ||
+              (allUser?.profileImage ? allUser?.profileImage : "/profile.png")
+               } /> 
             <div className="user_info">
               <div className="loginId">아이디 : {allUser?.loginId}</div>
               <div className="email">이메일 : {allUser?.email}</div>
