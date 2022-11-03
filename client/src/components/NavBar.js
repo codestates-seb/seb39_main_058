@@ -7,6 +7,8 @@ import { SiNotion } from "react-icons/si";
 import { useSelector, useDispatch } from "react-redux"
 import { BsTrash } from "react-icons/bs";
 import Guide from './Guide'
+import { RemoveModal } from '../pages/Community/CommunityDetail';
+import { ImWarning } from 'react-icons/im';
 
 function NavBar({welcome}) {
 
@@ -244,25 +246,22 @@ function NavBar({welcome}) {
                 setNoticeOn(!noticeOn)
             }}><AiOutlineBell/></div>
     </NavBarStyle>
-    {logout ?
-    <LogoutStyle>
-        <div className='view'>
-          <div>로그아웃 하시겠습니까?</div>
-          <div className='confirm'>
-            <div onClick={() => {
+    { logout && <RemoveModal>
+        <div className="delete-warning">
+        <ImWarning className="delete-warning-icon"/>
+        <div>로그아웃 하시겠습니까?</div>
+        <div className="confirm-wrapper">
+            <div className="confirm" onClick={() => {
                 dispatch({type:'LOGOUT'})
                 navigate('/')
                 setLogout(false)
                 clear()
                 setAlarms([])
             }}>확인</div>
-            <div onClick={() => {
-                setLogout(false)
-            }}>취소</div>
-          </div>
+            <div className="cancel" onClick={() => setLogout(false)}>취소</div>
         </div>
-    </LogoutStyle> :
-    undefined}
+        </div>
+    </RemoveModal>}
 
     {noticeOn ?
     <Notification>
