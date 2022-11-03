@@ -4,6 +4,9 @@ import { Map, CustomOverlayMap, MapMarker, Roadview } from "react-kakao-maps-sdk
 import { BiCurrentLocation } from "react-icons/bi";
 import Loading from "../../components/Loading";
 import { useSelector } from "react-redux";
+import { RemoveModal } from "../Community/CommunityDetail";
+import { ImWarning } from 'react-icons/im';
+import { useNavigate } from "react-router-dom";
 
 function MainPage(){
 
@@ -40,6 +43,7 @@ function MainPage(){
     })
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
+    const navigate = useNavigate();
     
     // 구로구 쓰레기통 API
     useEffect(() => {
@@ -153,29 +157,32 @@ function MainPage(){
                                 trashTakeCreate()
                                 setModal(true)
                             }else{
-                                alert('로그인 이후 사용 가능합니다.')
+                                navigate('/login')
                             }
                         }}>비워주세요</div>
                         </>
                     </div> :
                 undefined}
-                {modal && res ?
-                <div className="roadview_modal_container" onClick={() => {
-                    setModal(false)
-                    setRes(undefined)
-                    }}>
-                    <div className="notice_modal_container" onClick={(e) => {
-                        e.stopPropagation()
-                        setModal(true)
-                    }}>
-                        {res === 500 ?
-                        <div>이미 다른 사용자가 비움 요청한 쓰레기통 입니다.</div> : 
-                        <div>
-                            <div>정상적으로 접수 되었습니다.</div>
-                            <div>100 포인트가 적립되었습니다.</div>
-                        </div>}
+                {modal && res === 500 ? <RemoveModal>
+                    <div className="delete-warning">
+                        <ImWarning className="delete-warning-icon"/>
+                        <div>이미 비움 요청된 쓰레기통 입니다.</div>
+                        <div className="confirm-wrapper">
+                        <div className="confirm" onClick={() => setModal(false)}>확인</div>
+                        </div>
                     </div>
-                </div> :
+                </RemoveModal> :
+                modal && res !== 500 ?
+                <RemoveModal>
+                    <div className="delete-warning">
+                        <ImWarning className="delete-warning-icon"/>
+                        <div>정상적으로 접수 되었습니다.</div>
+                        <div>100 포인트가 적립 되었습니다.</div>
+                        <div className="confirm-wrapper">
+                        <div className="confirm" onClick={() => setModal(false)}>확인</div>
+                        </div>
+                    </div>
+                </RemoveModal> :
                 undefined}
                 <MyLocationBtn onClick={() => {
                     handleMyLocation()

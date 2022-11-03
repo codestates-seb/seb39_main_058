@@ -6,6 +6,8 @@ import { AiOutlineSearch, AiFillLock } from "react-icons/ai";
 import PageNation from '../../components/PageNation';
 import { useSelector } from 'react-redux'
 import { FaSearch } from "react-icons/fa";
+import { ImWarning } from 'react-icons/im';
+import { RemoveModal } from './CommunityDetail';
 
 const tag = ["구로구","강남구","관악구","동작구","마포구"]
 
@@ -18,6 +20,7 @@ function CommunityPage() {
     content : ''
   })
   const [total, setTotal] = useState(null)
+  const [modal, setModal] = useState(false)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -89,7 +92,7 @@ function CommunityPage() {
       document.getElementById("select").value = "태그를 선택해주세요"
     }
     else{
-      alert("태그를 선택해주세요.")
+      setModal(true)
     }
   }
 
@@ -130,6 +133,15 @@ function CommunityPage() {
             </div>)})}
       </div>
         <div className='tag_search' onClick={handleTagSearch}> <AiOutlineSearch/> 태그 검색</div>
+        { modal && <RemoveModal>
+              <div className="delete-warning">
+                <ImWarning className="delete-warning-icon"/>
+                <div>태그를 선택해주세요.</div>
+                <div className="confirm-wrapper">
+                  <div className="confirm" onClick={() => setModal(false)}>확인</div>
+                </div>
+              </div>
+          </RemoveModal>}
         <div className='bords_container'>
           <div className='bords_list top'>
             <span className='id'>번호</span>

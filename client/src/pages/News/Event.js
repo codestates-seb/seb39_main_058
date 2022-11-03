@@ -7,6 +7,8 @@ import { useSelector } from "react-redux"
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate } from "react-router-dom";
 import EventCreate from "./EventCreate";
+import { ImWarning } from 'react-icons/im';
+import { RemoveModal } from "../Community/CommunityDetail";
 
 const random = [
     "https://images.unsplash.com/photo-1497752531616-c3afd9760a11?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y3V0ZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
@@ -32,6 +34,7 @@ const Event = () => {
     const [coupon, setCoupon] = useState('')
     const [getPoint, setGetPoint] = useState(false)
     const [imgLink, setImgLink] = useState('')
+    const [couponModal, setCouponModal] = useState(false)
 
     const navigate = useNavigate();
 
@@ -90,7 +93,7 @@ const Event = () => {
         })
         .then(res => {
             if(res.status === 500){
-                alert("잘못된 쿠폰 번호 입니다.")
+                setCouponModal(true)
             }
             if(res.status === 200){
                 setGetPoint(true)
@@ -159,7 +162,7 @@ return (
             <div className="title">쿠폰 입력</div>
             <input type='text' placeholder="쿠폰번호 입력" onChange={(e) => setCoupon(e.target.value)}/>
             <div className="confirm" onClick={() => {
-                userInfo.accessToken ? handleConfirmButton() : alert("로그인 후 이용 가능합니다.")
+                userInfo.accessToken ? handleConfirmButton() : navigate('/login')
             }}>확인</div>
             <p>* 쿠폰 입력은 로그인 이후 사용 가능합니다.</p>
         </div>
@@ -177,16 +180,17 @@ return (
             <div className="submit" onClick={() => navigate('/news/event/create')}>등록</div>
         </div>
         <div className="body">
-            {del ?
-            <div className="back" onClick={() => setDel(false)}>
-                <div className="modal_view" onClick={e => e.stopPropagation()}>
-                    <div>삭제 하시겠습니까?</div>
-                    <div className="final">
-                        <div onClick={handleDeletClick}>확인</div>
-                        <div onClick={() => setDel(false)}>취소</div>
-                    </div>
+            { del && <RemoveModal>
+              <div className="delete-warning">
+                <ImWarning className="delete-warning-icon"/>
+                <div>삭제 이후 복구할 수 없습니다.</div>
+                <div>정말 해당 글을 삭제하시겠습니까?</div>
+                <div className="confirm-wrapper">
+                  <div className="confirm" onClick={handleDeletClick}>확인</div>
+                  <div className="cancel" onClick={() => setDel(false)}>취소</div>
                 </div>
-            </div> : undefined}
+              </div>
+          </RemoveModal>}
             {edit ?
             <div className="back" onClick={() => setEdit(false)}>
                 <div className="view" onClick={e => e.stopPropagation()}>
@@ -216,6 +220,15 @@ return (
         </InfiniteScroll>
         </div>
     </div> : undefined}
+    { couponModal && <RemoveModal>
+              <div className="delete-warning">
+                <ImWarning className="delete-warning-icon"/>
+                <div>잘못된 쿠폰 번호 입니다.</div>
+                <div className="confirm-wrapper">
+                  <div className="confirm" onClick={() => setCouponModal(false)}>확인</div>
+                </div>
+              </div>
+          </RemoveModal>}
     </EventStyle>
     );
 }
