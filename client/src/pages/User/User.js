@@ -74,7 +74,7 @@ function User() {
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "/gold.png" :
                         userData.totalPoints <= 50000 || userData.totalPoints < 100000 ? "/platinum.png" :
                         userData.totalPoints >= 100000 ? "/diamond.png" : undefined} />
-                    <span>
+                    <span className='rank_name'>
                         {userData.totalPoints < 10000 ? "브론즈" :
                         userData.totalPoints <= 10000 || userData.totalPoints < 25000 ? "실버" :
                         userData.totalPoints <= 25000 || userData.totalPoints < 50000 ? "골드" :
@@ -224,6 +224,12 @@ const Main = styled.main`
 
         @media screen and (max-width: 500px){
             height: 25vh;
+            .rank_name{
+                margin-top: -2vh;
+            }
+            .more{
+                margin-bottom: 3vh;
+            }
         }
         
         img{
@@ -233,7 +239,6 @@ const Main = styled.main`
             @media screen and (max-width: 500px){
             width: 50vw;
             height: 28vh;
-            margin-top: -7vh;
         }
         }
 

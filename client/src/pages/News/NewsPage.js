@@ -4,6 +4,8 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import {Link} from "react-router-dom"
 import { useSelector } from "react-redux"
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { ImWarning } from 'react-icons/im';
+import { RemoveModal } from '../Community/CommunityDetail';
 
 const NewsPage = () => {
 
@@ -116,22 +118,20 @@ const NewsPage = () => {
           }}>편집</div>}
         </div> :
       undefined}
-      {completion ?
-      <div className='back_drop'>
-        <div className='view'>
-          <div>정말 삭제하시겠습니까?</div>
-          <div className='confirm'>
-            <div onClick={() => {
-              setCompletion(false)
-              handleDeletButton()
-            }}>확인</div>
-            <div onClick={() => {
-              setCompletion(false)
-            }}>취소</div>
-          </div>
-        </div>
-      </div> :
-      undefined}
+      { completion && <RemoveModal>
+              <div className="delete-warning">
+                <ImWarning className="delete-warning-icon"/>
+                <div>삭제 이후 복구할 수 없습니다.</div>
+                <div>정말 해당 글을 삭제하시겠습니까?</div>
+                <div className="confirm-wrapper">
+                  <div className="confirm" onClick={() => {
+                    setCompletion(false)
+                    handleDeletButton()
+                  }}>확인</div>
+                  <div className="cancel" onClick={() => setCompletion(false)}>취소</div>
+                </div>
+              </div>
+          </RemoveModal>}
       <InfiniteScroll
       dataLength={totalElements}
       next = {scrollChange}
