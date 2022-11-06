@@ -19,13 +19,14 @@ function NavBar({welcome}) {
     const [alarms, setAlarms] = useState([])
 
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const clear = () => {
         setNoticeOn(false)
         setMenu(false)
+        dispatch({type : "CHANGE", payload : 1})
     }
 
-    const dispatch = useDispatch()
 
     const userInfo = useSelector(state => state.LoginPageReducer.userinfo)
 

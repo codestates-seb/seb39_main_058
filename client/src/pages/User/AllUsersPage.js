@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector} from 'react-redux';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components'
 import { TopBackground } from './AdminUser'
 import { ImWarning } from 'react-icons/im';
+import PageNation from '../../components/PageNation';
 
 function AllUsersPage() {
 
@@ -12,9 +12,13 @@ function AllUsersPage() {
   const [ pageInfo, setPageInfo ] = useState([]);
   const [ pointBtn, setPointBtn ] = useState(false);
 
+  const page = useSelector(state => {
+    return state.CurrentPageReducer.page
+  })
+
   // 전체 유저 정보 받아오기
   useEffect(() => {
-    fetch(`https://sswitch.ga/admin/users/`, {
+    fetch(`https://sswitch.ga/admin/users?page=${page-1}&size=20`, {
         headers: {
             "Authorization": `Bearer ${userInfo.accessToken}`,
             "Content-Type": "application/json"
@@ -26,14 +30,13 @@ function AllUsersPage() {
           setPageInfo(data.pageInfo);
         })
         .catch(err => console.log(err))
-  },[])
+  },[page])
 
   return (
     <>
     <Main>
       <TopBackground/>
       <AllUsersWrapper>
-        {console.log(allUsers[0]?.profileImage)}
         {allUsers.map((allUser) => 
           <EachUser key={allUser?.userId}>
             <img src={ 
@@ -58,6 +61,8 @@ function AllUsersPage() {
             <button className='point_btn' onClick={() =>setPointBtn(!pointBtn)}>포인트 지급</button>
           </EachUser>)}
       </AllUsersWrapper>
+
+      <PageNation data = {allUsers} total = {pageInfo.totalElements} />
 
       {/* 포인트 지급 모달창 */}
       { pointBtn && <RemoveModal>
